@@ -1,0 +1,100 @@
+set $mod Mod1
+
+# startup applications
+exec_always --no-startup-id polybar example
+exec_always --no-startup-id feh --bg-scale ~/Pictures/Wallpapers/vaporwave1.jpg
+exec --no-startup-id compton --xrender-sync-fence --xrender-sync --backend glx --vsync opengl-swc -b
+exec --no-startup-id xss-lock -- i3lock -i /home/antony/Pictures/Wallpapers/vaporwave2.png
+exec --no-startup-id mpd
+exec --no-startup-id insync start
+exec --no-startup-id nm-applet
+exec --no-startup-id redshift
+exec_always --no-startup-id xinput set-prop "PS/2 Generic Mouse" "Device Enabled" 0
+
+hide_edge_borders both
+for_window [class="^.*"] border pixel 0
+for_window [window_role="gimp-toolbox"] floating disable; move right; resize grow width 30 px or 30ppt
+
+# applications
+bindsym $mod+Return exec konsole
+bindsym $mod+c exec chromium-browser --force-device-scale-factor=1.2
+bindsym $mod+g exec gedit
+bindsym $mod+Shift+g exec google-chrome --force-device-scale-factor=1.2
+bindsym $mod+q kill
+bindsym $mod+j exec bash /home/antony/intellij/bin/idea.sh
+bindsym $mod+Shift+c exec bash /home/antony/clion/bin/clion.sh
+bindsym $mod+n exec nautilus
+bindsym $mod+d exec dmenu_run
+bindsym $mod+m qutebrowser --backend webengine
+
+# system commands
+bindsym $mod+l exec i3lock -i /home/antony/Pictures/Wallpapers/vaporwave2.png
+bindsym XF86MonBrightnessUp exec sudo bup.sh
+bindsym XF86MonBrightnessDown exec sudo bdown.sh
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ '+5%'; exec pactl set-sink-volume alsa_output.usb-AudioQuest_inc._AudioQuest_DragonFly-00.iec958-stereo +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ '-5%'; exec pactl set-sink-volume alsa_output.usb-AudioQuest_inc._AudioQuest_DragonFly-00.iec958-stereo -5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle; exec pactl set-sink-mute alsa_output.usb-AudioQuest_inc._AudioQuest_DragonFly-00.iec958-stereo toggle
+bindsym 0xff61 exec --no-startup-id scrot -q 100 -e 'mv $f ~/Drive/Scrot/'
+
+# i3 system commands
+bindsym $mod+Shift+r exec killall polybar feh ; restart
+bindsym $mod+Shift+e exec killall xss-lock nm-applet nautilus; exec clear; exit
+
+# focus
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split
+bindsym $mod+h split h
+bindsym $mod+v split v
+
+# fullscreen
+bindsym $mod+f fullscreen toggle
+
+# gaps
+bindsym $mod+a gaps inner current plus 5
+bindsym $mod+Shift+a gaps inner current minus 5
+
+bindsym $mod+z gaps outer current plus 5
+bindsym $mod+Shift+z gaps outer current minus 5
+
+bindsym $mod+t gaps inner current set 0; gaps outer current set 0
+bindsym $mod+Shift+t gaps inner current set 25; gaps outer current set 25
+
+bindsym $mod+y resize shrink width 10px or 10 ppt
+bindsym $mod+u resize grow width 10px or 10 ppt
+
+bindsym $mod+i resize shrink height 10px or 10 ppt
+bindsym $mod+o resize grow height 10px or 10 ppt
+
+# change desktops
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+# move windows
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10

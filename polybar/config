@@ -1,6 +1,6 @@
 [colors]
 trans = rgba(255, 255, 255, 0)
-black = #000000
+black = #c680d1
 primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
@@ -15,7 +15,7 @@ radius = 6.0
 fixed-center = true
 
 line-size = 3
-line-color = #f00
+line-color = #c680d1
 
 border-size = 4
 border-color = #00000000
@@ -30,9 +30,9 @@ font-0 = fixed:pixelsize=10;1
 font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-2 = siji:pixelsize=10;1
 
-modules-left = bspwm i3
+modules-left = i3
 modules-center = date
-modules-right = cpu temperature wlan eth battery
+modules-right = cpu temperature wlan battery
 
 tray=right	
 tray-position = right
@@ -142,7 +142,7 @@ date = %B %d
 date-alt = %B %d
 
 time = %H:%M
-time-alt = 
+time-alt = %H:%M
 
 format-prefix = 
 format-prefix-black = ${colors.trans}
