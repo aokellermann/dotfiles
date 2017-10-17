@@ -30,7 +30,7 @@ font-0 = fixed:pixelsize=10;1
 font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-2 = siji:pixelsize=10;1
 
-modules-left = i3
+modules-left = i3 mpd
 modules-center = date
 modules-right = cpu temperature wlan battery
 
@@ -103,6 +103,10 @@ icon-next = 
 
 label-song-maxlen = 200
 label-song-ellipsis = true
+
+host = 127.0.0.1
+port = 6601
+interval = 2
 
 [module/cpu]
 type = internal/cpu
