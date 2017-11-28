@@ -1,15 +1,18 @@
 set $mod Mod1
+font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+font pango:DejaVu Sans Mono 10
 
 # startup applications
+exec --no-startup-id mpd
 exec_always --no-startup-id polybar example
 exec_always --no-startup-id feh --bg-scale ~/Pictures/Wallpapers/vaporwave1scaled.jpg
 exec --no-startup-id compton --xrender-sync-fence --xrender-sync --backend glx --vsync opengl-swc -b
 exec --no-startup-id xss-lock -- i3lock -i /home/antony/Pictures/Wallpapers/vaporwave2.png
-exec --no-startup-id mpd
 exec --no-startup-id insync start
 exec --no-startup-id nm-applet
 exec --no-startup-id redshift
 exec_always --no-startup-id xinput set-prop "TPPS/2 IBM TrackPoint" "Device Enabled" 0
+exec xset b off
 
 hide_edge_borders both
 for_window [class="^.*"] border pixel 0
@@ -22,22 +25,28 @@ bindsym $mod+g exec gedit
 bindsym $mod+q kill
 bindsym $mod+j exec intellij-idea-ultimate-edition
 bindsym $mod+Shift+c exec clion
-bindsym $mod+n exec nautilus
+bindsym $mod+n exec thunar
 bindsym $mod+d exec dmenu_run
-
+bindsym $mod+Shift+n exec konsole -e ncmpcpp
+bindsym $mod+Shift+v exec qutebrowser
 
 # system commands
 bindsym $mod+l exec i3lock -i /home/antony/Pictures/Wallpapers/vaporwave2.png
-bindsym 0xffc2 exec xbacklight -dec 10
-bindsym 0xffc3 exec xbacklight -inc 10
-bindsym 0xffc0 exec pactl set-sink-volume @DEFAULT_SINK@ '+3%'
-bindsym 0xffbf exec pactl set-sink-volume @DEFAULT_SINK@ '-3%'
+bindsym 0xffc2 exec xbacklight -dec 9
+bindsym 0xffc3 exec xbacklight -inc 9
+bindsym 0xffc0 exec pactl set-sink-volume @DEFAULT_SINK@ '+4%'
+bindsym 0xffbf exec pactl set-sink-volume @DEFAULT_SINK@ '-4%'
 bindsym 0xffbe exec pactl set-sink-mute @DEFAULT_SINK@ toggle;
-bindsym 0xff61 exec --no-startup-id scrot -q 100 -e 'mv $f ~/Drive/Scrot/'
+bindsym 0xff61 exec scrot -q 100 -e 'mv $f ~/Drive/Scrot/'
+bindsym $mod+0x2c exec mpc -q prev
+bindsym $mod+0x2e exec mpc -q next
+bindsym $mod+p exec mpc -q toggle
+bindsym $mod+Shift+p exec mpc -q stop
+bindsym $mod+0x2f exec mpc -q random
 
 # i3 system commands
 bindsym $mod+Shift+r exec killall polybar feh ; restart
-bindsym $mod+Shift+e exec killall xss-lock nm-applet nautilus; exec clear; exit
+bindsym $mod+Shift+e exec killall xss-lock nm-applet; exec clear; exit
 
 # focus
 bindsym $mod+Left focus left
@@ -66,10 +75,12 @@ bindsym $mod+z gaps outer current plus 5
 bindsym $mod+Shift+z gaps outer current minus 5
 
 bindsym $mod+t gaps inner current set 0; gaps outer current set 0
-bindsym $mod+Shift+t gaps inner current set 25; gaps outer current set 25
+bindsym $mod+Shift+t gaps inner current set 10; gaps outer current set 10
 
 bindsym $mod+y resize shrink width 10px or 10 ppt
 bindsym $mod+u resize grow width 10px or 10 ppt
+bindsym $mod+Shift+y resize shrink width 1px or 1 ppt
+bindsym $mod+Shift+u resize grow width 1px or 1 ppt
 
 bindsym $mod+i resize shrink height 10px or 10 ppt
 bindsym $mod+o resize grow height 10px or 10 ppt
