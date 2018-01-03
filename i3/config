@@ -3,14 +3,17 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 font pango:DejaVu Sans Mono 10
 
 # startup applications
+exec_always --no-startup-id bash betterlockscreen/lock.sh -u ~/Pictures/Wallpapers/vaporwave2.png
 exec --no-startup-id mpd
 exec_always --no-startup-id polybar example
-exec_always --no-startup-id feh --bg-scale ~/Pictures/Wallpapers/vaporwave1scaled.jpg
+exec_always --no-startup-id feh  --bg-fill ~/Pictures/Wallpapers/vaporwave2.png
 exec --no-startup-id compton --xrender-sync-fence --xrender-sync --backend glx --vsync opengl-swc -b
-exec --no-startup-id xss-lock -- i3lock -i /home/antony/Pictures/Wallpapers/vaporwave2.png
+exec --no-startup-id xss-lock -- bash betterlockscreen/lock.sh -l
 exec --no-startup-id insync start
 exec --no-startup-id nm-applet
+exec --no-startup-id blueberry-tray
 exec --no-startup-id redshift
+exec --no-startup-id libinput-gestures-setup start
 exec_always --no-startup-id xinput set-prop "TPPS/2 IBM TrackPoint" "Device Enabled" 0
 exec xset b off
 
@@ -31,7 +34,7 @@ bindsym $mod+Shift+n exec konsole -e ncmpcpp
 bindsym $mod+Shift+v exec qutebrowser
 
 # system commands
-bindsym $mod+l exec i3lock -i /home/antony/Pictures/Wallpapers/vaporwave2.png
+bindsym $mod+l exec bash betterlockscreen/lock.sh -l
 bindsym 0xffc2 exec xbacklight -dec 9
 bindsym 0xffc3 exec xbacklight -inc 9
 bindsym 0xffc0 exec pactl set-sink-volume @DEFAULT_SINK@ '+4%'
