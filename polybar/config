@@ -1,6 +1,6 @@
 [colors]
 trans = rgba(255, 255, 255, 0)
-black = #c680d1
+black = #ef80ff
 primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
@@ -16,7 +16,7 @@ radius = 6.0
 fixed-center = true
 
 line-size = 3
-line-color = #c680d1
+line-color = #ef80ff
 
 border-size = 4
 border-color = #00000000
