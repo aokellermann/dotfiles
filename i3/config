@@ -3,18 +3,19 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 font pango:DejaVu Sans Mono 10
 
 # startup applications
-exec_always --no-startup-id bash betterlockscreen/lock.sh -u ~/Pictures/Wallpapers/vaporwave2.png
+exec_always xrdb -load ~/.Xresources
+exec_always xrdb ~/.Xresources
 exec --no-startup-id mpd
-exec_always --no-startup-id polybar example
-exec_always --no-startup-id feh  --bg-fill ~/Pictures/Wallpapers/vaporwave2.png
-exec --no-startup-id compton --xrender-sync-fence --xrender-sync --backend glx --vsync opengl-swc -b
-exec --no-startup-id xss-lock -- bash betterlockscreen/lock.sh -l
+exec_always --no-startup-id polybar laptop
+exec_always --no-startup-id feh --bg-fill ~/Pictures/Wallpapers/vaporwave2-1080p.png --bg-scale ~/Pictures/Wallpapers/death.png --bg-scale ~/Pictures/Wallpapers/vaporwave1.png
+exec --no-startup-id compton --config ~/.config/compton.conf -b
+exec --no-startup-id xss-lock -- i3lock -e -i ~/Pictures/Wallpapers/vaporwave2-1080p.png
 exec --no-startup-id insync start
 exec --no-startup-id nm-applet
 exec --no-startup-id blueberry-tray
 exec --no-startup-id redshift
 exec --no-startup-id libinput-gestures-setup start
-exec_always --no-startup-id xinput set-prop "TPPS/2 IBM TrackPoint" "Device Enabled" 0
+exec_always --no-startup-id xinput set-prop "TPPS/2 Elan TrackPoint" "Device Enabled" 0
 exec xset b off
 
 hide_edge_borders both
@@ -22,30 +23,35 @@ for_window [class="^.*"] border pixel 0
 for_window [window_role="gimp-toolbox"] floating disable; move right; resize grow width 30 px or 30ppt
 
 # applications
-bindsym $mod+Return exec konsole
-bindsym $mod+c exec chromium --force-device-scale-factor=1.2
+bindsym $mod+Return exec urxvt
+bindsym $mod+c exec firefox
 bindsym $mod+g exec gedit
 bindsym $mod+q kill
 bindsym $mod+j exec intellij-idea-ultimate-edition
 bindsym $mod+Shift+c exec clion
 bindsym $mod+n exec thunar
 bindsym $mod+d exec dmenu_run
-bindsym $mod+Shift+n exec konsole -e ncmpcpp
-bindsym $mod+Shift+v exec qutebrowser
+bindsym $mod+Shift+n exec urxvt -e ncmpcpp
 
 # system commands
-bindsym $mod+l exec bash betterlockscreen/lock.sh -l
+bindsym $mod+l exec i3lock -e -i ~/Pictures/Wallpapers/vaporwave2-1080p.png
 bindsym 0xffc2 exec xbacklight -dec 9
 bindsym 0xffc3 exec xbacklight -inc 9
 bindsym 0xffc0 exec pactl set-sink-volume @DEFAULT_SINK@ '+4%'
 bindsym 0xffbf exec pactl set-sink-volume @DEFAULT_SINK@ '-4%'
 bindsym 0xffbe exec pactl set-sink-mute @DEFAULT_SINK@ toggle;
+bindsym 0xffc1 exec pactl set-source-mute @DEFAULT_SOURCE@ toggle;
 bindsym 0xff61 exec scrot -q 100 -e 'mv $f ~/Drive/Scrot/'
 bindsym $mod+0x2c exec mpc -q prev
 bindsym $mod+0x2e exec mpc -q next
 bindsym $mod+p exec mpc -q toggle
 bindsym $mod+Shift+p exec mpc -q stop
 bindsym $mod+0x2f exec mpc -q random
+
+bindsym XF86AudioPause exec mpc -q toggle
+bindsym XF86AudioPlay exec mpc -q toggle
+bindsym XF86AudioNext exec mpc -q next
+bindsym XF86AudioPrev exec mpc -q prev
 
 # i3 system commands
 bindsym $mod+Shift+r exec killall polybar feh ; restart
@@ -87,6 +93,9 @@ bindsym $mod+Shift+u resize grow width 1px or 1 ppt
 
 bindsym $mod+i resize shrink height 10px or 10 ppt
 bindsym $mod+o resize grow height 10px or 10 ppt
+bindsym $mod+Shift+i resize shrink height 1px or 1 ppt
+bindsym $mod+Shift+o resize grow height 1px or 1 ppt
+
 
 # change desktops
 bindsym $mod+1 workspace 1
