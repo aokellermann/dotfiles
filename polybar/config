@@ -5,7 +5,7 @@ primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
 
-[bar/example]
+[bar/laptop]
 monitor = eDP1
 background = ${colors.trans}
 foreground = ${colors.black}
@@ -27,9 +27,37 @@ padding-right = 2
 module-margin-left = 1
 module-margin-right = 2
 
-#font-0 = fixed:pixelsize=10;1
-#font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
-#font-2 = siji:pixelsize=10;1
+font-0 = "DejaVu Sans Book:size=10;0"
+
+modules-left = i3 mpd
+modules-center = date
+modules-right = pulseaudio cpu temperature wlan battery
+
+tray=right	
+tray-position = right
+tray-padding = 2
+
+[bar/desktop]
+monitor = HDMI1
+background = ${colors.trans}
+foreground = ${colors.black}
+
+width = 100%
+height = 25
+radius = 6.0
+fixed-center = true
+
+line-size = 3
+line-color = #ef80ff
+
+border-size = 4
+border-color = #00000000
+
+padding-left = 0
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 2
 
 font-0 = "DejaVu Sans Book:size=10;0"
 
@@ -210,6 +238,9 @@ screenchange-reload = true
 ;compositing-trans = screen
 ;compositing-black = source
 ;compositing-border = over
+
+[module/pulseaudio]
+type = internal/pulseaudio
 
 [global/wm]
 margin-top = 5
