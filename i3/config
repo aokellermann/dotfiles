@@ -7,20 +7,22 @@ exec_always xrdb -load ~/.Xresources
 exec_always xrdb ~/.Xresources
 exec --no-startup-id mpd
 exec_always --no-startup-id polybar laptop
-exec_always --no-startup-id feh --bg-fill ~/Pictures/Wallpapers/vaporwave2-1080p.png --bg-scale ~/Pictures/Wallpapers/death.png --bg-scale ~/Pictures/Wallpapers/vaporwave1.png
+exec_always --no-startup-id feh --bg-fill ~/Pictures/Wallpapers/vaporwave3.jpg --bg-scale ~/Pictures/Wallpapers/death.png --bg-scale ~/Pictures/Wallpapers/vaporwave1.png
 exec --no-startup-id compton --config ~/.config/compton.conf -b
-exec --no-startup-id xss-lock -- i3lock -e -i ~/Pictures/Wallpapers/vaporwave2-1080p.png
+exec --no-startup-id xss-lock -- i3lock -e -i ~/Pictures/Wallpapers/vaporwave3.png
 exec --no-startup-id insync start
 exec --no-startup-id nm-applet
 exec --no-startup-id blueberry-tray
-exec --no-startup-id redshift
+exec --no-startup-id redshift -l 42.6:-71.3
 exec --no-startup-id libinput-gestures-setup start
+exec --no-startup-id ibus-daemon
 exec_always --no-startup-id xinput set-prop "TPPS/2 Elan TrackPoint" "Device Enabled" 0
-exec xset b off
+exec_always xset b off
 
 hide_edge_borders both
 for_window [class="^.*"] border pixel 0
 for_window [window_role="gimp-toolbox"] floating disable; move right; resize grow width 30 px or 30ppt
+#for_window [class="[.]*"] floating enable
 
 # applications
 bindsym $mod+Return exec urxvt
@@ -29,19 +31,31 @@ bindsym $mod+g exec gedit
 bindsym $mod+q kill
 bindsym $mod+j exec intellij-idea-ultimate-edition
 bindsym $mod+Shift+c exec clion
-bindsym $mod+n exec thunar
+bindsym $mod+n exec caja
 bindsym $mod+d exec dmenu_run
 bindsym $mod+Shift+n exec urxvt -e ncmpcpp
+bindsym $mod+x exec tick
 
-# system commands
-bindsym $mod+l exec i3lock -e -i ~/Pictures/Wallpapers/vaporwave2-1080p.png
-bindsym 0xffc2 exec xbacklight -dec 9
-bindsym 0xffc3 exec xbacklight -inc 9
+# volume/brightness
 bindsym 0xffc0 exec pactl set-sink-volume @DEFAULT_SINK@ '+4%'
 bindsym 0xffbf exec pactl set-sink-volume @DEFAULT_SINK@ '-4%'
 bindsym 0xffbe exec pactl set-sink-mute @DEFAULT_SINK@ toggle;
 bindsym 0xffc1 exec pactl set-source-mute @DEFAULT_SOURCE@ toggle;
+bindsym 0xffc2 exec xbacklight -dec 9
+bindsym 0xffc3 exec xbacklight -inc 9
+
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ '-4%'
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ '+4%'
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle;
+bindsym XF86MonBrightnessDown exec xbacklight -dec 9
+bindsym XF86MonBrightnessUp exec xbacklight -inc 9
+
+# utils
+bindsym $mod+l exec i3lock -e -i ~/Pictures/Wallpapers/vaporwave3.png
 bindsym 0xff61 exec scrot -q 100 -e 'mv $f ~/Drive/Scrot/'
+
+# mpd controls
 bindsym $mod+0x2c exec mpc -q prev
 bindsym $mod+0x2e exec mpc -q next
 bindsym $mod+p exec mpc -q toggle
@@ -75,6 +89,7 @@ bindsym $mod+v split v
 
 # fullscreen
 bindsym $mod+f fullscreen toggle
+bindsym $mod+b floating toggle
 
 # gaps
 bindsym $mod+a gaps inner current plus 5
@@ -96,8 +111,7 @@ bindsym $mod+o resize grow height 10px or 10 ppt
 bindsym $mod+Shift+i resize shrink height 1px or 1 ppt
 bindsym $mod+Shift+o resize grow height 1px or 1 ppt
 
-
-# change desktops
+# focused workspace
 bindsym $mod+1 workspace 1
 bindsym $mod+2 workspace 2
 bindsym $mod+3 workspace 3
@@ -109,7 +123,7 @@ bindsym $mod+8 workspace 8
 bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
 
-# move windows
+# move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace 1
 bindsym $mod+Shift+2 move container to workspace 2
 bindsym $mod+Shift+3 move container to workspace 3
@@ -120,4 +134,3 @@ bindsym $mod+Shift+7 move container to workspace 7
 bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
-
