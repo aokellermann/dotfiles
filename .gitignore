@@ -1,0 +1,6 @@
+*
+!.gitignore
+!README
+!i3/
+!ncmpcpp/
+!polybar/
