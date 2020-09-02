@@ -1,4 +1,5 @@
 set $mod Mod1
+set $term alacritty
 font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 font pango:DejaVu Sans Mono 10
 
@@ -7,7 +8,7 @@ exec_always xrdb -load ~/.Xresources
 exec_always xrdb ~/.Xresources
 exec --no-startup-id mpd
 exec_always --no-startup-id polybar laptop
-exec_always --no-startup-id feh --bg-fill ~/Pictures/Wallpapers/vaporwave3.jpg --bg-scale ~/Pictures/Wallpapers/death.png --bg-scale ~/Pictures/Wallpapers/vaporwave1.png
+exec_always --no-startup-id feh --bg-fill ~/Pictures/Wallpapers/outrun.jpg --bg-scale ~/Pictures/Wallpapers/vaporwave3.png --bg-scale ~/Pictures/Wallpapers/vaporwave1.png
 exec --no-startup-id compton --config ~/.config/compton.conf -b
 exec --no-startup-id xss-lock -- i3lock -e -i ~/Pictures/Wallpapers/vaporwave3.png
 exec --no-startup-id insync start
@@ -15,7 +16,7 @@ exec --no-startup-id nm-applet
 exec --no-startup-id blueberry-tray
 exec --no-startup-id redshift -l 42.6:-71.3
 exec --no-startup-id libinput-gestures-setup start
-exec --no-startup-id ibus-daemon
+exec --no-startup-id ibus-daemon -d
 exec_always --no-startup-id xinput set-prop "TPPS/2 Elan TrackPoint" "Device Enabled" 0
 exec_always xset b off
 
@@ -25,28 +26,30 @@ for_window [window_role="gimp-toolbox"] floating disable; move right; resize gro
 #for_window [class="[.]*"] floating enable
 
 # applications
-bindsym $mod+Return exec urxvt
+bindsym $mod+Return exec alacritty
 bindsym $mod+c exec firefox
-bindsym $mod+g exec gedit
+bindsym $mod+g exec subl3 
 bindsym $mod+q kill
 bindsym $mod+j exec intellij-idea-ultimate-edition
 bindsym $mod+Shift+c exec clion
 bindsym $mod+n exec caja
 bindsym $mod+d exec dmenu_run
-bindsym $mod+Shift+n exec urxvt -e ncmpcpp
+bindsym $mod+Shift+n exec $term -e ncmpcpp
 bindsym $mod+x exec tick
+bindsym $mod+comma exec $term -e yay -Syu
+bindsym $mod+period exec $term -e python
 
 # volume/brightness
-bindsym 0xffc0 exec pactl set-sink-volume @DEFAULT_SINK@ '+4%'
-bindsym 0xffbf exec pactl set-sink-volume @DEFAULT_SINK@ '-4%'
+bindsym 0xffc0 exec pactl set-sink-volume @DEFAULT_SINK@ '+8%'
+bindsym 0xffbf exec pactl set-sink-volume @DEFAULT_SINK@ '-8%'
 bindsym 0xffbe exec pactl set-sink-mute @DEFAULT_SINK@ toggle;
 bindsym 0xffc1 exec pactl set-source-mute @DEFAULT_SOURCE@ toggle;
 bindsym 0xffc2 exec xbacklight -dec 9
 bindsym 0xffc3 exec xbacklight -inc 9
 
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ '-4%'
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ '+4%'
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ '-8%'
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ '+8%'
 bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle;
 bindsym XF86MonBrightnessDown exec xbacklight -dec 9
 bindsym XF86MonBrightnessUp exec xbacklight -inc 9
@@ -84,12 +87,12 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split
-bindsym $mod+h split h
+bindsym $mod+b split h
 bindsym $mod+v split v
 
 # fullscreen
 bindsym $mod+f fullscreen toggle
-bindsym $mod+b floating toggle
+bindsym $mod+Shift+b floating toggle
 
 # gaps
 bindsym $mod+a gaps inner current plus 5
