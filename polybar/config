@@ -173,13 +173,13 @@ ramp-signal-black = ${colors.trans}
 type = internal/date
 interval = 1
 
-date = %E %F:%G %H
+date = %B %d
 date-alt = %B %d
 
 time = %H:%M
 time-alt = %H:%M
 
-useplancktime = true
+#useplancktime = true
 
 format-prefix = 
 format-prefix-black = ${colors.trans}
