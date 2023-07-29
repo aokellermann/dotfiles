@@ -1,0 +1,7 @@
+[init]
+	defaultBranch = master
+[user]
+	email = aokellermann@gmail.com
+	name = Antony Kellermann
+[push]
+	autoSetupRemote = true
