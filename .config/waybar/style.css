@@ -1,8 +1,10 @@
+@define-color pink #F272B8;
+
 * {
     /* `otf-font-awesome` is required to be installed for icons */
     font-family: DejaVu, FontAwesome, sans-serif;
     font-size: 13px;
-    color: #F272B8;
+    color: @pink;
 }
 
 window#waybar {
@@ -20,11 +22,11 @@ button {
 
 /* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
 button:hover {
-    box-shadow: inset 0 -3px #F272B8;
+    box-shadow: inset 0 -3px @pink;
 }
 
 #workspaces button.focused {
-    box-shadow: inset 0 -3px #F272B8;
+    box-shadow: inset 0 -3px @pink;
 }
 
 #workspaces button {
