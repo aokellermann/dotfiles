@@ -1,0 +1,204 @@
+# super
+set $mod Mod4
+
+set $left h
+set $down j
+set $up k
+set $right l
+
+# terminal
+set $term kitty
+
+# launcher
+set $menu bemenu-run --fn $uifont -b -p "▶" --tf "$prompt" --hf "$highlight" --sf "$highlight" --scf "$highlight" | xargs swaymsg exec
+
+# display
+output * bg ~/Pictures/wallpapers/cityscape_synthwave_moon_buildings_4k_hd_vaporwave.jpg fill
+
+set $mon0 'SDC 0x4193 Unknown'
+set $mon1 'AOC 2367 AJMG79A000532'
+set $mon2 'AOC 2367 AJMG79A000521'
+
+output $mon0 position 1080,1080 bg ~/Pictures/wallpapers/cityscape_synthwave_moon_buildings_4k_hd_vaporwave.jpg fill
+output $mon1 position 0000,0000 transform 270
+output $mon2 position 1080,0000
+
+# theme
+
+set $gnome-schema org.gnome.desktop.interface
+
+exec_always {
+    gsettings set $gnome-schema gtk-theme 'Arc-Dark'
+    gsettings set $gnome-schema icon-theme 'Arc'
+}
+
+# blue light filter
+
+exec gammastep -l 42.6:-71.3
+
+# kill borders
+default_border none
+default_floating_border none
+
+# screen lock
+set $lock swaylock-corrupter --clock --indicator --timestr "%I:%M"
+
+exec swayidle -w \
+	timeout 900 '$lock' \
+	timeout 1200 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+	before-sleep '$lock'
+
+
+# trackpad
+input "1739:52914:SYNA8017:00_06CB:CEB2_Touchpad" {
+       dwt enabled
+       tap enabled
+       natural_scroll disabled
+       middle_emulation enabled
+       scroll_factor 2
+}
+
+# reload sway
+bindsym $mod+Shift+r reload
+
+# exit sway
+bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+# shells
+bindsym $mod+Return exec $term
+bindsym $mod+Period exec $term -e python
+
+# Kill focused window
+bindsym $mod+q kill
+
+# launcher
+bindsym $mod+d exec $menu
+
+# lock screen
+bindsym $mod+l exec $lock
+
+# web browser
+bindsym $mod+c exec firefox
+
+# file browser
+bindsym $mod+n exec caja
+
+# text editor
+bindsym $mod+g exec code
+
+# electron apps
+# todo: globally apply wayland flags
+bindsym $mod+k exec notion-app-nativefier --enable-features=UseOzonePlatform --ozone-platform=wayland
+bindsym $mod+Shift+k exec discord --enable-features=UseOzonePlatform --ozone-platform=wayland
+
+# screenshot
+bindsym Control+Print exec grimshot copy active
+bindsym Control+Shift+Print exec grimshot copy area
+bindsym Control+Shift+$mod+Print exec grimshot copy window 
+
+# sound
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# music
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+# brightness
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
+
+# other
+bindsym XF86Search exec $menu
+
+# switch workspace
+bindsym $mod+1 exec sway_win_extra workspaces 1
+bindsym $mod+2 exec sway_win_extra workspaces 2
+bindsym $mod+3 exec sway_win_extra workspaces 3
+bindsym $mod+4 exec sway_win_extra workspaces 4
+bindsym $mod+5 exec sway_win_extra workspaces 5
+bindsym $mod+6 exec sway_win_extra workspaces 6
+bindsym $mod+7 exec sway_win_extra workspaces 7
+bindsym $mod+8 exec sway_win_extra workspaces 8
+bindsym $mod+9 exec sway_win_extra workspaces 9
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move container to different workspace
+bindsym $mod+Alt+1 exec sway_win_extra move container to 1
+bindsym $mod+Alt+2 exec sway_win_extra move container to 2
+bindsym $mod+Alt+3 exec sway_win_extra move container to 3
+bindsym $mod+Alt+4 exec sway_win_extra move container to 4
+bindsym $mod+Alt+5 exec sway_win_extra move container to 5
+bindsym $mod+Alt+6 exec sway_win_extra move container to 6
+bindsym $mod+Alt+7 exec sway_win_extra move container to 7
+bindsym $mod+Alt+8 exec sway_win_extra move container to 8
+bindsym $mod+Alt+9 exec sway_win_extra move container to 9
+
+# move container to different output
+bindsym $mod+Control+1 move container to output $mon0
+bindsym $mod+Control+2 move container to output $mon1
+bindsym $mod+Control+3 move container to output $mon2
+
+# move container
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split layout
+bindsym $mod+h splith
+bindsym $mod+v splitv
+
+# switch layout style
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# fullscreen
+bindsym $mod+f fullscreen
+
+# toggle floating
+bindsym $mod+b floating toggle
+
+# toggle focus
+bindsym $mod+space focus mode_toggle
+
+# focus parent
+bindsym $mod+a focus parent
+
+# scratchpad
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# resize
+floating_modifier $mod normal
+
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# bar
+bar {
+    swaybar_command waybar
+}
+
+include /etc/sway/config.d/*
