@@ -1,0 +1,61 @@
+* {
+    /* `otf-font-awesome` is required to be installed for icons */
+    font-family: DejaVu, FontAwesome, sans-serif;
+    font-size: 13px;
+    color: #F272B8;
+}
+
+window#waybar {
+    /* make transparent */
+    background-color: rgba(0, 0, 0, 0);
+}
+
+button {
+    /* Use box-shadow instead of border so the text isn't offset */
+    box-shadow: inset 0 -3px transparent;
+    /* Avoid rounded borders under each button name */
+    border: none;
+    border-radius: 0;
+}
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+button:hover {
+    box-shadow: inset 0 -3px #F272B8;
+}
+
+#workspaces button.focused {
+    box-shadow: inset 0 -3px #F272B8;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#temperature,
+#network,
+#pulseaudio,
+#tray,
+#mode,
+#scratchpad {
+    padding: 0 10px;
+}
+
+#window,
+#workspaces {
+    margin: 0 4px;
+}
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 0;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #workspaces {
+    margin-right: 0;
+}
