@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# opens google given arguments
+
+if [ $# -eq 0 ];
+then
+    firefox "https://google.com"
+else
+    firefox --search "$(echo $@)"
+fi
