@@ -1,0 +1,9 @@
+@-moz-document 
+url("about:blank"),
+url("about:home"),
+url("about:newtab"),
+url("about:config"){
+    body {
+        background: #383c4a !important;
+    }
+}
