@@ -56,6 +56,7 @@ alias gc='git commit -m'
 alias gch='git checkout'
 alias gl='git log'
 alias ga='git add -A'
+alias gd='git diff'
 
 # check filesystem usage
 alias sdu='du -csh ./* | sort -h'
