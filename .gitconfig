@@ -5,3 +5,7 @@
 	name = Antony Kellermann
 [push]
 	autoSetupRemote = true
+[core]
+	editor = vim
+[commit]
+	gpgSign = true
