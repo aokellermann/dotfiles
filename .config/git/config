@@ -3,6 +3,7 @@
 [user]
 	email = aokellermann@gmail.com
 	name = Antony Kellermann
+	signingkey = 43E9CBC9026AEF5AE22BCE896C77AEA8CA8258CC
 [push]
 	autoSetupRemote = true
 [core]
