@@ -13,13 +13,15 @@ set $term kitty
 set $menu bemenu-run --fn $uifont -b -p "▶" --tf "$prompt" --hf "$highlight" --sf "$highlight" --scf "$highlight" | xargs swaymsg exec
 
 # display
-output * bg ~/Pictures/wallpapers/cityscape_synthwave_moon_buildings_4k_hd_vaporwave.jpg fill
+set $wallpaper0 ~/images/wallpapers/cityscape_synthwave_moon_buildings_4k_hd_vaporwave.jpg
+
+output * bg $wallpaper0 fill
 
 set $mon0 'SDC 0x4193 Unknown'
 set $mon1 'AOC 2367 AJMG79A000532'
 set $mon2 'AOC 2367 AJMG79A000521'
 
-output $mon0 position 1080,1080 bg ~/Pictures/wallpapers/cityscape_synthwave_moon_buildings_4k_hd_vaporwave.jpg fill
+output $mon0 position 1080,1080 bg $wallpaper0 fill
 output $mon1 position 0000,0000 transform 270
 output $mon2 position 1080,0000
 
@@ -79,6 +81,8 @@ bindsym $mod+l exec $lock
 
 # web browser
 bindsym $mod+c exec firefox
+# kill the stupid sharing popup
+for_window [app_id="firefox" title="Firefox — Sharing Indicator"] kill
 
 # file browser
 bindsym $mod+n exec caja
