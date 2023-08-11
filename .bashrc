@@ -52,7 +52,7 @@ export MON2="AOC 2367 AJMG79A000521"
 
 # git
 alias gs='git status'
-alias gc='git commit -m'
+alias gc='git commit'
 alias gch='git checkout'
 alias gl='git log'
 alias ga='git add -A'
@@ -60,3 +60,9 @@ alias gd='git diff'
 
 # check filesystem usage
 alias sdu='du -csh ./* | sort -h'
+
+# texlive
+MANPATH=$MANPATH:"/opt/texlive/2023/texmf-dist/doc/man"
+INFOPATH=$INFOPATH:"/opt/texlive/2023/texmf-dist/doc/info"
+PATH=$PATH:"/opt/texlive/2023/bin/x86_64-linux"
+
