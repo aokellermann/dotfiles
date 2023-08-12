@@ -204,4 +204,8 @@ bar {
     swaybar_command waybar
 }
 
+
+# authorize gui programs as root
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+
 include /etc/sway/config.d/*
