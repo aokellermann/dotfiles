@@ -134,15 +134,15 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move container to different workspace
-bindsym $mod+Alt+1 exec sway_win_extra move container to 1
-bindsym $mod+Alt+2 exec sway_win_extra move container to 2
-bindsym $mod+Alt+3 exec sway_win_extra move container to 3
-bindsym $mod+Alt+4 exec sway_win_extra move container to 4
-bindsym $mod+Alt+5 exec sway_win_extra move container to 5
-bindsym $mod+Alt+6 exec sway_win_extra move container to 6
-bindsym $mod+Alt+7 exec sway_win_extra move container to 7
-bindsym $mod+Alt+8 exec sway_win_extra move container to 8
-bindsym $mod+Alt+9 exec sway_win_extra move container to 9
+bindsym $mod+Alt+1 exec sway_win_extra move_container_to 1
+bindsym $mod+Alt+2 exec sway_win_extra move_container_to 2
+bindsym $mod+Alt+3 exec sway_win_extra move_container_to 3
+bindsym $mod+Alt+4 exec sway_win_extra move_container_to 4
+bindsym $mod+Alt+5 exec sway_win_extra move_container_to 5
+bindsym $mod+Alt+6 exec sway_win_extra move_container_to 6
+bindsym $mod+Alt+7 exec sway_win_extra move_container_to 7
+bindsym $mod+Alt+8 exec sway_win_extra move_container_to 8
+bindsym $mod+Alt+9 exec sway_win_extra move_container_to 9
 
 # move container to different output
 bindsym $mod+Control+1 move container to output $mon0
@@ -177,8 +177,18 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # scratchpad
-bindsym $mod+Shift+minus move scratchpad
-bindsym $mod+minus scratchpad show
+bindsym $mod+Shift+grave move scratchpad
+bindsym $mod+grave scratchpad show
+
+set $scratchterm scratch_term
+for_window [app_id=$scratchterm] move scratchpad
+for_window [app_id=$scratchterm] scratchpad show
+bindsym $mod+minus exec sway_win_extra scratchpad_show_except $scratchterm && swaymsg [app_id=$scratchterm] scratchpad show || exec $term --class $scratchterm
+
+set $scratchpy scratch_py
+for_window [app_id=$scratchpy] move scratchpad
+for_window [app_id=$scratchpy] scratchpad show
+bindsym $mod+equal exec sway_win_extra scratchpad_show_except $scratchpy && swaymsg [app_id=$scratchpy] scratchpad show || exec $term --class $scratchpy -e python -q
 
 # resize
 floating_modifier $mod normal
