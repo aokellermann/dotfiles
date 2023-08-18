@@ -93,6 +93,7 @@ bindsym $mod+g exec code
 # electron apps
 # todo: globally apply wayland flags
 bindsym $mod+k exec notion-app-nativefier --enable-features=UseOzonePlatform --ozone-platform=wayland
+bindsym $mod+Shift+k exec betterbird
 
 # screenshot
 bindsym Control+Print exec grimshot copy active
