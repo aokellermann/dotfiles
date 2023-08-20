@@ -7,8 +7,8 @@
 HISTCONTROL=ignoreboth
 
 # history size
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=10000
+HISTFILESIZE=20000
 
 # append to bash history file instead of overwriting
 shopt -s histappend
