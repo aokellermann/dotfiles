@@ -10,3 +10,5 @@
 	editor = vim
 [commit]
 	gpgSign = true
+[tag]
+    gpgSign = true
