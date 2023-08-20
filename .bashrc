@@ -17,7 +17,7 @@ shopt -s histappend
 shopt -s checkwinsize
 
 # path
-PATH=$PATH:"~/.local/bin"
+PATH=$PATH:"/home/aokellermann/.local/bin"
 
 # colors
 BLUE="$(tput setaf 4)"
@@ -69,4 +69,4 @@ INFOPATH=$INFOPATH:"/opt/texlive/2023/texmf-dist/doc/info"
 PATH=$PATH:"/opt/texlive/2023/bin/x86_64-linux"
 
 # jetbrains
-PATH=$PATH:"~/.local/share/JetBrains/Toolbox/scripts"
+PATH=$PATH:"/home/aokellermann/.local/share/JetBrains/Toolbox/scripts"
