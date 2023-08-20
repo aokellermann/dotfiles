@@ -182,14 +182,12 @@ bindsym $mod+Shift+grave move scratchpad
 bindsym $mod+grave scratchpad show
 
 set $scratchterm scratch_term
-for_window [app_id=$scratchterm] move scratchpad
-for_window [app_id=$scratchterm] scratchpad show
-bindsym $mod+minus exec sway_win_extra scratchpad_show_except $scratchterm && swaymsg [app_id=$scratchterm] scratchpad show || exec $term --class $scratchterm
+for_window [app_id=$scratchterm] move scratchpad; scratchpad show
+bindsym $mod+semicolon exec sway-scratch show $scratchterm "$term --class $scratchterm"
 
 set $scratchpy scratch_py
-for_window [app_id=$scratchpy] move scratchpad
-for_window [app_id=$scratchpy] scratchpad show
-bindsym $mod+equal exec sway_win_extra scratchpad_show_except $scratchpy && swaymsg [app_id=$scratchpy] scratchpad show || exec $term --class $scratchpy -e python -q
+for_window [app_id=$scratchpy] move scratchpad; scratchpad show
+bindsym $mod+apostrophe exec sway-scratch show $scratchpy "$term --class $scratchpy -e python -q"
 
 # resize
 floating_modifier $mod normal
