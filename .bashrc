@@ -1,4 +1,5 @@
 # return if not interactive
+#
 [[ $- != *i* ]] && return
 
 # don't put duplicate lines in bash history
@@ -66,3 +67,5 @@ MANPATH=$MANPATH:"/opt/texlive/2023/texmf-dist/doc/man"
 INFOPATH=$INFOPATH:"/opt/texlive/2023/texmf-dist/doc/info"
 PATH=$PATH:"/opt/texlive/2023/bin/x86_64-linux"
 
+# jetbrains
+PATH=$PATH:".local/share/JetBrains/Toolbox/scripts"
