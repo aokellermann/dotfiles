@@ -17,7 +17,7 @@ shopt -s histappend
 shopt -s checkwinsize
 
 # path
-PATH=$PATH:.local/bin
+PATH=$PATH:"~/.local/bin"
 
 # colors
 BLUE="$(tput setaf 4)"
@@ -52,6 +52,7 @@ export MON1="AOC 2367 AJMG79A000532"
 export MON2="AOC 2367 AJMG79A000521"
 
 # git
+export GIT_EMPTY_TREE_HASH="$(git hash-object -t tree /dev/null)"
 alias gs='git status'
 alias gc='git commit'
 alias gch='git checkout'
@@ -68,4 +69,4 @@ INFOPATH=$INFOPATH:"/opt/texlive/2023/texmf-dist/doc/info"
 PATH=$PATH:"/opt/texlive/2023/bin/x86_64-linux"
 
 # jetbrains
-PATH=$PATH:".local/share/JetBrains/Toolbox/scripts"
+PATH=$PATH:"~/.local/share/JetBrains/Toolbox/scripts"
