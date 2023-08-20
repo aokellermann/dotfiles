@@ -1,0 +1,10 @@
+#!/usr/bin/sh
+
+for hook in ~/.config/git/hooks/pre-commit.d/*; do
+    sh "$hook"
+    RESULT=$?
+    if [ $RESULT != 0 ]; then
+        echo "pre-commit.d/$hook returned non-zero: $RESULT; aborting commit"
+        exit $RESULT
+    fi
+done

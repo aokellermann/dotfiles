@@ -8,6 +8,7 @@
 	autoSetupRemote = true
 [core]
 	editor = vim
+	hooksPath = /home/aokellermann/.config/git/hooks
 [commit]
 	gpgSign = true
 [tag]
