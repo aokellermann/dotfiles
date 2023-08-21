@@ -1,7 +1,7 @@
 [init]
 	defaultBranch = master
 [user]
-	email = aokellermann@gmail.com
+	email = antony@aokellermann.dev
 	name = Antony Kellermann
 	signingkey = 43E9CBC9026AEF5AE22BCE896C77AEA8CA8258CC
 [push]
@@ -12,4 +12,4 @@
 [commit]
 	gpgSign = true
 [tag]
-    gpgSign = true
+	gpgSign = true
