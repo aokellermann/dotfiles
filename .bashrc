@@ -70,3 +70,7 @@ PATH=$PATH:"/opt/texlive/2023/bin/x86_64-linux"
 
 # jetbrains
 PATH=$PATH:"/home/aokellermann/.local/share/JetBrains/Toolbox/scripts"
+
+# sway
+alias sway-tree='swaymsg -r -t get_tree'
+
