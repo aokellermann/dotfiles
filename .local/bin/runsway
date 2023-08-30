@@ -3,6 +3,13 @@
 export XDG_SESSION_TYPE=wayland
 export XDG_CURRENT_DESKTOP=sway
 
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+set -o allexport
+. "$XDG_CONFIG_HOME/user-dirs.dirs"
+set +o allexport
+
 # https://wiki.archlinux.org/title/wayland#Java
 export _JAVA_AWT_WM_NONREPARENTING=1
 
