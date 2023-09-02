@@ -70,6 +70,8 @@
 
 # Custom commands
 [commands]
+"Clean up Pacman Cache" = "paccache -rk2"
+"Clean up Yay Cache" = "yaycache -rk2"
 #"Python Environment" = "~/dev/.env/bin/pip install -i https://pypi.python.org/simple -U --upgrade-strategy eager jupyter"
 #"Custom command using interactive shell (unix)" = "-i vim_upgrade"
 
