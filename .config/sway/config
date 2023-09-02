@@ -17,7 +17,7 @@ set $wallpaper0 ~/images/wallpapers/cityscape_synthwave_moon_buildings_4k_hd_vap
 
 output * bg $wallpaper0 fill
 
-set $mon0 'SDC 0x4193 Unknown'
+set $mon0 'Samsung Display Corp. 0x4193 Unknown'
 set $mon1 'AOC 2367 AJMG79A000532'
 set $mon2 'AOC 2367 AJMG79A000521'
 
