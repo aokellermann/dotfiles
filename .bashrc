@@ -47,7 +47,7 @@ alias vpnd='nordvpn d'
 source /usr/share/nvm/init-nvm.sh
 
 # sway-win-extra
-export MON0="SDC 0x4193 Unknown"
+export MON0="Samsung Display Corp. 0x4193 Unknown"
 export MON1="AOC 2367 AJMG79A000532"
 export MON2="AOC 2367 AJMG79A000521"
 
