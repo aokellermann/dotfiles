@@ -2,7 +2,7 @@
 
 staged=$(git-staged)
 
-if [[ ${staged[@]} =~ PKGBUILD ]]
+if [[ " ${staged[@]} " =~ " PKGBUILD " ]]
 then
     res=$(namcap PKGBUILD)
     if [ -n "$res" ]

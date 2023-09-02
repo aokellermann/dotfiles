@@ -2,7 +2,7 @@
 
 staged=$(git-staged)
 
-if [[ ${staged[@]} =~ PKGBUILD ]]
+if [[ " ${staged[@]} " =~ " PKGBUILD " ]]
 then
     makepkg --printsrcinfo > .SRCINFO
     git add .SRCINFO
