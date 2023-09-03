@@ -183,11 +183,11 @@ bindsym $mod+grave scratchpad show
 
 set $scratchterm scratch_term
 for_window [app_id=$scratchterm] move scratchpad; scratchpad show
-bindsym $mod+semicolon exec sway-scratch show $scratchterm "$term --class $scratchterm"
+bindsym $mod+semicolon exec sway-scratch show --app-id $scratchterm --exec "$term --class $scratchterm"
 
 set $scratchpy scratch_py
 for_window [app_id=$scratchpy] move scratchpad; scratchpad show
-bindsym $mod+apostrophe exec sway-scratch show $scratchpy "$term --class $scratchpy -e python -q"
+bindsym $mod+apostrophe exec sway-scratch show --app-id $scratchpy --exec "$term --class $scratchpy -e python -q"
 
 # resize
 floating_modifier $mod normal
