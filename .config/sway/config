@@ -68,7 +68,7 @@ bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. 
 
 # shells
 bindsym $mod+Return exec $term
-bindsym $mod+Period exec $term -e python
+bindsym $mod+Shift+Return exec $term -e python -q
 
 # Kill focused window
 bindsym $mod+q kill
@@ -182,12 +182,20 @@ bindsym $mod+Shift+grave move scratchpad
 bindsym $mod+grave scratchpad show
 
 set $scratchterm scratch_term
-for_window [app_id=$scratchterm] move scratchpad; scratchpad show
+for_window [app_id=$scratchterm] move scratchpad, scratchpad show
 bindsym $mod+semicolon exec sway-scratch show --app-id $scratchterm --exec "$term --class $scratchterm"
 
 set $scratchpy scratch_py
-for_window [app_id=$scratchpy] move scratchpad; scratchpad show
+for_window [app_id=$scratchpy] move scratchpad, scratchpad show
 bindsym $mod+apostrophe exec sway-scratch show --app-id $scratchpy --exec "$term --class $scratchpy -e python -q"
+
+set $scratchspotify Spotify
+for_window [class=$scratchspotify] move scratchpad, scratchpad show
+bindsym $mod+comma exec sway-scratch show --class $scratchspotify --exec "spotify --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
+
+set $scratchyoutube youtube
+for_window [app_id=$scratchyoutube] move scratchpad, scratchpad show
+bindsym $mod+period exec sway-scratch show --app-id $scratchyoutube --exec "firefox --new-instance --name $scratchyoutube -P youtube https://youtube.com"
 
 # resize
 floating_modifier $mod normal
