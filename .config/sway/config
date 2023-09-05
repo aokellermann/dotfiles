@@ -178,24 +178,26 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # scratchpad
-bindsym $mod+Shift+grave move scratchpad
-bindsym $mod+grave scratchpad show
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
 
 set $scratchterm scratch_term
-for_window [app_id=$scratchterm] move scratchpad, scratchpad show
-bindsym $mod+semicolon exec sway-scratch show --app-id $scratchterm --exec "$term --class $scratchterm"
+for_window [app_id=$scratchterm] move scratchpad, scratchpad show, resize set 80 ppt 80 ppt
+bindsym $mod+semicolon exec /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchterm --resize "set 90 ppt 90 ppt" --exec "$term --class $scratchterm"
 
 set $scratchpy scratch_py
-for_window [app_id=$scratchpy] move scratchpad, scratchpad show
-bindsym $mod+apostrophe exec sway-scratch show --app-id $scratchpy --exec "$term --class $scratchpy -e python -q"
+for_window [app_id=$scratchpy] move scratchpad, scratchpad show, resize set 80 ppt 80 ppt
+bindsym $mod+apostrophe exec /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchpy --resize "set 90 ppt 90 ppt" --exec "$term --class $scratchpy -e python -q"
 
 set $scratchspotify Spotify
-for_window [class=$scratchspotify] move scratchpad, scratchpad show
-bindsym $mod+comma exec sway-scratch show --class $scratchspotify --exec "spotify --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
+for_window [class=$scratchspotify] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
+bindsym $mod+comma exec  /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --class $scratchspotify --resize "set 90 ppt 90 ppt" --exec "spotify --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
 
 set $scratchyoutube youtube
-for_window [app_id=$scratchyoutube] move scratchpad, scratchpad show
-bindsym $mod+period exec sway-scratch show --app-id $scratchyoutube --exec "firefox --new-instance --name $scratchyoutube -P youtube https://youtube.com"
+for_window [app_id=$scratchyoutube] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
+bindsym $mod+period exec /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchyoutube --resize "set 90 ppt 90 ppt" --exec "firefox --new-instance --name $scratchyoutube -P youtube https://youtube.com"
+
+bindsym $mod+Shift+period exec swaymsg [app_id=$scratchterm] scratchpad show || $term --class $scratchterm && swaymsg [app_id=$scratchterm] resize set 80 ppt 80 ppt
 
 # resize
 floating_modifier $mod normal
