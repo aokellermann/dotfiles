@@ -38,9 +38,11 @@ exec_always {
 
 exec gammastep -l 42.6:-71.3
 
-# kill borders
+# borders
 default_border none
 default_floating_border none
+client.focused #F272B8FF #00000000 #F272B8
+client.unfocused #F272B860 #00000000 #F272B8
 
 # screen lock
 set $lock swaylock-corrupter --clock --indicator --timestr "%I:%M"
