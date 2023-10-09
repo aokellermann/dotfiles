@@ -203,8 +203,6 @@ set $scratchyoutube youtube
 for_window [app_id=$scratchyoutube] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+period exec /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchyoutube --resize "set 90 ppt 90 ppt" --exec "firefox --new-instance --name $scratchyoutube -P youtube https://youtube.com"
 
-bindsym $mod+Shift+period exec swaymsg [app_id=$scratchterm] scratchpad show || $term --class $scratchterm && swaymsg [app_id=$scratchterm] resize set 80 ppt 80 ppt
-
 # resize
 floating_modifier $mod normal
 
