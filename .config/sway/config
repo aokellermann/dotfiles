@@ -62,6 +62,15 @@ input "1739:52914:SYNA8017:00_06CB:CEB2_Touchpad" {
        scroll_factor 2
 }
 
+
+
+
+input "6127:24814:Lenovo_TrackPoint_Keyboard_II" {
+    pointer_accel 1
+    accel_profile flat
+}
+
+
 # reload sway
 bindsym $mod+Shift+r reload
 
