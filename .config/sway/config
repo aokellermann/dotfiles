@@ -62,7 +62,10 @@ input "1739:52914:SYNA8017:00_06CB:CEB2_Touchpad" {
        scroll_factor 2
 }
 
-
+input "2:10:TPPS/2_Elan_TrackPoint" {
+    pointer_accel 0.75
+    accel_profile flat
+}
 
 
 input "6127:24814:Lenovo_TrackPoint_Keyboard_II" {
