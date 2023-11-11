@@ -8,3 +8,8 @@ browser[type=content-primary],
 browser[type=content] > html {
     background: var(--in-content-page-background) !important
 }
+
+/* disable the bottom left popup url when fullscreen */
+#statuspanel[type="overLink"][sizemode="fullscreen"] {
+    opacity: 0 !important;
+}
