@@ -192,8 +192,8 @@ bindsym $mod+b floating toggle
 # toggle focus
 bindsym $mod+space focus mode_toggle
 
-# focus parent
-bindsym $mod+a focus parent
+# sticky floating windows
+bindsym $mod+a sticky toggle
 
 # scratchpad
 bindsym $mod+Shift+minus move scratchpad
