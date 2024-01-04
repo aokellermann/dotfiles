@@ -13,3 +13,5 @@
 	gpgSign = true
 [tag]
 	gpgSign = true
+[safe]
+	directory = /opt/flutter
