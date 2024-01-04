@@ -18,6 +18,7 @@ shopt -s checkwinsize
 
 # path
 PATH=$PATH:"/home/aokellermann/.local/bin"
+PATH=$PATH:"/home/aokellermann/.dotnet/tools"
 
 # colors
 BLUE="$(tput setaf 4)"
@@ -48,8 +49,9 @@ source /usr/share/nvm/init-nvm.sh
 
 # sway-win-extra
 export MON0="Samsung Display Corp. 0x4193 Unknown"
-export MON1="AOC 2367 AJMG79A000532"
-export MON2="AOC 2367 AJMG79A000521"
+export MON1="Dell Inc. DELL S2722QC DLXCMD3"
+# MON1="AOC 2367 AJMG79A000532"
+# MON2="AOC 2367 AJMG79A000521"
 
 # git
 export GIT_EMPTY_TREE_HASH="$(git hash-object -t tree /dev/null)"
@@ -59,6 +61,7 @@ alias gch='git checkout'
 alias gl='git log'
 alias ga='git add -A'
 alias gd='git diff'
+alias gf='git fetch --all'
 
 # check filesystem usage
 alias sdu='du -csh ./* | sort -h'
@@ -76,3 +79,6 @@ alias sway-tree='swaymsg -r -t get_tree'
 
 # compile latex
 alias ltpdf='latexmk -output-format=pdf -output-directory=out -pvc'
+
+# needed by some tools like flutter
+export CHROME_EXECUTABLE=/bin/google-chrome-stable
