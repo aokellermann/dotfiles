@@ -49,9 +49,8 @@ source /usr/share/nvm/init-nvm.sh
 
 # sway-win-extra
 export MON0="Samsung Display Corp. 0x4193 Unknown"
-export MON1="Dell Inc. DELL S2722QC DLXCMD3"
-# MON1="AOC 2367 AJMG79A000532"
-# MON2="AOC 2367 AJMG79A000521"
+export MON1="Dell Inc. DELL S2722QC GRLCMD3"
+export MON2="Dell Inc. DELL S2722QC DLXCMD3"
 
 # git
 export GIT_EMPTY_TREE_HASH="$(git hash-object -t tree /dev/null)"
@@ -82,3 +81,6 @@ alias ltpdf='latexmk -output-format=pdf -output-directory=out -pvc'
 
 # needed by some tools like flutter
 export CHROME_EXECUTABLE=/bin/google-chrome-stable
+
+# kill tray chat apps
+alias kall='killall slack Discord WhatsApp'
