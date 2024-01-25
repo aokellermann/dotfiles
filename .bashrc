@@ -47,11 +47,6 @@ alias vpnd='nordvpn d'
 # nvm
 source /usr/share/nvm/init-nvm.sh
 
-# sway-win-extra
-export MON0="Samsung Display Corp. 0x4193 Unknown"
-export MON1="Dell Inc. DELL S2722QC GRLCMD3"
-export MON2="Dell Inc. DELL S2722QC DLXCMD3"
-
 # git
 export GIT_EMPTY_TREE_HASH="$(git hash-object -t tree /dev/null)"
 alias gs='git status'
