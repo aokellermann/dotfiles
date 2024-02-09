@@ -12,7 +12,7 @@ profile Desktop {
 
 profile Projector {
 	output "Samsung Display Corp. 0x4193 Unknown" position 0000,0000
-	output "BNQ BenQ PJ 0x0000043E" position 0000,1080
+	output "BNQ BenQ PJ 0x0000043E" position 0000,900
 
 	exec swaymsg workspace 1, move workspace to output '"Samsung Display Corp. 0x4193 Unknown"'
 	exec swaymsg workspace 2, move workspace to output '"BNQ BenQ PJ 0x0000043E"'
