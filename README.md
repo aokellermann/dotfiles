@@ -11,8 +11,8 @@ Sway should be started from TTY with `runsway`, which will add some helpful envi
 ### Firefox
 
 1. Install `firefox-user-autoconfig` from AUR.
-2. Go to about:profiles and under Profile:default, click on Open Directory next to Root Directory.
-3. Open a terminal at that location and run the following: `ln -s ../chrome
+2. Go to `about:profiles` and under `Profile:default`, click on Open Directory next to Root Directory.
+3. Open a terminal at that location and run the following: `ln -s ../chrome`
 
 ## Credits
 
