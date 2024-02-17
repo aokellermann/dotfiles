@@ -78,4 +78,4 @@ alias ltpdf='latexmk -output-format=pdf -output-directory=out -pvc'
 export CHROME_EXECUTABLE=/bin/google-chrome-stable
 
 # kill tray chat apps
-alias kall='killall slack Discord WhatsApp'
+alias kall='killall slack Discord WhatsApp telegram-desktop'
