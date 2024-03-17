@@ -7,7 +7,7 @@ profile Desktop {
 	exec swaymsg workspace 2, move workspace to output '"Dell Inc. DELL S2722QC GRLCMD3"', output "'Dell Inc. DELL S2722QC GRLCMD3'" bg ~/images/wallpapers/michelangelo_vaporwave_portrait.jpg fill
 	exec swaymsg workspace 3, move workspace to output '"Dell Inc. DELL S2722QC DLXCMD3"', output "'Dell Inc. DELL S2722QC DLXCMD3'" bg ~/images/wallpapers/michelangelo_vaporwave_4k.jpg fill
 
-	exec printf "Samsung Display Corp. 0x4193 Unknown\nDell Inc. DELL S2722QC GRLCMD3\nDell Inc. DELL S2722QC DLXCMD3" > ~/.config/sway_win_extra
+	exec printf 'Samsung Display Corp. 0x4193 Unknown\nDell Inc. DELL S2722QC GRLCMD3\nDell Inc. DELL S2722QC DLXCMD3' > ~/.config/sway_win_extra
 }
 
 profile Projector {
@@ -17,5 +17,5 @@ profile Projector {
 	exec swaymsg workspace 1, move workspace to output '"Samsung Display Corp. 0x4193 Unknown"'
 	exec swaymsg workspace 2, move workspace to output '"BNQ BenQ PJ 0x0000043E"'
 
-	exec printf "Samsung Display Corp. 0x4193 Unknown\nBNQ BenQ PJ 0x0000043E" > ~/.config/sway_win_extra
+	exec printf 'Samsung Display Corp. 0x4193 Unknown\nBNQ BenQ PJ 0x0000043E' > ~/.config/sway_win_extra
 }
