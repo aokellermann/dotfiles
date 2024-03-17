@@ -46,6 +46,7 @@ for_window [class="jetbrains-idea"] title_format "<b>IntelliJ</b>"
 for_window [class="jetbrains-datagrip"] title_format "<b>DataGrip</b>"
 for_window [class="jetbrains-writerside"] title_format "<b>Writerside</b>"
 for_window [class="jetbrains-pycharm"] title_format "<b>PyCharm</b>"
+for_window [class="^whatsapp.*$"] title_format "<b>WhatsApp</b>"
 
 # screen lock
 set $lock swaylock-corrupter --clock --indicator --timestr "%I:%M"
