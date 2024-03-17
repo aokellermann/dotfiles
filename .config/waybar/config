@@ -19,7 +19,7 @@
         "format": "<span style=\"italic\">{}</span>"
     },
     "clock": {
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "tooltip-format": "<tt><big>{calendar}</big></tt>",
         "format-alt": "{:%Y-%m-%d}"
     },
     "tray": {
