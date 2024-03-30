@@ -40,6 +40,10 @@ alias l='ls -CF'
 # PS1
 PS1='\[${BLUE}\][\[${RESET}\]\[$MAGENTA\]\u\[${RESET}\]\[${MAGENTA2}\]@\[${RESET}\]\[${BLUE}\]\h\[${RESET}\] \[${MAGENTA}\]\W\[${RESET}\]\[${BLUE}\]]\[${RESET}\]\[${MAGENTA2}\]\$\[${RESET}\] '
 
+# editors
+export EDITOR=vim
+export VISUAL=vim
+
 # VPN
 alias vpn='nordvpn c United_States'
 alias vpnd='nordvpn d'
