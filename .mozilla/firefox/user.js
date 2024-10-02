@@ -18,3 +18,6 @@ defaultPref("full-screen-api.warning.timeout", 0)
 // Fixes some issues
 defaultPref("security.tls.enable_0rtt_data", false)
 
+//Disable stupid scroll bounce 
+defaultPref("apz.overscroll.enabled", false)
+
