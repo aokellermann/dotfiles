@@ -15,3 +15,5 @@
 	gpgSign = true
 [safe]
 	directory = /opt/flutter
+[credential]
+	helper = store
