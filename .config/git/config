@@ -17,3 +17,5 @@
 	directory = /opt/flutter
 [credential]
 	helper = store
+[advice]
+	addIgnoredFile = false
