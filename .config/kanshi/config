@@ -1,3 +1,11 @@
+profile Laptop {
+	output "Samsung Display Corp. 0x4193 Unknown"
+
+	exec swaymsg workspace 1, move workspace to output '"Samsung Display Corp. 0x4193 Unknown"', output "'eDP-1'" bg ~/images/wallpapers/cityscape_synthwave_moon_buildings_4k_hd_vaporwave.jpg fill
+
+	exec printf 'Samsung Display Corp. 0x4193 Unknown' > ~/.config/sway_win_extra
+}
+
 profile Desktop {
 	output "Samsung Display Corp. 0x4193 Unknown" position 1440,1660
 	output "Dell Inc. DELL S2722QC GRLCMD3" position 0000,0000 scale 1.5 transform 90
