@@ -19,6 +19,9 @@ export MOZ_ENABLE_WAYLAND=1
 # https://wiki.archlinux.org/title/wayland#Qt
 export QT_QPA_PLATFORM=wayland
 
+# https://wiki.archlinux.org/title/Wayland#Environment_variable
+export ELECTRON_OZONE_PLATFORM_HINT=wayland
+
 # https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#Kvantum
 export QT_STYLE_OVERRIDE=kvantum
 
