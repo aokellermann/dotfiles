@@ -60,6 +60,7 @@ alias gl='git log'
 alias ga='git add -A'
 alias gd='git diff'
 alias gf='git fetch --all'
+alias gcp='git cherry-pick'
 
 # check filesystem usage
 alias sdu='du -csh ./* | sort -h'
