@@ -9,7 +9,7 @@
 #assume_yes = true
 
 # Disable specific steps - same options as the command line flag
-disable = ["flutter", "containers"]
+disable = ["flutter", "containers", "poetry"]
 
 # Ignore failures for these steps
 #ignore_failures = ["powershell"]
