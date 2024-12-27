@@ -62,8 +62,13 @@ alias gd='git diff'
 alias gf='git fetch --all'
 alias gcp='git cherry-pick'
 
+# docker
+alias ddv='docker compose down --volumes'
+alias dcu='docker compose up -d'
+alias dcub='dcu --build'
+
 # check filesystem usage
-alias sdu='du -csh ./* | sort -h'
+alias sdu='du -csh $(ls -A) | sort -h'
 
 # texlive
 MANPATH=$MANPATH:"/opt/texlive/2023/texmf-dist/doc/man"
