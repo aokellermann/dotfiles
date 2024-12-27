@@ -48,6 +48,10 @@ for_window [class="jetbrains-writerside"] title_format "<b>Writerside</b>"
 for_window [class="jetbrains-pycharm"] title_format "<b>PyCharm</b>"
 for_window [class="^whatsapp.*$"] title_format "<b>WhatsApp</b>"
 
+# floating windows
+for_window [app_id="Bitwarden"] floating enable
+for_window [title="Extension: (Bitwarden Password Manager) - Bitwarden — Mozilla Firefox"] floating enable
+
 # screen lock
 set $lock swaylock-corrupter --clock --indicator --timestr "%I:%M"
 
@@ -114,6 +118,7 @@ bindsym $mod+g exec code
 bindsym $mod+k exec notion-app --enable-features=UseOzonePlatform --ozone-platform=wayland
 bindsym $mod+Shift+k exec betterbird
 bindsym $mod+Shift+b exec bananacakepop-beta --enable-features=UseOzonePlatform --ozone-platform=wayland
+bindsym $mod+j exec cursor --enable-features=UseOzonePlatform --ozone-platform=wayland
 
 # screenshot
 bindsym Control+Print exec grimshot copy active
