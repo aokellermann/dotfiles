@@ -50,7 +50,6 @@ for_window [class="^whatsapp.*$"] title_format "<b>WhatsApp</b>"
 
 # floating windows
 for_window [app_id="Bitwarden"] floating enable
-for_window [title="Extension: (Bitwarden Password Manager) - Bitwarden — Mozilla Firefox"] floating enable
 
 # screen lock
 set $lock swaylock-corrupter --clock --indicator --timestr "%I:%M"
@@ -103,9 +102,7 @@ bindsym $mod+d exec $menu
 bindsym $mod+l exec $lock
 
 # web browser
-bindsym $mod+c exec firefox
-# kill the stupid sharing popup
-for_window [app_id="firefox" title="Firefox — Sharing Indicator"] kill
+bindsym $mod+c exec zen-browser
 
 # file browser
 bindsym $mod+n exec caja
@@ -221,10 +218,6 @@ bindsym $mod+apostrophe exec /./home/aokellermann/repos/sway-scratch/target/debu
 set $scratchspotify spotify
 for_window [app_id=$scratchspotify] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+comma exec  /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchspotify --resize "set 90 ppt 90 ppt" --exec "spotify --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
-
-set $scratchyoutube youtube
-for_window [app_id=$scratchyoutube] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+period exec /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchyoutube --resize "set 90 ppt 90 ppt" --exec "firefox --new-instance --name $scratchyoutube -P youtube https://youtube.com"
 
 # resize
 floating_modifier $mod normal
