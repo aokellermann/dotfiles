@@ -30,6 +30,17 @@ echo '{
 }' | sudo tee /etc/docker/daemon.json
 ```
 
+If you want to move data from your old docker location, you can `rsync` it over:
+```sh
+sudo rsync -avxP /var/lib/docker/ /home/docker
+rm -rf /var/lib/docker/*
+```
+
+Clean up old directory:
+```sh
+rm -rf /var/lib/docker/*
+```
+
 ## Credits
 
 Other people's helpful dotfiles:
