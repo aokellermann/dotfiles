@@ -66,6 +66,7 @@ alias gcp='git cherry-pick'
 alias ddv='docker compose down --volumes'
 alias dcu='docker compose up -d'
 alias dcub='dcu --build'
+alias dimg='docker history --no-trunc $1 | tac | tr -s " " | cut -d " " -f 5- | sed "s,^/bin/sh -c #(nop) ,,g" | sed "s,^/bin/sh -c,RUN,g" | sed "s, && ,\n  & ,g" | sed "s,\s*[0-9]*[\.]*[0-9]*\s*[kMG]*B\s*$,,g" | head -n -1'
 
 # check filesystem usage
 alias sdu='du -csh $(ls -A) | sort -h'
@@ -89,3 +90,20 @@ export CHROME_EXECUTABLE=/bin/google-chrome-stable
 
 # kill tray chat apps
 alias kall='killall slack Discord WhatsApp telegram-desktop'
+
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/usr/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/usr/etc/profile.d/conda.sh" ]; then
+        . "/usr/etc/profile.d/conda.sh"
+    else
+        export PATH="/usr/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
