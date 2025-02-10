@@ -102,7 +102,7 @@ bindsym $mod+d exec $menu
 bindsym $mod+l exec $lock
 
 # web browser
-bindsym $mod+c exec zen-browser
+bindsym $mod+c exec firefox
 
 # file browser
 bindsym $mod+n exec caja
