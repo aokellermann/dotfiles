@@ -80,8 +80,6 @@ input "6127:24814:Lenovo_TrackPoint_Keyboard_II" {
     accel_profile flat
 }
 
-exec blueman-applet
-
 # reload sway
 bindsym $mod+Shift+r reload
 
