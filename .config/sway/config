@@ -19,6 +19,9 @@ set $menu bemenu-run --fn $uifont -b -p "▶" --tf "$prompt" --hf "$highlight" -
 
 exec_always kanshi
 
+# notifications
+exec mako
+
 # insync
 exec insync start
 
