@@ -19,6 +19,9 @@ set $menu bemenu-run --fn $uifont -b -p "▶" --tf "$prompt" --hf "$highlight" -
 
 exec_always kanshi
 
+# insync
+exec insync start
+
 # theme
 
 set $gnome-schema org.gnome.desktop.interface
@@ -216,6 +219,10 @@ bindsym $mod+apostrophe exec /./home/aokellermann/repos/sway-scratch/target/debu
 set $scratchspotify spotify
 for_window [app_id=$scratchspotify] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+comma exec  /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchspotify --resize "set 90 ppt 90 ppt" --exec "spotify --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
+
+set $scratchferdium ferdium 
+for_window [app_id=$scratchferdium] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
+bindsym $mod+period exec  /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchferdium --resize "set 90 ppt 90 ppt" --exec "ferdium --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
 
 # resize
 floating_modifier $mod normal
