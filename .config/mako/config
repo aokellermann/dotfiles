@@ -1,0 +1,8 @@
+default-timeout=5000
+background-color=#383c4ad0
+text-color=#F272B8
+border-color=#F272B8
+
+[mode=do-not-disturb]
+invisible=1 
+
