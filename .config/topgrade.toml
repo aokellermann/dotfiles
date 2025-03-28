@@ -70,6 +70,7 @@ disable = ["flutter", "containers", "poetry"]
 
 # Custom commands
 [commands]
+"Upgrade Nitro" = "upgrade-nitro.sh"
 "Clean up Pacman Cache" = "paccache -rk2"
 "Clean up Yay Cache" = "yaycache -rk2"
 #"Python Environment" = "~/dev/.env/bin/pip install -i https://pypi.python.org/simple -U --upgrade-strategy eager jupyter"
