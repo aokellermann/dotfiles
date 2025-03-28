@@ -69,7 +69,7 @@ alias dcub='dcu --build'
 alias dimg='docker history --no-trunc $1 | tac | tr -s " " | cut -d " " -f 5- | sed "s,^/bin/sh -c #(nop) ,,g" | sed "s,^/bin/sh -c,RUN,g" | sed "s, && ,\n  & ,g" | sed "s,\s*[0-9]*[\.]*[0-9]*\s*[kMG]*B\s*$,,g" | head -n -1'
 
 # check filesystem usage
-alias sdu='du -csh $(ls -A) | sort -h'
+alias sdu='du -csh $(find . -maxdepth 1 -mindepth 1) | sort -h'
 
 # texlive
 MANPATH=$MANPATH:"/opt/texlive/2023/texmf-dist/doc/man"
@@ -91,6 +91,8 @@ export CHROME_EXECUTABLE=/bin/google-chrome-stable
 # kill tray chat apps
 alias kall='killall slack Discord WhatsApp telegram-desktop'
 
+# .env
+alias eenv='f() { if [ -z "$1" ]; then FILE=".env"; else FILE="$1"; fi; if [ -f "$FILE" ]; then set -a; source "$FILE"; set +a; echo "Variables from $FILE exported"; else echo "File $FILE not found"; fi; }; f'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -107,3 +109,5 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - bash)"
