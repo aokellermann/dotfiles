@@ -83,7 +83,7 @@ PATH=$PATH:"/home/aokellermann/.local/share/JetBrains/Toolbox/scripts"
 alias sway-tree='swaymsg -r -t get_tree'
 
 # compile latex
-alias ltpdf='latexmk -output-format=pdf -output-directory=out -pvc'
+alias ltpdf='latexmk -output-format=pdf -output-directory=out -pvc -interaction=nonstopmode'
 
 # needed by some tools like flutter
 export CHROME_EXECUTABLE=/bin/google-chrome-stable
