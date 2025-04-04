@@ -17,8 +17,8 @@ shopt -s histappend
 shopt -s checkwinsize
 
 # path
-PATH=$PATH:"/home/aokellermann/.local/bin"
-PATH=$PATH:"/home/aokellermann/.dotnet/tools"
+PATH=$PATH:"~/.local/bin"
+PATH=$PATH:"~/.dotnet/tools"
 
 # colors
 BLUE="$(tput setaf 4)"
@@ -93,21 +93,6 @@ alias kall='killall slack Discord WhatsApp telegram-desktop'
 
 # .env
 alias eenv='f() { if [ -z "$1" ]; then FILE=".env"; else FILE="$1"; fi; if [ -f "$FILE" ]; then set -a; source "$FILE"; set +a; echo "Variables from $FILE exported"; else echo "File $FILE not found"; fi; }; f'
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/usr/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/usr/etc/profile.d/conda.sh" ]; then
-        . "/usr/etc/profile.d/conda.sh"
-    else
-        export PATH="/usr/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init - bash)"
