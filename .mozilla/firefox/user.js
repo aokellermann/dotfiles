@@ -1,6 +1,9 @@
 // Don't download pdfs by default
 defaultPref("browser.download.open_pdf_attachments_inline", true)
 
+// dark theme
+defaultPref("systemUsesDarkTheme", true)
+
 // Allow custom theming
 defaultPref("toolkit.legacyUserProfileCustomizations.stylesheets", true)
 
