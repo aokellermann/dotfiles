@@ -1,9 +1,9 @@
 profile Laptop {
-	output "Samsung Display Corp. 0x4193 Unknown"
+	output "Samsung Display Corp. 0x419F Unknown"
 
-	exec swaymsg workspace 1, move workspace to output '"Samsung Display Corp. 0x4193 Unknown"', output "'eDP-1'" bg ~/images/wallpapers/cityscape_synthwave_moon_buildings_4k_hd_vaporwave.jpg fill
+	exec swaymsg workspace 1, move workspace to output '"Samsung Display Corp. 0x419F Unknown"', output "'eDP-1'" bg ~/images/wallpapers/cityscape_synthwave_moon_buildings_4k_hd_vaporwave.jpg fill
 
-	exec printf 'Samsung Display Corp. 0x4193 Unknown' > ~/.config/sway_win_extra
+	exec printf 'Samsung Display Corp. 0x419F Unknown' > ~/.config/sway_win_extra
 }
 
 profile Desktop {
