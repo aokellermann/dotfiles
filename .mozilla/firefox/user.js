@@ -1,7 +1,7 @@
 // Don't download pdfs by default
 defaultPref("browser.download.open_pdf_attachments_inline", true)
 
-// dark theme
+// Force dark theme
 defaultPref("systemUsesDarkTheme", true)
 
 // Allow custom theming
@@ -23,4 +23,10 @@ defaultPref("security.tls.enable_0rtt_data", false)
 
 //Disable stupid scroll bounce 
 defaultPref("apz.overscroll.enabled", false)
+
+// Disable ctrl+q
+defaultPref("browser.quitShortcut.disabled", true)
+
+// Disable pocket
+defaultPref("extensions.pocket.enabled", false)
 
