@@ -75,6 +75,14 @@ input "1739:52914:SYNA8017:00_06CB:CEB2_Touchpad" {
        scroll_factor 2
 }
 
+input "1739:53160:SYNA802E:00_06CB:CFA8_Touchpad" {
+       dwt enabled
+       tap enabled
+       natural_scroll disabled
+       middle_emulation enabled
+       scroll_factor 2
+}
+
 input "2:10:TPPS/2_Elan_TrackPoint" {
     pointer_accel 0.75
     accel_profile flat
@@ -123,7 +131,7 @@ bindsym $mod+j exec cursor --enable-features=UseOzonePlatform --ozone-platform=w
 
 # screenshot
 bindsym Control+Print exec grimshot copy active
-bindsym Control+Shift+Print exec grimshot copy area
+bindsym Control+Shift+slash exec grimshot copy area
 bindsym Control+Shift+$mod+Print exec grimshot copy window 
 
 # sound
@@ -143,6 +151,8 @@ bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
 
 # other
 bindsym XF86Search exec $menu
+
+bindsym $mod+Shift+XF86Assistant exec grimshot copy area
 
 # switch workspace
 bindsym $mod+1 exec sway_win_extra workspaces 1
@@ -213,19 +223,19 @@ bindsym $mod+minus scratchpad show
 
 set $scratchterm scratch_term
 for_window [app_id=$scratchterm] move scratchpad, scratchpad show, resize set 80 ppt 80 ppt
-bindsym $mod+semicolon exec /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchterm --resize "set 90 ppt 90 ppt" --exec "$term --class $scratchterm"
+bindsym $mod+semicolon exec sway-scratch show --app-id $scratchterm --resize "set 90 ppt 90 ppt" --exec "$term --class $scratchterm"
 
 set $scratchpy scratch_py
 for_window [app_id=$scratchpy] move scratchpad, scratchpad show, resize set 80 ppt 80 ppt
-bindsym $mod+apostrophe exec /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchpy --resize "set 90 ppt 90 ppt" --exec "$term --class $scratchpy -e python -q"
+bindsym $mod+apostrophe exec sway-scratch show --app-id $scratchpy --resize "set 90 ppt 90 ppt" --exec "$term --class $scratchpy -e python -q"
 
 set $scratchspotify spotify
 for_window [app_id=$scratchspotify] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+comma exec  /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchspotify --resize "set 90 ppt 90 ppt" --exec "spotify --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
+bindsym $mod+comma exec  sway-scratch show --app-id $scratchspotify --resize "set 90 ppt 90 ppt" --exec "spotify --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
 
 set $scratchferdium ferdium 
 for_window [app_id=$scratchferdium] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+period exec  /./home/aokellermann/repos/sway-scratch/target/debug/sway-scratch show --app-id $scratchferdium --resize "set 90 ppt 90 ppt" --exec "ferdium --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
+bindsym $mod+period exec  sway-scratch show --app-id $scratchferdium --resize "set 90 ppt 90 ppt" --exec "ferdium --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
 
 # resize
 floating_modifier $mod normal
