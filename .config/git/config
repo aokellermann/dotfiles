@@ -3,12 +3,11 @@
 [user]
 	email = antony@aokellermann.dev
 	name = Antony Kellermann
-	signingkey = 828F96333A69C10A7F4A86DD5414EF92A26D1FE8
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJqwspE/24qBkRtt2Ojjfoe3O96U02NaNnEXix2wI3tR
 [push]
 	autoSetupRemote = true
 [core]
 	editor = vim
-	hooksPath = /home/aokellermann/.config/git/hooks
 [commit]
 	gpgSign = true
 [tag]
@@ -19,3 +18,5 @@
 	helper = store
 [advice]
 	addIgnoredFile = false
+[gpg]
+	format = ssh
