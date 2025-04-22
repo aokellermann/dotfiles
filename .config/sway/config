@@ -22,6 +22,9 @@ exec_always kanshi
 # notifications
 exec mako
 
+# auth
+exec bitwarden-desktop
+
 # insync
 exec insync start
 
