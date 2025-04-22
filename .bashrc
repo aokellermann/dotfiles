@@ -94,3 +94,5 @@ alias kall='killall slack Discord WhatsApp telegram-desktop'
 # .env
 alias eenv='f() { if [ -z "$1" ]; then FILE=".env"; else FILE="$1"; fi; if [ -f "$FILE" ]; then set -a; source "$FILE"; set +a; echo "Variables from $FILE exported"; else echo "File $FILE not found"; fi; }; f'
 
+# mirrors
+alias rank-mirrors='reflector --protocol https --latest 50 --fastest 8 --age 24 --sort rate --country us --save /etc/pacman.d/mirrorlist'
