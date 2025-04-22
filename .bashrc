@@ -94,5 +94,3 @@ alias kall='killall slack Discord WhatsApp telegram-desktop'
 # .env
 alias eenv='f() { if [ -z "$1" ]; then FILE=".env"; else FILE="$1"; fi; if [ -f "$FILE" ]; then set -a; source "$FILE"; set +a; echo "Variables from $FILE exported"; else echo "File $FILE not found"; fi; }; f'
 
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - bash)"
