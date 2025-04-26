@@ -31,4 +31,7 @@ export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock
 # https://wiki.archlinux.org/title/Go#Install_directory
 export GOPATH=~/.go
 
+# https://docs.sfcompute.com/docs/getting-started#cli-options
+export SF_CLI_DISABLE_AUTO_UPGRADE=1
+
 exec sway
