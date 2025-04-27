@@ -1,0 +1,6 @@
+@theme "/usr/share/rofi/themes/Arc-Dark.rasi"
+configuration {
+  modi: "drun,run,ssh,combi";
+  combi-modi: "drun,run,ssh";
+  ssh-command: "kitty -- kitty +kitten ssh {host}";
+}
