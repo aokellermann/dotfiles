@@ -16,17 +16,19 @@ set $term kitty
 set $menu rofi -show combi
 
 # display
-
 exec_always kanshi
 
 # notifications
 exec mako
 
-# auth
+# auth (includes ssh agent)
 exec bitwarden-desktop
 
 # insync
 exec insync start
+
+# messaging
+exec signal-desktop
 
 # theme
 
@@ -49,13 +51,6 @@ client.unfocused #F272B860 #00000000 #F272B8
 
 # titles
 for_window [shell="xwayland"] title_format "<b>%class</b>"
-for_window [class="jetbrains-rider"] title_format "<b>Rider</b>"
-for_window [class="jetbrains-webstorm"] title_format "<b>Webstorm</b>"
-for_window [class="jetbrains-idea"] title_format "<b>IntelliJ</b>"
-for_window [class="jetbrains-datagrip"] title_format "<b>DataGrip</b>"
-for_window [class="jetbrains-writerside"] title_format "<b>Writerside</b>"
-for_window [class="jetbrains-pycharm"] title_format "<b>PyCharm</b>"
-for_window [class="^whatsapp.*$"] title_format "<b>WhatsApp</b>"
 
 # floating windows
 for_window [app_id="Bitwarden"] floating enable
@@ -70,13 +65,6 @@ exec swayidle -w \
 
 
 # trackpad
-input "1739:52914:SYNA8017:00_06CB:CEB2_Touchpad" {
-       dwt enabled
-       tap enabled
-       natural_scroll disabled
-       middle_emulation enabled
-       scroll_factor 2
-}
 
 input "1739:53160:SYNA802E:00_06CB:CFA8_Touchpad" {
        dwt enabled
@@ -128,8 +116,6 @@ bindsym $mod+g exec code
 # electron apps
 # todo: globally apply wayland flags
 bindsym $mod+k exec notion-app --enable-features=UseOzonePlatform --ozone-platform=wayland
-bindsym $mod+Shift+k exec betterbird
-bindsym $mod+Shift+b exec bananacakepop-beta --enable-features=UseOzonePlatform --ozone-platform=wayland
 bindsym $mod+j exec cursor --enable-features=UseOzonePlatform --ozone-platform=wayland
 
 # screenshot
