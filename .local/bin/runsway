@@ -10,6 +10,10 @@ set -o allexport
 . "$XDG_CONFIG_HOME/user-dirs.dirs"
 set +o allexport
 
+# paging
+export PAGER="bat -p"
+export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
+
 # https://wiki.archlinux.org/title/wayland#Java
 export _JAVA_AWT_WM_NONREPARENTING=1
 
@@ -33,5 +37,8 @@ export GOPATH=~/.go
 
 # https://docs.sfcompute.com/docs/getting-started#cli-options
 export SF_CLI_DISABLE_AUTO_UPGRADE=1
+
+# ranger
+export RANGER_LOAD_DEFAULT_RC=false
 
 exec sway
