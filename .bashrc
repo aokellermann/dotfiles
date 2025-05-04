@@ -72,9 +72,9 @@ alias dimg='docker history --no-trunc $1 | tac | tr -s " " | cut -d " " -f 5- | 
 alias sdu='du -csh $(find . -maxdepth 1 -mindepth 1) | sort -h'
 
 # texlive
-MANPATH=$MANPATH:"/opt/texlive/2023/texmf-dist/doc/man"
-INFOPATH=$INFOPATH:"/opt/texlive/2023/texmf-dist/doc/info"
-PATH=$PATH:"/opt/texlive/2023/bin/x86_64-linux"
+MANPATH=$MANPATH:"/usr/local/texlive/2025/texmf-dist/doc/man"
+INFOPATH=$INFOPATH:"/usr/local/texlive/2025/texmf-dist/doc/info"
+PATH=$PATH:"/usr/local/texlive/2025/bin/x86_64-linux"
 
 # jetbrains
 PATH=$PATH:"/home/aokellermann/.local/share/JetBrains/Toolbox/scripts"
