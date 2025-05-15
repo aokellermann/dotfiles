@@ -224,7 +224,11 @@ bindsym $mod+comma exec  sway-scratch show --app-id $scratchspotify --resize "se
 
 set $scratchferdium ferdium 
 for_window [app_id=$scratchferdium] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+period exec  sway-scratch show --app-id $scratchferdium --resize "set 90 ppt 90 ppt" --exec "ferdium --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
+bindsym $mod+period exec sway-scratch show --app-id $scratchferdium --resize "set 90 ppt 90 ppt" --exec "ferdium --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
+
+set $scratchbeeper BeeperTexts
+for_window [app_id=$scratchbeeper] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
+bindsym $mod+Shift+period exec sway-scratch show --app-id $scratchbeeper --resize "set 90 ppt 90 ppt" --exec "beeper"
 
 # resize
 floating_modifier $mod normal
