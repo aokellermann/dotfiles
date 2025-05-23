@@ -27,9 +27,6 @@ exec bitwarden-desktop
 # insync
 exec insync start
 
-# messaging
-exec signal-desktop
-
 # theme
 
 set $gnome-schema org.gnome.desktop.interface
