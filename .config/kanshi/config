@@ -1,9 +1,6 @@
 profile Laptop {
 	output "Samsung Display Corp. 0x419F Unknown"
-
-	exec swaymsg workspace 1, move workspace to output '"Samsung Display Corp. 0x419F Unknown"', output "'eDP-1'" bg ~/images/wallpapers/cityscape_synthwave_moon_buildings_4k_hd_vaporwave.jpg fill
-
-	exec printf 'Samsung Display Corp. 0x419F Unknown' > ~/.config/sway_win_extra
+	exec sway-wins.sh
 }
 
 profile Desktop {
@@ -18,12 +15,3 @@ profile Desktop {
 	exec printf 'Samsung Display Corp. 0x4193 Unknown\nDell Inc. DELL S2722QC GRLCMD3\nDell Inc. DELL S2722QC DLXCMD3' > ~/.config/sway_win_extra
 }
 
-profile Projector {
-	output "Samsung Display Corp. 0x4193 Unknown" position 0000,0000
-	output "BNQ BenQ PJ 0x0000043E" position 0000,900
-
-	exec swaymsg workspace 1, move workspace to output '"Samsung Display Corp. 0x4193 Unknown"'
-	exec swaymsg workspace 2, move workspace to output '"BNQ BenQ PJ 0x0000043E"'
-
-	exec printf 'Samsung Display Corp. 0x4193 Unknown\nBNQ BenQ PJ 0x0000043E' > ~/.config/sway_win_extra
-}
