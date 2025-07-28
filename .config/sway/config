@@ -27,6 +27,12 @@ exec bitwarden-desktop
 # insync
 exec insync start
 
+# signal
+exec signal-desktop
+
+# ferdium
+exec ferdium
+
 # theme
 
 set $gnome-schema org.gnome.desktop.interface
@@ -217,15 +223,19 @@ bindsym $mod+apostrophe exec sway-scratch show --app-id $scratchpy --resize "set
 
 set $scratchspotify spotify
 for_window [app_id=$scratchspotify] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+comma exec  sway-scratch show --app-id $scratchspotify --resize "set 90 ppt 90 ppt" --exec "spotify --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
+bindsym $mod+comma exec  sway-scratch show --app-id $scratchspotify --resize "set 90 ppt 90 ppt" --exec "spotify"
 
 set $scratchferdium ferdium 
 for_window [app_id=$scratchferdium] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+period exec sway-scratch show --app-id $scratchferdium --resize "set 90 ppt 90 ppt" --exec "ferdium --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto"
+bindsym $mod+period exec sway-scratch show --app-id $scratchferdium --resize "set 90 ppt 90 ppt" --exec "ferdium"
 
 set $scratchbeeper BeeperTexts
 for_window [app_id=$scratchbeeper] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+Shift+period exec sway-scratch show --app-id $scratchbeeper --resize "set 90 ppt 90 ppt" --exec "beeper"
+
+set $scratchsignal signal
+for_window [app_id=$scratchsignal] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
+bindsym $mod+Alt+period exec sway-scratch show --app-id $scratchsignal --resize "set 90 ppt 90 ppt" --exec "signal-desktop"
 
 # resize
 floating_modifier $mod normal
