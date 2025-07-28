@@ -96,3 +96,7 @@ alias eenv='f() { if [ -z "$1" ]; then FILE=".env"; else FILE="$1"; fi; if [ -f 
 
 # mirrors
 alias rank-mirrors='reflector --protocol https --latest 50 --fastest 8 --age 24 --sort rate --country us --save /etc/pacman.d/mirrorlist'
+
+# chrome debugging
+alias chromium-debug='chromium --remote-debugging-port=9222 --no-sandbox --disable-gpu'
+
