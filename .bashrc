@@ -86,7 +86,7 @@ alias sway-tree='swaymsg -r -t get_tree'
 alias ltpdf='latexmk -output-format=pdf -output-directory=out -pvc -interaction=nonstopmode'
 
 # needed by some tools like flutter
-export CHROME_EXECUTABLE=/bin/google-chrome-stable
+export CHROME_EXECUTABLE=/usr/bin/chromium
 
 # kill tray chat apps
 alias kall='killall slack Discord WhatsApp telegram-desktop'
