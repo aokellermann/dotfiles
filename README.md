@@ -21,24 +21,37 @@ Sway should be started from TTY with `runsway`, which will add some helpful envi
 
 ### Docker
 
-I like to store docker data in `/home/docker` so that is not on my root drive:
+I use [containerd image store](https://docs.docker.com/engine/storage/containerd/):
 
 ```sh
 sudo mkdir -p /etc/docker
 echo '{                     
-    "data-root": "/home/docker"
+    "features": {
+        "containerd-snapshotter": true
+    }
 }' | sudo tee /etc/docker/daemon.json
+```
+
+and `/home/containerd` as image store directory:
+
+Set `root = '/home/containerd'` in `/etc/containerd/config.toml` and create a home folder owned by root:
+
+```sh
+sudo mkdir /home/containerd
+sudo chmod 755 /home/containerd
 ```
 
 If you want to move data from your old docker location, you can `rsync` it over:
 ```sh
-sudo rsync -avxP /var/lib/docker/ /home/docker
+sudo rsync -avxP /var/lib/docker/ /home/containerd
 rm -rf /var/lib/docker/*
 ```
 
-Clean up old directory:
-```sh
-rm -rf /var/lib/docker/*
+Additionally, [systemd cgroup setting](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd-systemd) should be configured on cgroup v2 kernels:
+
+```
+[plugins.'io.containerd.cri.v1.runtime'.containerd.runtimes.runc.options]
+    SystemdCgroup = true
 ```
 
 ## Credits
