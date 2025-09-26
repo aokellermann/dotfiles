@@ -28,7 +28,7 @@ exec bitwarden-desktop
 exec insync start
 
 # signal
-exec signal-desktop
+exec signal-desktop --use-tray-icon --enable-features=UseOzonePlatform --ozone-platform=wayland
 
 # ferdium
 exec ferdium
