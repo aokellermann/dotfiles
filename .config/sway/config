@@ -28,7 +28,7 @@ exec bitwarden-desktop
 exec insync start
 
 # signal
-exec signal-desktop --use-tray-icon --enable-features=UseOzonePlatform --ozone-platform=wayland
+exec_always signal-desktop --enable-features=UseOzonePlatform --ozone-platform=wayland
 
 # ferdium
 exec ferdium
@@ -72,6 +72,7 @@ exec swayidle -w \
 input "1739:53160:SYNA802E:00_06CB:CFA8_Touchpad" {
        dwt enabled
        tap enabled
+       drag disabled
        natural_scroll disabled
        middle_emulation enabled
        scroll_factor 2
@@ -235,7 +236,11 @@ bindsym $mod+Shift+period exec sway-scratch show --app-id $scratchbeeper --resiz
 
 set $scratchsignal signal
 for_window [app_id=$scratchsignal] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+Alt+period exec sway-scratch show --app-id $scratchsignal --resize "set 90 ppt 90 ppt" --exec "signal-desktop"
+bindsym $mod+Alt+period exec sway-scratch show --app-id $scratchsignal --resize "set 90 ppt 90 ppt" --exec "signal-desktop --enable-features=UseOzonePlatform --ozone-platform=wayland"
+
+set $scratchslack Slack
+for_window [app_id=$scratchslack] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
+bindsym $mod+Ctrl+period exec sway-scratch show --app-id $scratchslack --resize "set 90 ppt 90 ppt" --exec "slack --enable-features=UseOzonePlatform --ozone-platform=wayland"
 
 # resize
 floating_modifier $mod normal
