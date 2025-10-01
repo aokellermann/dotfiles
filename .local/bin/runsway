@@ -41,4 +41,5 @@ export SF_CLI_DISABLE_AUTO_UPGRADE=1
 # ranger
 export RANGER_LOAD_DEFAULT_RC=false
 
-exec sway
+# lock the session so that if sway crashes, there is no fallback to a unlocked, logged in terminal
+exec sh -c 'sway; vlock -a'
