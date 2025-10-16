@@ -123,9 +123,9 @@ bindsym $mod+k exec notion-app --enable-features=UseOzonePlatform --ozone-platfo
 bindsym $mod+j exec cursor --enable-features=UseOzonePlatform --ozone-platform=wayland
 
 # screenshot
-bindsym Control+Print exec grimshot copy active
+bindsym Control+slash exec grimshot copy active
 bindsym Control+Shift+slash exec grimshot copy area
-bindsym Control+Shift+$mod+Print exec grimshot copy window 
+bindsym Control+Shift+$mod+slash exec grimshot copy output
 
 # sound
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
