@@ -45,8 +45,8 @@ export EDITOR=vim
 export VISUAL=vim
 
 # VPN
-alias vpn='nordvpn c United_States'
-alias vpnd='nordvpn d'
+alias vpn='nordvpn set killswitch on && nordvpn c United_States'
+alias vpnd='nordvpn set killswitch off &&nordvpn d'
 
 # git
 export GIT_EMPTY_TREE_HASH="$(git hash-object -t tree /dev/null)"
