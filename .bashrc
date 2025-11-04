@@ -48,9 +48,6 @@ export VISUAL=vim
 alias vpn='nordvpn c United_States'
 alias vpnd='nordvpn d'
 
-# nvm
-source /usr/share/nvm/init-nvm.sh
-
 # git
 export GIT_EMPTY_TREE_HASH="$(git hash-object -t tree /dev/null)"
 alias gs='git status'
@@ -100,3 +97,11 @@ alias rank-mirrors='reflector --protocol https --latest 50 --fastest 8 --age 24 
 # chrome debugging
 alias chromium-debug='chromium --remote-debugging-port=9222 --no-sandbox --disable-gpu'
 
+
+# pnpm
+export PNPM_HOME="/home/aokellermann/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
