@@ -105,3 +105,6 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# bun
+export PATH="/home/aokellermann/.cache/.bun/bin:$PATH"
