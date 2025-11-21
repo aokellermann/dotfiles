@@ -108,3 +108,6 @@ esac
 
 # bun
 export PATH="/home/aokellermann/.cache/.bun/bin:$PATH"
+
+# haskell
+export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
