@@ -17,6 +17,7 @@ image/png=org.gnome.Loupe.desktop
 text/plain=userapp-kitty-N8WVE3.desktop
 image/jpeg=org.gnome.Loupe.desktop
 image/svg+xml=org.gnome.Loupe.desktop
+x-scheme-handler/postman=Postman.desktop
 
 [Added Associations]
 x-scheme-handler/http=firefox.desktop;
