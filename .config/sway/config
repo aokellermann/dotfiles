@@ -15,9 +15,6 @@ set $term kitty
 # launcher
 set $menu rofi -show combi
 
-# display
-exec_always kanshi
-
 # notifications
 exec mako
 
