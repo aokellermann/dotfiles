@@ -111,3 +111,6 @@ export PATH="/home/aokellermann/.cache/.bun/bin:$PATH"
 
 # haskell
 export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
+
+# bitwarden secret
+export BWS_ACCESS_TOKEN=$(secret-tool lookup service bws account access-token)
