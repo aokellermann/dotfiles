@@ -27,7 +27,7 @@ MAGENTA2="$(tput setaf 13)"
 RESET="$(tput sgr0)"
 
 # use color
-alias ls='ls --color=auto'
+alias ls='ls --color=auto --hyperlink=auto'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
@@ -114,3 +114,6 @@ export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
 
 # bitwarden secret
 export BWS_ACCESS_TOKEN=$(secret-tool lookup service bws account access-token)
+
+# kitten diff
+alias kgd='git difftool --no-symlinks --dir-diff'
