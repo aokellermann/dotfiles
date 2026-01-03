@@ -7,7 +7,7 @@
 [push]
 	autoSetupRemote = true
 [core]
-	editor = vim
+	editor = nvim
 [commit]
 	gpgSign = true
 [tag]
