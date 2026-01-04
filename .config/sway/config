@@ -15,6 +15,9 @@ set $term kitty
 # launcher
 set $menu rofi -show combi
 
+# wayland flags for electron apps
+set $wayland_flags --enable-features=UseOzonePlatform --ozone-platform=wayland
+
 # notifications
 exec mako
 
@@ -25,7 +28,7 @@ exec bitwarden-desktop
 exec insync start
 
 # signal
-exec_always signal-desktop --enable-features=UseOzonePlatform --ozone-platform=wayland
+exec_always signal-desktop $wayland_flags
 
 # ferdium
 exec ferdium
@@ -34,14 +37,14 @@ exec ferdium
 
 set $gnome-schema org.gnome.desktop.interface
 
-exec_always {
+exec {
     gsettings set $gnome-schema gtk-theme 'Arc-Dark'
     gsettings set $gnome-schema icon-theme 'Arc'
 }
 
 # blue light filter
 
-exec gammastep -l 42.6:-71.3
+exec gammastep -l geoclue2
 
 # borders
 default_border none
@@ -116,8 +119,8 @@ bindsym $mod+g exec code
 
 # electron apps
 # todo: globally apply wayland flags
-bindsym $mod+k exec notion-app --enable-features=UseOzonePlatform --ozone-platform=wayland
-bindsym $mod+j exec cursor --enable-features=UseOzonePlatform --ozone-platform=wayland
+bindsym $mod+k exec notion-app $wayland_flags
+bindsym $mod+j exec cursor $wayland_flags
 
 # screenshot
 bindsym $mod+slash exec grimshot copy active
@@ -233,11 +236,11 @@ bindsym $mod+Shift+period exec sway-scratch show --app-id $scratchbeeper --resiz
 
 set $scratchsignal signal
 for_window [app_id=$scratchsignal] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+Alt+period exec sway-scratch show --app-id $scratchsignal --resize "set 90 ppt 90 ppt" --exec "signal-desktop --enable-features=UseOzonePlatform --ozone-platform=wayland"
+bindsym $mod+Alt+period exec sway-scratch show --app-id $scratchsignal --resize "set 90 ppt 90 ppt" --exec "signal-desktop $wayland_flags"
 
 set $scratchslack Slack
 for_window [app_id=$scratchslack] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+Ctrl+period exec sway-scratch show --app-id $scratchslack --resize "set 90 ppt 90 ppt" --exec "slack --enable-features=UseOzonePlatform --ozone-platform=wayland"
+bindsym $mod+Ctrl+period exec sway-scratch show --app-id $scratchslack --resize "set 90 ppt 90 ppt" --exec "slack $wayland_flags"
 
 # resize
 floating_modifier $mod normal

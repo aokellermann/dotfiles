@@ -16,9 +16,8 @@ shopt -s histappend
 # check window size after each command in order to update LINES and COLUMNS
 shopt -s checkwinsize
 
-# path
-PATH=$PATH:"~/.local/bin"
-PATH=$PATH:"~/.dotnet/tools"
+# path - prepend to avoid duplicates on re-source
+PATH="${HOME}/.local/bin:${PATH}"
 
 # colors
 BLUE="$(tput setaf 4)"
@@ -78,16 +77,16 @@ alias dcu='docker compose up -d'
 alias dcub='dcu --build'
 alias dimg='docker history --no-trunc $1 | tac | tr -s " " | cut -d " " -f 5- | sed "s,^/bin/sh -c #(nop) ,,g" | sed "s,^/bin/sh -c,RUN,g" | sed "s, && ,\n  & ,g" | sed "s,\s*[0-9]*[\.]*[0-9]*\s*[kMG]*B\s*$,,g" | head -n -1'
 
-# check filesystem usage
-alias sdu='du -csh $(find . -maxdepth 1 -mindepth 1) | sort -h'
-
-# texlive
-MANPATH=$MANPATH:"/usr/local/texlive/2025/texmf-dist/doc/man"
-INFOPATH=$INFOPATH:"/usr/local/texlive/2025/texmf-dist/doc/info"
-PATH=$PATH:"/usr/local/texlive/2025/bin/x86_64-linux"
-
-# jetbrains
-PATH=$PATH:"/home/aokellermann/.local/share/JetBrains/Toolbox/scripts"
+# texlive (version-agnostic paths)
+for texlive_dir in /usr/local/texlive/*/bin/x86_64-linux; do
+    [ -d "$texlive_dir" ] && PATH="$PATH:$texlive_dir"
+done
+for texlive_man in /usr/local/texlive/*/texmf-dist/doc/man; do
+    [ -d "$texlive_man" ] && MANPATH="$MANPATH:$texlive_man"
+done
+for texlive_info in /usr/local/texlive/*/texmf-dist/doc/info; do
+    [ -d "$texlive_info" ] && INFOPATH="$INFOPATH:$texlive_info"
+done
 
 # sway
 alias sway-tree='swaymsg -r -t get_tree'
@@ -97,9 +96,6 @@ alias ltpdf='latexmk -output-format=pdf -output-directory=out -pvc -interaction=
 
 # needed by some tools like flutter
 export CHROME_EXECUTABLE=/usr/bin/chromium
-
-# kill tray chat apps
-alias kall='killall slack Discord WhatsApp telegram-desktop'
 
 # .env
 alias eenv='f() { if [ -z "$1" ]; then FILE=".env"; else FILE="$1"; fi; if [ -f "$FILE" ]; then set -a; source "$FILE"; set +a; echo "Variables from $FILE exported"; else echo "File $FILE not found"; fi; }; f'
@@ -120,13 +116,18 @@ esac
 # pnpm end
 
 # bun
-export PATH="/home/aokellermann/.cache/.bun/bin:$PATH"
+export PATH="$HOME/.cache/.bun/bin:$PATH"
 
 # haskell
 export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
 
-# bitwarden secret
-export BWS_ACCESS_TOKEN=$(secret-tool lookup service bws account access-token)
+# bitwarden secret (lazy-loaded on first use)
+bws() {
+    if [ -z "$BWS_ACCESS_TOKEN" ]; then
+        export BWS_ACCESS_TOKEN=$(secret-tool lookup service bws account access-token)
+    fi
+    command bws "$@"
+}
 
 # kitten diff
 alias kgd='git difftool --no-symlinks --dir-diff'
