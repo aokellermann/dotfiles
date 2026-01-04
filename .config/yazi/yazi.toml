@@ -62,6 +62,7 @@ pdf = [
 	{ run = "tdf %s1", desc = "tdf", for = "unix", block = true },
 ]
 video = [
+	{ run = "mpv --really-quiet %s1", desc = "mpv", for = "linux", orphan = true },
 	{ run = "mpv --profile=sw-fast --vo=kitty --vo-kitty-use-shm=yes --really-quiet %s1", desc = "mpv (kitty)", for = "linux", block = true },
 ]
 image = [
