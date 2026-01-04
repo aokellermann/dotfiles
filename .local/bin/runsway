@@ -29,8 +29,8 @@ export ELECTRON_OZONE_PLATFORM_HINT=wayland
 # https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#Kvantum
 export QT_STYLE_OVERRIDE=kvantum
 
-# https://bitwarden.com/help/ssh-agent/
-export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock
+# SSH agent - use systemd socket-activated ssh-agent
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 # https://wiki.archlinux.org/title/Go#Install_directory
 export GOPATH=~/.go
