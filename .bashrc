@@ -45,6 +45,15 @@ export VISUAL=nvim
 alias v='nvim'
 complete -o default -o filenames v
 
+# ranger
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
+
 # VPN
 alias vpn='nordvpn set killswitch on && nordvpn c United_States'
 alias vpnd='nordvpn set killswitch off &&nordvpn d'
