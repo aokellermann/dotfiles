@@ -61,6 +61,9 @@ extract = [
 pdf = [
 	{ run = "tdf %s1", desc = "tdf", for = "unix", block = true },
 ]
+video = [
+	{ run = "mpv --profile=sw-fast --vo=kitty --vo-kitty-use-shm=yes --really-quiet %s1", desc = "mpv (kitty)", for = "linux", block = true },
+]
 download = [
 	{ run = "ya emit download --open %S", desc = "Download and open" },
 	{ run = "ya emit download %S",        desc = "Download" },
@@ -74,8 +77,10 @@ rules = [
 	{ mime = "text/*", use = [ "edit", "reveal" ] },
 	# Image
 	{ mime = "image/*", use = [ "open", "reveal" ] },
-	# Media
-	{ mime = "{audio,video}/*", use = [ "play", "reveal" ] },
+	# Audio
+	{ mime = "audio/*", use = [ "play", "reveal" ] },
+	# Video
+	{ mime = "video/*", use = [ "video", "play", "reveal" ] },
 	# Archive
 	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", use = [ "extract", "reveal" ] },
 	# JSON
