@@ -43,6 +43,8 @@ PS1='\[${BLUE}\][\[${RESET}\]\[$MAGENTA\]\u\[${RESET}\]\[${MAGENTA2}\]@\[${RESET
 # editors
 export EDITOR=nvim
 export VISUAL=nvim
+alias v='nvim'
+complete -o default -o filenames v
 
 # VPN
 alias vpn='nordvpn set killswitch on && nordvpn c United_States'
