@@ -59,6 +59,17 @@ alias gd='git diff'
 alias gf='git fetch --all'
 alias gcp='git cherry-pick'
 
+# git alias completions
+source /usr/share/git/completion/git-completion.bash
+__git_complete gs _git_status
+__git_complete gc _git_commit
+__git_complete gch _git_checkout
+__git_complete gl _git_log
+__git_complete ga _git_add
+__git_complete gd _git_diff
+__git_complete gf _git_fetch
+__git_complete gcp _git_cherry_pick
+
 # docker
 alias ddv='docker compose down --volumes'
 alias dcu='docker compose up -d'
@@ -117,3 +128,6 @@ export BWS_ACCESS_TOKEN=$(secret-tool lookup service bws account access-token)
 
 # kitten diff
 alias kgd='git difftool --no-symlinks --dir-diff'
+
+# zoxide
+eval "$(zoxide init bash)"
