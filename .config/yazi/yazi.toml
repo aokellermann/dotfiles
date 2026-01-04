@@ -58,6 +58,9 @@ reveal = [
 extract = [
 	{ run = "ya pub extract --list %s", desc = "Extract here" },
 ]
+pdf = [
+	{ run = "tdf %s1", desc = "tdf", for = "unix", block = true },
+]
 download = [
 	{ run = "ya emit download --open %S", desc = "Download and open" },
 	{ run = "ya emit download %S",        desc = "Download" },
@@ -80,6 +83,8 @@ rules = [
 	{ mime = "*/javascript", use = [ "edit", "reveal" ] },
 	# Empty file
 	{ mime = "inode/empty", use = [ "edit", "reveal" ] },
+	# PDF
+	{ mime = "application/pdf", use = [ "pdf", "open", "reveal" ] },
 	# Virtual file system
 	{ mime = "vfs/{absent,stale}", use = "download" },
 	# Fallback
@@ -239,3 +244,4 @@ sort_by      	 = "none"
 sort_sensitive = false
 sort_reverse 	 = false
 sort_translit  = false
+
