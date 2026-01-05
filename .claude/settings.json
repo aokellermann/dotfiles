@@ -1,0 +1,29 @@
+{
+  "cleanupPeriodDays": 9999,
+  "permissions": {
+    "allow": [
+      "Bash(docker:*)",
+      "Bash(python:*)",
+      "Bash(uv:*)",
+      "Bash(git:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(grep:*)",
+      "Read:*",
+      "Write:*",
+      "Edit:*"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(sudo:*)"
+    ]
+  },
+  "model": "opus",
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
+  }
+}
