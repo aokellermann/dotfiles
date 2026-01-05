@@ -17,7 +17,7 @@ shopt -s histappend
 shopt -s checkwinsize
 
 # path - prepend to avoid duplicates on re-source
-PATH="${HOME}/.local/bin:${PATH}"
+PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:${PATH}"
 
 # colors
 BLUE="$(tput setaf 4)"
