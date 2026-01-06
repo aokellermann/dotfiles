@@ -9,10 +9,11 @@ wt_branch=""
 
 usage() {
     cat <<EOF
-Usage: gw <command> <branch> [options]
+Usage: gw <command> [branch] [options]
   add <branch> [--cd]  Create worktree at ../<repo>-<branch> with branch <username>/<branch>
   cd [branch]          Change to worktree for <branch>, or main worktree if omitted
   rm <branch>          Remove worktree and delete branch
+  ls                   List all worktrees
 EOF
     exit 1
 }
@@ -83,9 +84,14 @@ cmd_rm() {
     echo "Removed worktree $wt_path and branch $wt_branch"
 }
 
+cmd_ls() {
+    git worktree list
+}
+
 case "$1" in
 add) cmd_add "$2" "$3" ;;
 cd) cmd_cd "$2" ;;
 rm) cmd_rm "$2" ;;
+ls) cmd_ls ;;
 *) usage ;;
 esac
