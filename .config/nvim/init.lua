@@ -219,6 +219,13 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Treat Google Apps Script files as JavaScript
+vim.filetype.add {
+  extension = {
+    gs = 'javascript',
+  },
+}
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -686,6 +693,7 @@ require('lazy').setup({
 
         bashls = {},
         ruff = {},
+        ts_ls = {},
         ty = {},
         lua_ls = {
           -- cmd = { ... },
@@ -952,7 +960,7 @@ require('lazy').setup({
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter').setup {}
       -- Install parsers
-      local ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      local ensure_installed = { 'bash', 'c', 'diff', 'html', 'javascript', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
       require('nvim-treesitter').install(ensure_installed)
     end,
     -- There are additional nvim-treesitter modules that you can use to interact
