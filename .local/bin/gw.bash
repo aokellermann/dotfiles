@@ -20,7 +20,7 @@ _gw_completions() {
     _init_completion || return
 
     if ((cword == 1)); then
-        COMPREPLY=($(compgen -W "add cd ls rm" -- "$cur"))
+        COMPREPLY=($(compgen -W "add cd ls prune rm" -- "$cur"))
         return
     fi
 
