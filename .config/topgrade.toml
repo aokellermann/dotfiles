@@ -70,6 +70,7 @@ disable = ["flutter", "containers", "poetry", "uv", "bun", "jetbrains_toolbox", 
 
 # Custom commands
 [commands]
+"Claude Code" = "claude update"
 "Upgrade Nitro" = "upgrade-nitro.sh"
 "Clean up Pacman Cache" = "paccache -rk2"
 "Clean up Yay Cache" = "yaycache -rk2"
