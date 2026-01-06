@@ -69,6 +69,9 @@ alias gd='git diff'
 alias gf='git fetch --all'
 alias gcp='git cherry-pick'
 
+# git worktree helper
+source "$HOME/.local/bin/gw.bash"
+
 # git alias completions
 source /usr/share/git/completion/git-completion.bash
 __git_complete gs _git_status
