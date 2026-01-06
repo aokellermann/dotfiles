@@ -1,0 +1,91 @@
+#!/bin/bash
+# Git worktree helper
+
+set -e
+
+# Globals set by find_worktree
+wt_path=""
+wt_branch=""
+
+usage() {
+    cat <<EOF
+Usage: gw <command> <branch> [options]
+  add <branch> [--cd]  Create worktree at ../<repo>-<branch> with branch <username>/<branch>
+  cd [branch]          Change to worktree for <branch>, or main worktree if omitted
+  rm <branch>          Remove worktree and delete branch
+EOF
+    exit 1
+}
+
+# Find worktree info by branch suffix. Sets $wt_path and $wt_branch.
+find_worktree() {
+    local branch="$1"
+    eval "$(git worktree list --porcelain | awk -v branch="/$branch\$" '
+        /^worktree / { path = substr($0, 10) }
+        /^branch / {
+            br = substr($0, 8)
+            if (br ~ branch) { printf "wt_path=\"%s\"\nwt_branch=\"%s\"\n", path, br; exit }
+        }
+    ')"
+    [[ -z "$wt_path" ]] && {
+        echo "No worktree found for branch ending in /$branch" >&2
+        exit 1
+    }
+}
+
+get_repo_name() {
+    basename -s .git "$(git remote get-url origin 2>/dev/null)" 2>/dev/null ||
+        basename "$(git rev-parse --show-toplevel)"
+}
+
+get_username() {
+    local remote_url
+    remote_url=$(git remote get-url origin 2>/dev/null)
+    if [[ "$remote_url" =~ github\.com[:/]([^/]+)/ ]]; then
+        echo "${BASH_REMATCH[1]}"
+    else
+        git config user.name | tr ' ' '-'
+    fi
+}
+
+cmd_add() {
+    local branch="$1" do_cd="$2"
+    [[ -z "$branch" ]] && usage
+
+    local repo username worktree_path full_branch
+    repo=$(get_repo_name)
+    username=$(get_username)
+    worktree_path="../${repo}-${branch}"
+    full_branch="${username}/${branch}"
+
+    git worktree add -b "$full_branch" "$worktree_path"
+    worktree_path=$(cd "$worktree_path" && pwd)
+    echo "Created worktree at $worktree_path with branch $full_branch"
+
+    [[ "$do_cd" == "--cd" ]] && echo "__gw_cd:$worktree_path"
+}
+
+cmd_cd() {
+    if [[ -z "$1" ]]; then
+        # No branch specified - return main worktree
+        git worktree list --porcelain | awk '/^worktree / { print substr($0, 10); exit }'
+    else
+        find_worktree "$1"
+        echo "$wt_path"
+    fi
+}
+
+cmd_rm() {
+    [[ -z "$1" ]] && usage
+    find_worktree "$1"
+    git worktree remove "$wt_path"
+    git branch -d "$wt_branch"
+    echo "Removed worktree $wt_path and branch $wt_branch"
+}
+
+case "$1" in
+add) cmd_add "$2" "$3" ;;
+cd) cmd_cd "$2" ;;
+rm) cmd_rm "$2" ;;
+*) usage ;;
+esac
