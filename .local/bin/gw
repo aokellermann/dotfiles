@@ -12,6 +12,7 @@ usage() {
 Usage: gw <command> [branch] [options]
   add <branch> [--cd]  Create worktree at ../<repo>-<branch> with branch <username>/<branch>
   cd [branch]          Change to worktree for <branch>, or main worktree if omitted
+  merge [--prune]      Merge current branch into main (cd to main, merge, optionally prune)
   rm <branch>          Remove worktree and delete branch
   ls                   List all worktrees
   prune                Remove worktrees whose branches have been merged
@@ -77,6 +78,31 @@ cmd_cd() {
     fi
 }
 
+cmd_merge() {
+    local do_prune="$1"
+    local current_wt current_branch main_wt main_branch
+
+    current_wt=$(pwd)
+    current_branch=$(git symbolic-ref --short HEAD)
+    main_wt=$(git worktree list --porcelain | awk '/^worktree / { print substr($0, 10); exit }')
+    main_branch=$(git -C "$main_wt" symbolic-ref --short HEAD)
+
+    if [[ "$current_wt" == "$main_wt" ]]; then
+        echo "Already in main worktree, nothing to merge" >&2
+        exit 1
+    fi
+
+    echo "Merging $current_branch into $main_branch..."
+    git -C "$main_wt" merge "$current_branch"
+
+    if [[ "$do_prune" == "--prune" ]]; then
+        echo "Removing worktree $current_wt and branch $current_branch..."
+        git worktree remove "$current_wt"
+        git branch -d "$current_branch"
+        echo "__gw_cd:$main_wt"
+    fi
+}
+
 cmd_rm() {
     [[ -z "$1" ]] && usage
     find_worktree "$1"
@@ -116,6 +142,7 @@ cmd_prune() {
 case "$1" in
 add) cmd_add "$2" "$3" ;;
 cd) cmd_cd "$2" ;;
+merge) cmd_merge "$2" ;;
 rm) cmd_rm "$2" ;;
 ls) cmd_ls ;;
 prune) cmd_prune ;;

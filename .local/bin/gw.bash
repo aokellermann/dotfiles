@@ -20,7 +20,7 @@ _gw_completions() {
     _init_completion || return
 
     if ((cword == 1)); then
-        COMPREPLY=($(compgen -W "add cd ls prune rm" -- "$cur"))
+        COMPREPLY=($(compgen -W "add cd ls merge prune rm" -- "$cur"))
         return
     fi
 
@@ -35,6 +35,11 @@ _gw_completions() {
     add)
         if ((cword == 3)); then
             COMPREPLY=($(compgen -W "--cd" -- "$cur"))
+        fi
+        ;;
+    merge)
+        if ((cword == 2)); then
+            COMPREPLY=($(compgen -W "--prune" -- "$cur"))
         fi
         ;;
     esac
