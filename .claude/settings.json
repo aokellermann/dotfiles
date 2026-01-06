@@ -1,20 +1,14 @@
 {
+  "cleanupPeriodDays": 9999,
+  "env": {
+    "ENABLE_LSP_TOOL": "1",
+    "DISABLE_AUTOUPDATER": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  },
   "attribution": {
     "commit": "",
     "pr": ""
   },
-  "cleanupPeriodDays": 9999,
-  "enabledPlugins": {
-    "clangd-lsp@claude-plugins-official": true,
-    "commit-commands@claude-plugins-official": false,
-    "github@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true
-  },
-  "env": {
-    "ENABLE_LSP_TOOL": "1"
-  },
-  "model": "opus",
   "permissions": {
     "allow": [
       "Bash(docker:*)",
@@ -32,5 +26,11 @@
       "Bash(rm -rf:*)",
       "Bash(sudo:*)"
     ]
+  },
+  "model": "opus",
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true
   }
 }
