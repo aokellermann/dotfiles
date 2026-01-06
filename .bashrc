@@ -143,6 +143,11 @@ bws() {
 
 # kitten diff
 alias kgd='git difftool --no-symlinks --dir-diff'
+_kgd_completion() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    COMPREPLY=($(compgen -W "$(git diff --name-only 2>/dev/null)" -- "$cur"))
+}
+complete -F _kgd_completion kgd
 
 # zoxide
 eval "$(zoxide init bash)"
