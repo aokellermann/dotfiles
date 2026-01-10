@@ -129,14 +129,20 @@ cmd_ls() {
 
     wait "${pids[@]}" 2>/dev/null
 
+    # Find max branch length for alignment
+    local max_branch_len=0
+    for branch in "${branches[@]}"; do
+        ((${#branch} > max_branch_len)) && max_branch_len=${#branch}
+    done
+
     # Print results
     for i in "${!branches[@]}"; do
-        local pr_info=""
+        local pr_info="" display_path="${wt_paths[$i]/#$HOME/\~}"
         [[ -s "$tmpdir/$((i+1))" ]] && pr_info=$(cat "$tmpdir/$((i+1))")
         if [[ -n "$pr_info" ]]; then
-            printf "%-50s %s %s\n" "${wt_paths[$i]}" "${branches[$i]}" "$pr_info"
+            printf "%-50s %-${max_branch_len}s  %s\n" "$display_path" "${branches[$i]}" "$pr_info"
         else
-            printf "%-50s %s\n" "${wt_paths[$i]}" "${branches[$i]}"
+            printf "%-50s %s\n" "$display_path" "${branches[$i]}"
         fi
     done
 }
