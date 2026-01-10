@@ -107,7 +107,38 @@ cmd_rm() {
 }
 
 cmd_ls() {
-    git worktree list
+    local -a wt_paths=() branches=() pids=()
+    local tmpdir
+    tmpdir=$(mktemp -d)
+    trap 'rm -rf "$tmpdir"' RETURN
+
+    # Collect worktrees and spawn parallel PR lookups
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^worktree ]]; then
+            wt_path="${line#worktree }"
+        elif [[ "$line" =~ ^branch ]]; then
+            branch="${line#branch refs/heads/}"
+            wt_paths+=("$wt_path")
+            branches+=("$branch")
+            local i=${#branches[@]}
+            gh pr view "$branch" --json state,url \
+                --jq '"[\(.state)] \(.url)"' >"$tmpdir/$i" 2>/dev/null &
+            pids+=($!)
+        fi
+    done < <(git worktree list --porcelain)
+
+    wait "${pids[@]}" 2>/dev/null
+
+    # Print results
+    for i in "${!branches[@]}"; do
+        local pr_info=""
+        [[ -s "$tmpdir/$((i+1))" ]] && pr_info=$(cat "$tmpdir/$((i+1))")
+        if [[ -n "$pr_info" ]]; then
+            printf "%-50s %s %s\n" "${wt_paths[$i]}" "${branches[$i]}" "$pr_info"
+        else
+            printf "%-50s %s\n" "${wt_paths[$i]}" "${branches[$i]}"
+        fi
+    done
 }
 
 cmd_prune() {
