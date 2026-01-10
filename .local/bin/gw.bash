@@ -34,7 +34,7 @@ _gw_completions() {
         ;;
     add)
         if ((cword == 3)); then
-            COMPREPLY=($(compgen -W "--cd" -- "$cur"))
+            COMPREPLY=($(compgen -W "--no-cd" -- "$cur"))
         fi
         ;;
     merge)
