@@ -10,7 +10,7 @@ wt_branch=""
 usage() {
     cat <<EOF
 Usage: gw <command> [branch] [options]
-  add <branch> [--cd]  Create worktree at ../<repo>-<branch> with branch <username>/<branch>
+  add <branch> [--no-cd]  Create worktree at ../<repo>-<branch> with branch <username>/<branch>
   cd [branch]          Change to worktree for <branch>, or main worktree if omitted
   merge [--prune]      Merge current branch into main (cd to main, merge, optionally prune)
   rm <branch>          Remove worktree and delete branch
@@ -47,7 +47,7 @@ get_username() {
 }
 
 cmd_add() {
-    local branch="$1" do_cd="$2"
+    local branch="$1" no_cd="$2"
     [[ -z "$branch" ]] && usage
 
     local repo username worktree_path full_branch
@@ -60,7 +60,7 @@ cmd_add() {
     worktree_path=$(cd "$worktree_path" && pwd)
     echo "Created worktree at $worktree_path with branch $full_branch"
 
-    [[ "$do_cd" == "--cd" ]] && echo "__gw_cd:$worktree_path"
+    [[ "$no_cd" != "--no-cd" ]] && echo "__gw_cd:$worktree_path"
 }
 
 cmd_cd() {
