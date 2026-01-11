@@ -152,5 +152,8 @@ complete -F _kgd_completion kgd
 # claude code
 source "$HOME/.local/share/bash-completion/completions/claude"
 
+# cve-bench
+source "$HOME/repos/cve-benchmark-bash-completions/completions/run.bash"
+
 # zoxide
 eval "$(zoxide init bash)"
