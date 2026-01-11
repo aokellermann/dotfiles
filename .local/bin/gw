@@ -161,12 +161,15 @@ cmd_prune() {
             wt_branch="${line#branch refs/heads/}"
             # Skip the main worktree
             [[ "$wt_path" == "$main_wt" ]] && continue
-            # Check if branch is merged into main
-            if git -C "$main_wt" branch --merged "$main_branch" | grep -qE "^[*+]?\s+${wt_branch}\$"; then
+            # Check if branch is merged into main, has diverged, and worktree is clean
+            if git -C "$main_wt" branch --merged "$main_branch" | grep -qE "^[*+]?\s+${wt_branch}\$" &&
+               [[ "$(git rev-parse "$wt_branch")" != "$(git rev-parse "$main_branch")" ]] &&
+               git -C "$wt_path" diff-index --quiet HEAD -- 2>/dev/null &&
+               [[ -z "$(git -C "$wt_path" ls-files --others --exclude-standard)" ]]; then
                 echo "Pruning $wt_path (branch $wt_branch merged into $main_branch)"
                 git worktree remove "$wt_path"
                 git branch -d "$wt_branch"
-                ((pruned++))
+                ((++pruned))
             fi
         }
     done < <(git worktree list --porcelain)
