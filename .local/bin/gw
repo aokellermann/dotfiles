@@ -60,16 +60,19 @@ cmd_add() {
     worktree_path=$(cd "$worktree_path" && pwd)
     echo "Created worktree at $worktree_path with branch $full_branch"
 
-    [[ "$no_cd" != "--no-cd" ]] && echo "__gw_cd:$worktree_path"
+    [[ "$no_cd" != "--no-cd" ]] && echo "__gw_cd:$worktree_path:$branch"
 }
 
 cmd_cd() {
     if [[ -z "$1" ]]; then
         # No branch specified - return main worktree
-        git worktree list --porcelain | awk '/^worktree / { print substr($0, 10); exit }'
+        local main_wt main_branch
+        main_wt=$(git worktree list --porcelain | awk '/^worktree / { print substr($0, 10); exit }')
+        main_branch=$(git -C "$main_wt" symbolic-ref --short HEAD)
+        echo "$main_wt:$main_branch"
     else
         find_worktree "$1"
-        echo "$wt_path"
+        echo "$wt_path:${wt_branch##*/}"
     fi
 }
 
