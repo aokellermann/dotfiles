@@ -1,17 +1,30 @@
 # gw shell function wrapper (source this file)
 # The actual script is at ~/.local/bin/gw
 
+_gw_set_kitty_tab() {
+    [[ -n "$KITTY_WINDOW_ID" ]] && kitty @ set-tab-title "$1" 2>/dev/null
+}
+
 gw() {
     if [[ "$1" == "cd" ]]; then
-        local dir
-        dir=$("$HOME/.local/bin/gw" cd "$2") && cd "$dir" || return
+        local result dir branch
+        result=$("$HOME/.local/bin/gw" cd "$2") || return
+        dir="${result%:*}"
+        branch="${result##*:}"
+        cd "$dir" || return
+        _gw_set_kitty_tab "$branch"
     else
         local output
         output=$("$HOME/.local/bin/gw" "$@")
         echo "$output" | grep -v '^__gw_cd:'
-        local cd_path
-        cd_path=$(echo "$output" | sed -n 's/^__gw_cd://p')
-        [[ -n "$cd_path" ]] && { cd "$cd_path" || return; }
+        local cd_line dir branch
+        cd_line=$(echo "$output" | sed -n 's/^__gw_cd://p')
+        if [[ -n "$cd_line" ]]; then
+            dir="${cd_line%:*}"
+            branch="${cd_line##*:}"
+            cd "$dir" || return
+            _gw_set_kitty_tab "$branch"
+        fi
     fi
 }
 
