@@ -151,10 +151,12 @@ cmd_ls() {
 }
 
 cmd_prune() {
-    local main_wt main_branch pruned=0
+    local main_wt main_branch
     main_wt=$(git worktree list --porcelain | awk '/^worktree / { print substr($0, 10); exit }')
     main_branch=$(git -C "$main_wt" symbolic-ref --short HEAD)
 
+    # Collect worktrees to prune
+    local -a prune_paths=() prune_branches=()
     while IFS= read -r line; do
         [[ "$line" =~ ^worktree ]] && wt_path="${line#worktree }"
         [[ "$line" =~ ^branch ]] && {
@@ -166,13 +168,40 @@ cmd_prune() {
                [[ "$(git rev-parse "$wt_branch")" != "$(git rev-parse "$main_branch")" ]] &&
                git -C "$wt_path" diff-index --quiet HEAD -- 2>/dev/null &&
                [[ -z "$(git -C "$wt_path" ls-files --others --exclude-standard)" ]]; then
-                echo "Pruning $wt_path (branch $wt_branch merged into $main_branch)"
-                git worktree remove "$wt_path"
-                git branch -d "$wt_branch"
-                ((++pruned))
+                prune_paths+=("$wt_path")
+                prune_branches+=("$wt_branch")
             fi
         }
     done < <(git worktree list --porcelain)
+
+    if [[ ${#prune_paths[@]} -eq 0 ]]; then
+        echo "No worktrees to prune"
+        return
+    fi
+
+    # Show what will be pruned (write to tty so it's not captured by wrapper)
+    {
+        echo "The following worktrees will be pruned:"
+        for i in "${!prune_paths[@]}"; do
+            echo "  ${prune_paths[$i]} (branch ${prune_branches[$i]})"
+        done
+    } >/dev/tty
+
+    # Ask for confirmation
+    read -rp "Proceed? [y/N] " confirm </dev/tty
+    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+        echo "Aborted"
+        return
+    fi
+
+    # Prune confirmed worktrees
+    local pruned=0
+    for i in "${!prune_paths[@]}"; do
+        echo "Pruning ${prune_paths[$i]}..."
+        git worktree remove "${prune_paths[$i]}"
+        git branch -d "${prune_branches[$i]}"
+        ((++pruned))
+    done
 
     echo "Pruned $pruned worktree(s)"
 }
