@@ -97,7 +97,7 @@ rules = [
 	# Virtual file system
 	{ mime = "vfs/{absent,stale}", use = "download" },
 	# Fallback
-	{ url = "*", use = [ "open", "reveal" ] },
+	{ url = "*", use = [ "edit", "open", "reveal" ] },
 ]
 
 [tasks]
@@ -114,6 +114,9 @@ fetchers = [
 	{ id = "mime", url = "*/",         run = "mime.dir", prio = "high" },
 	{ id = "mime", url = "local://*",  run = "mime.local", prio = "high" },
 	{ id = "mime", url = "remote://*", run = "mime.remote", prio = "high" },
+]
+prepend_previewers = [
+	{ url = "*.md", run = "rich-preview" },
 ]
 spotters = [
 	{ url = "*/", run = "folder" },
