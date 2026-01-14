@@ -30,6 +30,9 @@ exec insync start
 # signal
 exec signal-desktop $wayland_flags
 
+# start mullvad in tray
+exec mullvad-vpn &
+
 # voice to text
 exec uv run --directory ~/repos/talkat talkat server
 bindsym $mod+x exec uv run --directory ~/repos/talkat talkat listen
