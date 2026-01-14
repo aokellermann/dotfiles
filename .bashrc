@@ -47,11 +47,11 @@ complete -o default -o filenames v
 
 # ranger
 function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	command yazi "$@" --cwd-file="$tmp"
-	IFS= read -r -d '' cwd < "$tmp"
-	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-	rm -f -- "$tmp"
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    command yazi "$@" --cwd-file="$tmp"
+    IFS= read -r -d '' cwd <"$tmp"
+    [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+    rm -f -- "$tmp"
 }
 
 # VPN
@@ -118,12 +118,11 @@ alias rank-mirrors='reflector --protocol https --latest 50 --fastest 8 --age 24 
 # chrome debugging
 alias chromium-debug='chromium --remote-debugging-port=9222 --no-sandbox --disable-gpu'
 
-
 # pnpm
 export PNPM_HOME="/home/aokellermann/.local/share/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
+*":$PNPM_HOME:"*) ;;
+*) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
 
@@ -150,10 +149,10 @@ _kgd_completion() {
 complete -F _kgd_completion kgd
 
 # claude code
-source "$HOME/.local/share/bash-completion/completions/claude"
+source "$HOME/.local/share/bash-completion/completions/claude.bash"
 
 # cve-bench
-source "$HOME/repos/cve-benchmark-bash-completions/completions/run.bash"
+source "$HOME/repos/cve-benchmark/completions/run.bash"
 
 # zoxide
 eval "$(zoxide init bash)"
