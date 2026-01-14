@@ -1,0 +1,483 @@
+# Bash completion for Cloudflare Wrangler CLI
+# https://developers.cloudflare.com/workers/wrangler/
+
+_wrangler_completions() {
+    local cur prev words cword
+    _init_completion || return
+
+    # Top-level commands
+    local commands="docs ai auth login logout whoami containers delete deploy deployments
+        dev dispatch-namespace init pages pubsub queues rollback secret setup tail triggers
+        types versions vpc workflows d1 hyperdrive kv pipelines r2 secrets-store vectorize
+        cert mtls-certificate"
+
+    # Global flags available to all commands
+    local global_opts="-c --config --cwd -e --env --env-file -h --help -v --version"
+
+    # Subcommands for each top-level command
+    local ai_commands="models finetune"
+    local d1_commands="create info list delete execute export time-travel migrations insights"
+    local d1_migrations_commands="create list apply"
+    local deployments_commands="list status"
+    local hyperdrive_commands="create delete get list update"
+    local kv_commands="namespace key bulk"
+    local kv_namespace_commands="create list delete rename"
+    local kv_key_commands="put list get delete"
+    local kv_bulk_commands="get put delete"
+    local pages_commands="dev functions project deployment deploy secret download"
+    local pages_project_commands="list create delete"
+    local pages_deployment_commands="list create tail"
+    local queues_commands="list create update delete info consumer pause-delivery resume-delivery purge subscription"
+    local r2_commands="object bucket sql"
+    local r2_object_commands="get put delete"
+    local r2_bucket_commands="create update list info delete sippy catalog notification domain dev-url lifecycle cors lock"
+    local secret_commands="put delete list bulk"
+    local vectorize_commands="create delete get list list-vectors query insert upsert get-vectors delete-vectors info create-metadata-index list-metadata-index delete-metadata-index"
+    local versions_commands="view list upload deploy secret"
+    local workflows_commands="list describe delete trigger instances"
+
+    # Deploy/dev specific options
+    local deploy_opts="--name --no-bundle --outdir --outfile --compatibility-date
+        --compatibility-flags --latest --assets --var --define --alias --triggers
+        --schedule --schedules --routes --route --domains --domain --jsx-factory
+        --jsx-fragment --tsconfig --minify --dry-run --metafile --keep-vars
+        --logpush --upload-source-maps --old-asset-ttl --dispatch-namespace
+        --containers-rollout --strict --experimental-autoconfig --x-autoconfig"
+    local dev_opts="--name --compatibility-date --compatibility-flags --latest
+        --assets --no-bundle --ip --port --inspector-port --routes --route --host
+        --local-protocol --https-key-path --https-cert-path --local-upstream
+        --upstream-protocol --var --define --alias --jsx-factory --jsx-fragment
+        --tsconfig -r --remote -l --local --minify --persist-to --live-reload
+        --test-scheduled --log-level --show-interactive-dev-session --types"
+
+    # Determine command context
+    local cmd="" subcmd="" subsubcmd=""
+    local i
+    for ((i=1; i < cword; i++)); do
+        case "${words[i]}" in
+            -*)
+                # Skip flags
+                continue
+                ;;
+            ai|auth|containers|d1|delete|deploy|deployments|dev|dispatch-namespace|docs|hyperdrive|init|kv|login|logout|mtls-certificate|cert|pages|pipelines|pubsub|queues|r2|rollback|secret|secrets-store|setup|tail|triggers|types|vectorize|versions|vpc|whoami|workflows)
+                cmd="${words[i]}"
+                break
+                ;;
+        esac
+    done
+
+    # Look for subcommand if we found a command
+    if [[ -n "$cmd" ]]; then
+        for ((i=i+1; i < cword; i++)); do
+            case "${words[i]}" in
+                -*)
+                    continue
+                    ;;
+                *)
+                    case "$cmd" in
+                        ai)
+                            case "${words[i]}" in
+                                models|finetune) subcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        d1)
+                            case "${words[i]}" in
+                                create|info|list|delete|execute|export|time-travel|migrations|insights)
+                                    subcmd="${words[i]}"
+                                    ;;
+                            esac
+                            ;;
+                        deployments)
+                            case "${words[i]}" in
+                                list|status) subcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        hyperdrive)
+                            case "${words[i]}" in
+                                create|delete|get|list|update) subcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        kv)
+                            case "${words[i]}" in
+                                namespace|key|bulk) subcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        pages)
+                            case "${words[i]}" in
+                                dev|functions|project|deployment|deploy|secret|download)
+                                    subcmd="${words[i]}"
+                                    ;;
+                            esac
+                            ;;
+                        queues)
+                            case "${words[i]}" in
+                                list|create|update|delete|info|consumer|pause-delivery|resume-delivery|purge|subscription)
+                                    subcmd="${words[i]}"
+                                    ;;
+                            esac
+                            ;;
+                        r2)
+                            case "${words[i]}" in
+                                object|bucket|sql) subcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        secret)
+                            case "${words[i]}" in
+                                put|delete|list|bulk) subcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        vectorize)
+                            case "${words[i]}" in
+                                create|delete|get|list|list-vectors|query|insert|upsert|get-vectors|delete-vectors|info|create-metadata-index|list-metadata-index|delete-metadata-index)
+                                    subcmd="${words[i]}"
+                                    ;;
+                            esac
+                            ;;
+                        versions)
+                            case "${words[i]}" in
+                                view|list|upload|deploy|secret) subcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        workflows)
+                            case "${words[i]}" in
+                                list|describe|delete|trigger|instances) subcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                    esac
+                    [[ -n "$subcmd" ]] && break
+                    ;;
+            esac
+        done
+    fi
+
+    # Look for sub-subcommand (for kv, r2, pages, d1)
+    if [[ -n "$subcmd" ]]; then
+        for ((i=i+1; i < cword; i++)); do
+            case "${words[i]}" in
+                -*)
+                    continue
+                    ;;
+                *)
+                    case "$cmd:$subcmd" in
+                        kv:namespace)
+                            case "${words[i]}" in
+                                create|list|delete|rename) subsubcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        kv:key)
+                            case "${words[i]}" in
+                                put|list|get|delete) subsubcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        kv:bulk)
+                            case "${words[i]}" in
+                                get|put|delete) subsubcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        r2:object)
+                            case "${words[i]}" in
+                                get|put|delete) subsubcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        r2:bucket)
+                            case "${words[i]}" in
+                                create|update|list|info|delete|sippy|catalog|notification|domain|dev-url|lifecycle|cors|lock)
+                                    subsubcmd="${words[i]}"
+                                    ;;
+                            esac
+                            ;;
+                        pages:project)
+                            case "${words[i]}" in
+                                list|create|delete) subsubcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        pages:deployment)
+                            case "${words[i]}" in
+                                list|create|tail) subsubcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                        d1:migrations)
+                            case "${words[i]}" in
+                                create|list|apply) subsubcmd="${words[i]}" ;;
+                            esac
+                            ;;
+                    esac
+                    [[ -n "$subsubcmd" ]] && break
+                    ;;
+            esac
+        done
+    fi
+
+    # Handle option arguments
+    case "$prev" in
+        -c|--config|--tsconfig|--https-key-path|--https-cert-path)
+            _filedir
+            return
+            ;;
+        --cwd|--outdir|--persist-to|--assets)
+            _filedir -d
+            return
+            ;;
+        --local-protocol|--upstream-protocol)
+            COMPREPLY=($(compgen -W "http https" -- "$cur"))
+            return
+            ;;
+        --log-level)
+            COMPREPLY=($(compgen -W "debug info log warn error none" -- "$cur"))
+            return
+            ;;
+        --containers-rollout)
+            COMPREPLY=($(compgen -W "immediate gradual" -- "$cur"))
+            return
+            ;;
+        --port|--inspector-port|--old-asset-ttl)
+            return
+            ;;
+        -e|--env|--name|--ip|--host|--compatibility-date|--jsx-factory|--jsx-fragment|--dispatch-namespace|--local-upstream|--var|--define|--alias)
+            return
+            ;;
+    esac
+
+    # Complete based on context
+    case "$cmd" in
+        "")
+            if [[ "$cur" == -* ]]; then
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            else
+                COMPREPLY=($(compgen -W "$commands" -- "$cur"))
+            fi
+            ;;
+        ai)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$ai_commands" -- "$cur"))
+                fi
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        d1)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$d1_commands" -- "$cur"))
+                fi
+            elif [[ "$subcmd" == "migrations" && -z "$subsubcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$d1_migrations_commands" -- "$cur"))
+                fi
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        deploy)
+            if [[ "$cur" == -* ]]; then
+                COMPREPLY=($(compgen -W "$global_opts $deploy_opts" -- "$cur"))
+            else
+                _filedir
+            fi
+            ;;
+        deployments)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$deployments_commands" -- "$cur"))
+                fi
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        dev)
+            if [[ "$cur" == -* ]]; then
+                COMPREPLY=($(compgen -W "$global_opts $dev_opts" -- "$cur"))
+            else
+                _filedir
+            fi
+            ;;
+        hyperdrive)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$hyperdrive_commands" -- "$cur"))
+                fi
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        kv)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$kv_commands" -- "$cur"))
+                fi
+            elif [[ -z "$subsubcmd" ]]; then
+                case "$subcmd" in
+                    namespace)
+                        if [[ "$cur" == -* ]]; then
+                            COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                        else
+                            COMPREPLY=($(compgen -W "$kv_namespace_commands" -- "$cur"))
+                        fi
+                        ;;
+                    key)
+                        if [[ "$cur" == -* ]]; then
+                            COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                        else
+                            COMPREPLY=($(compgen -W "$kv_key_commands" -- "$cur"))
+                        fi
+                        ;;
+                    bulk)
+                        if [[ "$cur" == -* ]]; then
+                            COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                        else
+                            COMPREPLY=($(compgen -W "$kv_bulk_commands" -- "$cur"))
+                        fi
+                        ;;
+                esac
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        pages)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$pages_commands" -- "$cur"))
+                fi
+            elif [[ -z "$subsubcmd" ]]; then
+                case "$subcmd" in
+                    project)
+                        if [[ "$cur" == -* ]]; then
+                            COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                        else
+                            COMPREPLY=($(compgen -W "$pages_project_commands" -- "$cur"))
+                        fi
+                        ;;
+                    deployment)
+                        if [[ "$cur" == -* ]]; then
+                            COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                        else
+                            COMPREPLY=($(compgen -W "$pages_deployment_commands" -- "$cur"))
+                        fi
+                        ;;
+                    dev|deploy)
+                        if [[ "$cur" == -* ]]; then
+                            COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                        else
+                            _filedir -d
+                        fi
+                        ;;
+                    *)
+                        COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                        ;;
+                esac
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        queues)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$queues_commands" -- "$cur"))
+                fi
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        r2)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$r2_commands" -- "$cur"))
+                fi
+            elif [[ -z "$subsubcmd" ]]; then
+                case "$subcmd" in
+                    object)
+                        if [[ "$cur" == -* ]]; then
+                            COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                        else
+                            COMPREPLY=($(compgen -W "$r2_object_commands" -- "$cur"))
+                        fi
+                        ;;
+                    bucket)
+                        if [[ "$cur" == -* ]]; then
+                            COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                        else
+                            COMPREPLY=($(compgen -W "$r2_bucket_commands" -- "$cur"))
+                        fi
+                        ;;
+                    *)
+                        COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                        ;;
+                esac
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        secret)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$secret_commands" -- "$cur"))
+                fi
+            elif [[ "$subcmd" == "bulk" && "$cur" != -* ]]; then
+                _filedir
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        vectorize)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$vectorize_commands" -- "$cur"))
+                fi
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        versions)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$versions_commands" -- "$cur"))
+                fi
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        workflows)
+            if [[ -z "$subcmd" ]]; then
+                if [[ "$cur" == -* ]]; then
+                    COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+                else
+                    COMPREPLY=($(compgen -W "$workflows_commands" -- "$cur"))
+                fi
+            else
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+        init|tail|delete|rollback|types|docs|login|logout|whoami|auth|setup|triggers|containers|dispatch-namespace|pubsub|pipelines|secrets-store|vpc|cert|mtls-certificate)
+            if [[ "$cur" == -* ]]; then
+                COMPREPLY=($(compgen -W "$global_opts" -- "$cur"))
+            fi
+            ;;
+    esac
+}
+
+complete -F _wrangler_completions wrangler

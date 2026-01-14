@@ -148,8 +148,10 @@ _kgd_completion() {
 }
 complete -F _kgd_completion kgd
 
-# claude code
-source "$HOME/.local/share/bash-completion/completions/claude.bash"
+# user completions
+for f in "$HOME/.local/share/bash-completion/completions"/*; do
+    [[ -f "$f" ]] && source "$f"
+done
 
 # cve-bench
 source "$HOME/repos/cve-benchmark/completions/run.bash"
