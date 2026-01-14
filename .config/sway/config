@@ -28,10 +28,11 @@ exec bitwarden-desktop
 exec insync start
 
 # signal
-exec_always signal-desktop $wayland_flags
+exec signal-desktop $wayland_flags
 
-# ferdium
-exec ferdium
+# voice to text
+exec uv run --directory ~/repos/talkat talkat server
+bindsym $mod+x exec uv run --directory ~/repos/talkat talkat listen
 
 # theme
 
@@ -45,6 +46,9 @@ exec {
 # blue light filter
 
 exec gammastep -l geoclue2
+
+# prevent apps from stealing focus (e.g., on notifications)
+focus_on_window_activation urgent
 
 # borders
 default_border none
@@ -215,20 +219,16 @@ bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
 set $scratchterm scratch_term
-for_window [app_id=$scratchterm] move scratchpad, scratchpad show, resize set 80 ppt 80 ppt
+for_window [app_id=$scratchterm] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+semicolon exec sway-scratch show --app-id $scratchterm --resize "set 90 ppt 90 ppt" --exec "$term --class $scratchterm"
 
 set $scratchpy scratch_py
-for_window [app_id=$scratchpy] move scratchpad, scratchpad show, resize set 80 ppt 80 ppt
+for_window [app_id=$scratchpy] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+apostrophe exec sway-scratch show --app-id $scratchpy --resize "set 90 ppt 90 ppt" --exec "$term --class $scratchpy -e python -q"
 
 set $scratchspotify spotify
 for_window [app_id=$scratchspotify] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+comma exec  sway-scratch show --app-id $scratchspotify --resize "set 90 ppt 90 ppt" --exec "spotify"
-
-set $scratchferdium ferdium 
-for_window [app_id=$scratchferdium] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+period exec sway-scratch show --app-id $scratchferdium --resize "set 90 ppt 90 ppt" --exec "ferdium"
+bindsym $mod+comma exec sway-scratch show --app-id $scratchspotify --resize "set 90 ppt 90 ppt" --exec "spotify"
 
 set $scratchbeeper BeeperTexts
 for_window [app_id=$scratchbeeper] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
