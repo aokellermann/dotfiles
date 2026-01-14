@@ -24,13 +24,14 @@
     ],
     "deny": [
       "Bash(rm -rf:*)",
-      "Bash(sudo:*)"
-    ]
+      "Bash(sudo:*)",
+      "Read(/home/aokellermann/docs)"
+    ],
+    "defaultMode": "acceptEdits"
   },
-  "model": "opus",
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
   }
 }
