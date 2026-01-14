@@ -13,7 +13,7 @@ Usage: gw <command> [branch] [options]
   add <branch> [--no-cd]  Create worktree at ../<repo>-<branch> with branch <username>/<branch>
   cd [branch]          Change to worktree for <branch>, or main worktree if omitted
   merge [--prune]      Merge current branch into main (cd to main, merge, optionally prune)
-  rm <branch>          Remove worktree and delete branch
+  rm <branch> [--force]  Remove worktree and delete branch (--force for uncommitted changes)
   ls                   List all worktrees
   prune                Remove worktrees whose branches have been merged
 EOF
@@ -102,10 +102,16 @@ cmd_merge() {
 }
 
 cmd_rm() {
-    [[ -z "$1" ]] && usage
-    find_worktree "$1"
-    git worktree remove "$wt_path"
-    git branch -d "$wt_branch"
+    local branch="$1" force="$2"
+    [[ -z "$branch" ]] && usage
+    find_worktree "$branch"
+    if [[ "$force" == "--force" ]]; then
+        git worktree remove --force "$wt_path"
+        git branch -D "$wt_branch"
+    else
+        git worktree remove "$wt_path"
+        git branch -d "$wt_branch"
+    fi
     echo "Removed worktree $wt_path and branch $wt_branch"
 }
 
@@ -210,7 +216,7 @@ case "$1" in
 add) cmd_add "$2" "$3" ;;
 cd) cmd_cd "$2" ;;
 merge) cmd_merge "$2" ;;
-rm) cmd_rm "$2" ;;
+rm) cmd_rm "$2" "$3" ;;
 ls) cmd_ls ;;
 prune) cmd_prune ;;
 *) usage ;;
