@@ -22,6 +22,15 @@
 	format = ssh
 [pull]
 	rebase = false
+[fetch]
+	prune = true
+	pruneTag = true
+[branch]
+	sort = -committerdate
+[column]
+	ui = auto
+[checkout]
+	workers = 0
 [diff]
     tool = kitty
     guitool = kitty.gui
