@@ -21,23 +21,20 @@ set $wayland_flags --enable-features=UseOzonePlatform --ozone-platform=wayland
 # notifications
 exec mako
 
-# auth (includes ssh agent)
-exec bitwarden-desktop
-
 # insync
-# exec insync start
+exec insync start
 
 # signal
-exec signal-desktop $wayland_flags
+exec signal-desktop $wayland_flags &
 
 # texting
-exec beeper
+exec beeper &
 
 # -u starts minimized
-exec slack $wayland_flags -u
+exec slack $wayland_flags -u &
 
 # VPN
-exec mullvad-vpn
+exec mullvad-vpn &
 
 # voice to text
 exec uv run --directory ~/repos/talkat talkat server
