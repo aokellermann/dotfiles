@@ -35,5 +35,12 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 # https://wiki.archlinux.org/title/Go#Install_directory
 export GOPATH=~/.go
 
+# some tools look for this
+export CHROME_EXECUTABLE=/usr/bin/chromium
+
+# editor
+export EDITOR=nvim
+export VISUAL=$EDITOR
+
 # lock the session so that if sway crashes, there is no fallback to a unlocked, logged in terminal
 exec sh -c 'sway; vlock -a'
