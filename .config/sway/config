@@ -25,11 +25,16 @@ exec mako
 exec bitwarden-desktop
 
 # insync
-exec insync start
+# exec insync start
 
-# chat apps
+# signal
 exec signal-desktop $wayland_flags
+
+# texting
 exec beeper
+
+# -u starts minimized
+exec slack $wayland_flags -u
 
 # VPN
 exec mullvad-vpn
