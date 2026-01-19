@@ -27,11 +27,12 @@ exec bitwarden-desktop
 # insync
 exec insync start
 
-# signal
+# chat apps
 exec signal-desktop $wayland_flags
+exec beeper
 
-# start mullvad in tray
-exec mullvad-vpn &
+# VPN
+exec mullvad-vpn
 
 # voice to text
 exec uv run --directory ~/repos/talkat talkat server
