@@ -1,0 +1,6 @@
+{
+  "log_level": "dev",
+  "show_hidden_events": false,
+  "external_platforms": [],
+  "launch_app_minimized": true
+}
