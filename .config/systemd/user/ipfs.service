@@ -1,0 +1,16 @@
+[Unit]
+Description=IPFS Daemon (VPN-restricted via br0 bridge)
+After=network-online.target
+Wants=network-online.target
+# Note: firejail-bridge.service is a system service that creates br0
+ConditionPathExists=/sys/class/net/br0
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/firejail --net=br0 --protocol=unix,inet,inet6,netlink --dns=10.64.0.1 /usr/bin/ipfs daemon
+Restart=on-failure
+RestartSec=10
+Environment="IPFS_PATH=%h/.ipfs"
+
+[Install]
+WantedBy=default.target

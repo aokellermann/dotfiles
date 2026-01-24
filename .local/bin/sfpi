@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+# Consolidated IPFS wrapper for firejail with enhanced features
+
+set -euo pipefail
+
+# Get and validate the firejail IPFS daemon PID
+get_ipfs_firejail_pid() {
+    local pid
+    pid=$(pgrep -f "firejail --net=br0.*ipfs daemon" | head -1)
+
+    if [ -z "$pid" ]; then
+        echo "Error: IPFS daemon not running in firejail" >&2
+        echo "Start it with: systemctl --user start ipfs.service" >&2
+        exit 1
+    fi
+
+    echo "$pid"
+}
+
+# Get the firejail IPFS daemon PID
+FIREJAIL_PID=$(get_ipfs_firejail_pid)
+
+# dir-size subcommand: Get IPFS directory size without traversal
+if [[ "${1:-}" == "dir-size" ]]; then
+    shift
+
+    # Parse arguments
+    HUMAN_READABLE=false
+    WITH_NODES=false
+    RECURSIVE_COUNT=false
+    CID=""
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h)
+                HUMAN_READABLE=true
+                shift
+                ;;
+            --with-nodes)
+                WITH_NODES=true
+                shift
+                ;;
+            --recursive-count)
+                RECURSIVE_COUNT=true
+                shift
+                ;;
+            *)
+                CID="$1"
+                shift
+                ;;
+        esac
+    done
+
+    # If no CID provided as argument, try reading from stdin
+    if [[ -z "$CID" ]]; then
+        if [[ ! -t 0 ]]; then
+            # stdin is a pipe, read from it
+            read -r CID
+        else
+            echo "Usage: sfpi dir-size [-h] [--with-nodes] [--recursive-count] <CID>" >&2
+            echo "       echo <CID> | sfpi dir-size [-h] [--with-nodes] [--recursive-count]" >&2
+            echo "  -h                Human-readable output (like df -h)" >&2
+            echo "  --with-nodes      Also output node count" >&2
+            echo "  --recursive-count Count all nodes recursively (slow, default: direct children only)" >&2
+            exit 1
+        fi
+    fi
+
+    # Get the block and parse protobuf
+    BLOCK_DATA=$(firejail --quiet --join="$FIREJAIL_PID" -- bash -c "ipfs block get '$CID'" 2>/dev/null |
+        protoc --decode_raw 2>/dev/null)
+
+    # Extract sizes (field 3), sum them
+    SIZE=$(echo "$BLOCK_DATA" | grep -E '^\s+3:' | awk '{sum += $2} END {print sum}')
+
+    # Get node count if requested
+    if [[ "$WITH_NODES" == true ]]; then
+        if [[ "$RECURSIVE_COUNT" == true ]]; then
+            # Full recursive traversal
+            NODE_COUNT=$(firejail --quiet --join="$FIREJAIL_PID" ipfs refs -r "$CID" 2>/dev/null | wc -l)
+            NODE_COUNT=$((NODE_COUNT + 1))  # Add 1 for the root node
+        else
+            # Count direct children from block metadata (field 2 entries)
+            NODE_COUNT=$(echo "$BLOCK_DATA" | grep -c -E '^\s+2:' || echo "0")
+            NODE_COUNT=$((NODE_COUNT + 1))  # Add 1 for the root node
+        fi
+    fi
+
+    # Output results
+    if [[ "$WITH_NODES" == true ]]; then
+        if [[ "$HUMAN_READABLE" == true ]]; then
+            SIZE_HUMAN=$(numfmt --to=iec-i --suffix=B "$SIZE")
+            echo "$SIZE_HUMAN $NODE_COUNT"
+        else
+            echo "$SIZE $NODE_COUNT"
+        fi
+    else
+        if [[ "$HUMAN_READABLE" == true ]]; then
+            numfmt --to=iec-i --suffix=B "$SIZE"
+        else
+            echo "$SIZE"
+        fi
+    fi
+    exit 0
+fi
+
+# api subcommand: Call IPFS HTTP API
+if [[ "${1:-}" == "api" ]]; then
+    shift
+
+    if [[ $# -lt 1 ]]; then
+        echo "Usage: sfpi api <endpoint> [curl args...]" >&2
+        echo "Example: sfpi api /api/v0/version" >&2
+        exit 1
+    fi
+
+    endpoint="$1"
+    shift
+
+    firejail --quiet --join="$FIREJAIL_PID" curl -s "http://127.0.0.1:5001${endpoint}" "$@"
+    exit 0
+fi
+
+# Enhanced pin add --progress handling
+if [[ "${1:-}" == "pin" && "${2:-}" == "add" ]]; then
+    HAS_PROGRESS=false
+    PATH_ARG=""
+
+    # Parse arguments to find --progress flag and the path
+    for arg in "${@:3}"; do
+        if [[ "$arg" == "--progress" ]]; then
+            HAS_PROGRESS=true
+        elif [[ "$arg" != -* ]]; then
+            PATH_ARG="$arg"
+        fi
+    done
+
+    # If --progress is enabled, enhance the output
+    if [[ "$HAS_PROGRESS" == true && -n "$PATH_ARG" ]]; then
+        # IPFS default chunk size is 256KB
+        CHUNK_SIZE=262144
+
+        # Resolve path to CID
+        echo "Resolving path and calculating total size..." >&2
+        CID=$(firejail --quiet --join="$FIREJAIL_PID" ipfs resolve -r "$PATH_ARG" 2>/dev/null | sed 's|^/ipfs/||')
+
+        # Get total size from block metadata (fast, no traversal)
+        BLOCK_DATA=$(firejail --quiet --join="$FIREJAIL_PID" -- bash -c "ipfs block get '$CID'" 2>/dev/null |
+            protoc --decode_raw 2>/dev/null)
+        TOTAL_SIZE=$(echo "$BLOCK_DATA" | grep -E '^\s+3:' | awk '{sum += $2} END {print sum}')
+        TOTAL_SIZE_HUMAN=$(numfmt --to=iec-i --suffix=B "$TOTAL_SIZE")
+
+        echo "Total size: $TOTAL_SIZE_HUMAN" >&2
+        echo "" >&2
+
+        # Run pin add and show byte-based progress
+        # Use stdbuf to disable buffering and read with \r delimiter since IPFS uses carriage returns
+        stdbuf -oL firejail --quiet --join="$FIREJAIL_PID" ipfs "$@" 2>&1 | while IFS= read -r -d $'\r' line || [[ -n "$line" ]]; do
+            if [[ "$line" =~ Fetched/Processed\ ([0-9]+)\ nodes ]]; then
+                PROCESSED="${BASH_REMATCH[1]}"
+                # Calculate bytes from node count * chunk size
+                PROCESSED_BYTES=$((PROCESSED * CHUNK_SIZE))
+                # Cap at total size
+                if [[ $PROCESSED_BYTES -gt $TOTAL_SIZE ]]; then
+                    PROCESSED_BYTES=$TOTAL_SIZE
+                fi
+                PROCESSED_HUMAN=$(numfmt --to=iec-i --suffix=B "$PROCESSED_BYTES")
+                PCT=$(awk "BEGIN {printf \"%.1f\", 100 * $PROCESSED_BYTES / $TOTAL_SIZE}")
+                echo -ne "\rProgress: $PROCESSED_HUMAN / $TOTAL_SIZE_HUMAN ($PCT%)" >&2
+            elif [[ -n "$line" ]]; then
+                echo "$line"
+            fi
+        done
+        echo "" >&2
+        exit 0
+    fi
+fi
+
+# Default: pass through to ipfs command
+exec firejail --quiet --join="$FIREJAIL_PID" ipfs "$@"

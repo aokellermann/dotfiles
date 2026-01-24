@@ -95,6 +95,71 @@ lspci -nnd ::03xx
 
 The hex code above is `64a0`. Then, add the following to your kernel params (e.g. in `/boot/loader/entries/foo.conf`) and replace the nex code with yours: `i915.force_probe=!64a0 xe.force_probe=64a0`
 
+
+### Sandboxed IPFS Network
+
+Using mullvad wireguard interface for sandboxing via firejail:
+
+`/usr/local/bin/firejail-bridge-up.sh`
+
+```sh
+#!/bin/bash
+
+# Bridge setup
+ip link add br0 type bridge
+ip addr add 10.10.20.1/24 dev br0
+ip link set br0 up
+
+# Enable forwarding
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# Forward rules for the bridge
+iptables -A FORWARD -i br0 -o wg0-mullvad -j ACCEPT
+iptables -A FORWARD -i wg0-mullvad -o br0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+# NAT through the VPN
+iptables -t nat -A POSTROUTING -o wg0-mullvad -s 10.10.20.0/24 -j MASQUERADE
+```
+
+`/usr/local/bin/firejail-bridge-down.sh`
+
+```sh
+#!/bin/bash
+
+iptables -D FORWARD -i br0 -o wg0-mullvad -j ACCEPT
+iptables -D FORWARD -i wg0-mullvad -o br0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -t nat -D POSTROUTING -o wg0-mullvad -s 10.10.20.0/24 -j MASQUERADE
+ip link set br0 down
+ip link del br0
+```
+
+`/etc/systemd/system/firejail-bridge.service`
+
+```
+[Unit]
+Description=Firejail bridge for Mullvad
+After=network-online.target wg-quick@wg0-mullvad.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/firejail-bridge-up.sh
+ExecStop=/usr/local/bin/firejail-bridge-down.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Start the services
+
+```sh
+systemctl enable --now firejail-bridge
+systemctl enable --now --user ipfs
+```
+
+Then, you'll have to use firejail (e.g. firejail --join=<PID> COMMAND) to access the IPFS daemon and RPC. The `sfpi` script in this repo will do this for you.
+
 ## Credits
 
 Other people's helpful dotfiles:
