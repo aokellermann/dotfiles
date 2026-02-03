@@ -1,7 +1,7 @@
 {
     "height": 24,
     "spacing": 4,
-    "modules-left": ["sway/workspaces", "sway/scratchpad", "sway/mode"],
+    "modules-left": ["sway/workspaces", "sway/scratchpad", "custom/mako", "sway/mode"],
     "modules-center": ["clock"],
     "modules-right": ["tray", "bluetooth", "pulseaudio", "cpu", "memory", "temperature", "network", "battery"],
 
@@ -83,6 +83,12 @@
         "format-plugged": "{capacity}% ",
         "format-alt": "{time} {icon}",
         "format-icons": ["", "", "", "", ""]
+    },
+    "custom/mako": {
+        "exec": "makoctl mode | grep -q do-not-disturb && printf '\\uf1f6' || printf '\\uf0f3'",
+        "interval": 1,
+        "on-click": "makoctl mode -t do-not-disturb",
+        "tooltip": false
     }
 }
 
