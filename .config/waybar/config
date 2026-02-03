@@ -1,9 +1,9 @@
 {
     "height": 24,
     "spacing": 4,
-    "modules-left": ["sway/workspaces", "sway/scratchpad", "custom/mako", "sway/mode"],
+    "modules-left": ["sway/workspaces", "sway/scratchpad", "custom/mako", "tray", "sway/mode"],
     "modules-center": ["clock"],
-    "modules-right": ["tray", "bluetooth", "pulseaudio", "cpu", "memory", "temperature", "network", "battery"],
+    "modules-right": ["bluetooth", "pulseaudio", "cpu", "memory", "temperature", "network", "battery"],
 
     "sway/workspaces": {
         "disable-scroll": true
