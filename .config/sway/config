@@ -38,7 +38,8 @@ exec mullvad-vpn &
 
 # voice to text
 exec uv run --directory ~/repos/talkat talkat server
-bindsym $mod+x exec uv run --directory ~/repos/talkat talkat listen
+# bindsym $mod+x exec uv run --directory ~/repos/talkat talkat listen
+bindsym $mod+x exec bash -c 'voxd --trigger-record'
 
 # theme
 

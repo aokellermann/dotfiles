@@ -137,9 +137,6 @@ if [[ "${1:-}" == "pin" && "${2:-}" == "add" ]]; then
 
     # If --progress is enabled, enhance the output
     if [[ "$HAS_PROGRESS" == true && -n "$PATH_ARG" ]]; then
-        # IPFS default chunk size is 256KB
-        CHUNK_SIZE=262144
-
         # Resolve path to CID
         echo "Resolving path and calculating total size..." >&2
         CID=$(firejail --quiet --join="$FIREJAIL_PID" ipfs resolve -r "$PATH_ARG" 2>/dev/null | sed 's|^/ipfs/||')
@@ -150,24 +147,34 @@ if [[ "${1:-}" == "pin" && "${2:-}" == "add" ]]; then
         TOTAL_SIZE=$(echo "$BLOCK_DATA" | grep -E '^\s+3:' | awk '{sum += $2} END {print sum}')
         TOTAL_SIZE_HUMAN=$(numfmt --to=iec-i --suffix=B "$TOTAL_SIZE")
 
-        echo "Total size: $TOTAL_SIZE_HUMAN" >&2
+        # Get total node count via refs -r (fetches metadata only)
+        echo "Counting nodes..." >&2
+        TOTAL_NODES=$(firejail --quiet --join="$FIREJAIL_PID" ipfs refs -r "$CID" 2>/dev/null | wc -l)
+        TOTAL_NODES=$((TOTAL_NODES + 1))  # Add 1 for root node
+
+        # Calculate average block size
+        AVG_BLOCK_SIZE=$((TOTAL_SIZE / TOTAL_NODES))
+
+        echo "Total: $TOTAL_SIZE_HUMAN ($TOTAL_NODES nodes)" >&2
         echo "" >&2
 
         # Run pin add and show byte-based progress
         # Use stdbuf to disable buffering and read with \r delimiter since IPFS uses carriage returns
+        SHOWED_PROGRESS=false
         stdbuf -oL firejail --quiet --join="$FIREJAIL_PID" ipfs "$@" 2>&1 | while IFS= read -r -d $'\r' line || [[ -n "$line" ]]; do
             if [[ "$line" =~ Fetched/Processed\ ([0-9]+)\ nodes ]]; then
                 PROCESSED="${BASH_REMATCH[1]}"
-                # Calculate bytes from node count * chunk size
-                PROCESSED_BYTES=$((PROCESSED * CHUNK_SIZE))
-                # Cap at total size
-                if [[ $PROCESSED_BYTES -gt $TOTAL_SIZE ]]; then
-                    PROCESSED_BYTES=$TOTAL_SIZE
-                fi
+                PROCESSED_BYTES=$((PROCESSED * AVG_BLOCK_SIZE))
                 PROCESSED_HUMAN=$(numfmt --to=iec-i --suffix=B "$PROCESSED_BYTES")
-                PCT=$(awk "BEGIN {printf \"%.1f\", 100 * $PROCESSED_BYTES / $TOTAL_SIZE}")
-                echo -ne "\rProgress: $PROCESSED_HUMAN / $TOTAL_SIZE_HUMAN ($PCT%)" >&2
+                PCT=$(awk "BEGIN {printf \"%.1f\", 100 * $PROCESSED / $TOTAL_NODES}")
+                echo -ne "\rProgress: $PROCESSED / $TOTAL_NODES nodes ($PROCESSED_HUMAN / $TOTAL_SIZE_HUMAN) $PCT%" >&2
+                SHOWED_PROGRESS=true
             elif [[ -n "$line" ]]; then
+                # Clear progress line before printing final output
+                if [[ "$SHOWED_PROGRESS" == true ]]; then
+                    echo "" >&2
+                    SHOWED_PROGRESS=false
+                fi
                 echo "$line"
             fi
         done
