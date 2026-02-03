@@ -138,3 +138,5 @@ source "$HOME/repos/cve-benchmark/completions/run.bash"
 
 # zoxide
 eval "$(zoxide init bash)"
+
+export YDOTOOL_SOCKET="$HOME/.ydotool_socket"
