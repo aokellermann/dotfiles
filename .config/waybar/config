@@ -3,7 +3,7 @@
     "spacing": 4,
     "modules-left": ["sway/workspaces", "sway/scratchpad", "custom/mako", "tray", "sway/mode"],
     "modules-center": ["clock"],
-    "modules-right": ["bluetooth", "pulseaudio", "cpu", "memory", "temperature", "network", "battery"],
+    "modules-right": ["bluetooth", "pulseaudio", "cpu", "memory", "temperature", "network", "custom/power-profile", "battery"],
 
     "sway/workspaces": {
         "disable-scroll": true
@@ -89,6 +89,12 @@
         "interval": 1,
         "on-click": "makoctl mode -t do-not-disturb",
         "tooltip": false
+    },
+    "custom/power-profile": {
+        "exec": "$HOME/.local/bin/waybar-power-profile",
+        "interval": 5,
+        "on-click": "powerprofilesctl set performance",
+        "on-click-right": "powerprofilesctl set power-saver"
     }
 }
 
