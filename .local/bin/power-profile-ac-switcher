@@ -1,0 +1,45 @@
+#!/bin/bash
+# Power profile switcher based on AC power state
+# Switches to performance when plugged in, balanced when on battery
+
+set -euo pipefail
+
+log() {
+	echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*" | systemd-cat -t power-profile-ac-switcher -p "$1"
+	shift
+	echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*" >&2
+}
+
+get_ac_state() {
+	upower -i /org/freedesktop/UPower/devices/line_power_AC | grep "online:" | awk '{print $NF}'
+}
+
+switch_profile() {
+	local target="$1"
+	log info "Switching power profile to: $target"
+	powerprofilesctl set "$target" || log err "Failed to switch to $target"
+}
+
+monitor_ac_state() {
+	local last_state=""
+
+	while true; do
+		local current_state
+		current_state=$(get_ac_state)
+
+		if [[ "$current_state" != "$last_state" ]]; then
+			if [[ "$current_state" == "yes" ]]; then
+				log info "AC power connected"
+				switch_profile "performance"
+			else
+				log info "AC power disconnected"
+				switch_profile "balanced"
+			fi
+			last_state="$current_state"
+		fi
+
+		sleep 2
+	done
+}
+
+monitor_ac_state
