@@ -5,15 +5,15 @@ profile=$(powerprofilesctl get)
 
 case "$profile" in
 	performance)
-		echo "󰈐 Performance"
+		echo "{\"text\": \"󰈐\", \"tooltip\": \"Performance\"}"
 		;;
 	balanced)
-		echo "⚖ Balanced"
+		echo "{\"text\": \"⚖\", \"tooltip\": \"Balanced\"}"
 		;;
 	power-saver)
-		echo "🔋 Power Saver"
+		echo "{\"text\": \"🔋\", \"tooltip\": \"Power Saver\"}"
 		;;
 	*)
-		echo "$profile"
+		echo "{\"text\": \"$profile\", \"tooltip\": \"$profile\"}"
 		;;
 esac

@@ -92,7 +92,9 @@
     },
     "custom/power-profile": {
         "exec": "$HOME/.local/bin/waybar-power-profile",
+        "return-type": "json",
         "interval": 5,
+        "tooltip": true,
         "on-click": "powerprofilesctl set performance",
         "on-click-right": "powerprofilesctl set power-saver"
     }
