@@ -1,0 +1,19 @@
+#!/bin/bash
+# Display current power profile for waybar
+
+profile=$(powerprofilesctl get)
+
+case "$profile" in
+	performance)
+		echo "󰈐 Performance"
+		;;
+	balanced)
+		echo "⚖ Balanced"
+		;;
+	power-saver)
+		echo "🔋 Power Saver"
+		;;
+	*)
+		echo "$profile"
+		;;
+esac
