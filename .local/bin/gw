@@ -136,7 +136,7 @@ cmd_ls() {
         fi
     done < <(git worktree list --porcelain)
 
-    wait "${pids[@]}" 2>/dev/null
+    wait "${pids[@]}" 2>/dev/null || true
 
     # Find max branch length for alignment
     local max_branch_len=0
