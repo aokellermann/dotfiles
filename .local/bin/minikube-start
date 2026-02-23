@@ -1,0 +1,6 @@
+#!/bin/bash
+
+total_mem_kb=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+mem_mb=$((total_mem_kb * 3 / 4 / 1024))
+
+minikube start --container-runtime=containerd --addons=gvisor,registry --cpus=max --memory="${mem_mb}m"
