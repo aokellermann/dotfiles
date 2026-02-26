@@ -2,8 +2,7 @@
   "cleanupPeriodDays": 9999,
   "env": {
     "ENABLE_LSP_TOOL": "1",
-    "DISABLE_AUTOUPDATER": "1",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+    "DISABLE_AUTOUPDATER": "1"
   },
   "attribution": {
     "commit": "",
@@ -23,11 +22,26 @@
       "Edit:*"
     ],
     "deny": [
-      "Bash(rm -rf:*)",
-      "Bash(sudo:*)",
       "Read(/home/aokellermann/docs)"
     ],
     "defaultMode": "acceptEdits"
   },
-  "enabledPlugins": {}
+  "enabledPlugins": {
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "effortLevel": "medium",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "dcg"
+          }
+        ]
+      }
+    ]
+  }
 }
