@@ -105,7 +105,7 @@ cmd_merge() {
     if [[ "$do_prune" == true ]]; then
         echo "Removing worktree $current_wt and branch $current_branch..."
         git worktree remove "$current_wt"
-        git branch -d "$current_branch"
+        git branch -d "$current_branch" 2>/dev/null || true
         echo "__gw_cd:$main_wt"
     fi
 }
@@ -116,10 +116,10 @@ cmd_rm() {
     find_worktree "$branch"
     if [[ "$force" == "--force" ]]; then
         git worktree remove --force "$wt_path"
-        git branch -D "$wt_branch"
+        git branch -D "$wt_branch" 2>/dev/null || true
     else
         git worktree remove "$wt_path"
-        git branch -d "$wt_branch"
+        git branch -d "$wt_branch" 2>/dev/null || true
     fi
     echo "Removed worktree $wt_path and branch $wt_branch"
 }
@@ -214,7 +214,7 @@ cmd_prune() {
     for i in "${!prune_paths[@]}"; do
         echo "Pruning ${prune_paths[$i]}..."
         git worktree remove "${prune_paths[$i]}"
-        git branch -d "${prune_branches[$i]}"
+        git branch -d "${prune_branches[$i]}" 2>/dev/null || true
         ((++pruned))
     done
 
