@@ -110,7 +110,7 @@ export PATH="$HOME/.cache/.bun/bin:$PATH"
 export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
 
 # rust
-PATH="${HOME}/.cargo/bin:${PATH}"
+. "$HOME/.cargo/env"
 
 # bitwarden secret (lazy-loaded on first use)
 bws() {
