@@ -26,11 +26,6 @@
     ],
     "defaultMode": "acceptEdits"
   },
-  "enabledPlugins": {
-    "typescript-lsp@claude-plugins-official": true
-  },
-  "skipDangerousModePermissionPrompt": true,
-  "effortLevel": "medium",
   "hooks": {
     "PreToolUse": [
       {
@@ -43,5 +38,18 @@
         ]
       }
     ]
-  }
+  },
+  "enabledPlugins": {
+    "typescript-lsp@claude-plugins-official": true,
+    "docent@transluce-plugins": true
+  },
+  "extraKnownMarketplaces": {
+    "transluce-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "TransluceAI/claude-code-plugins"
+      }
+    }
+  },
+  "skipDangerousModePermissionPrompt": true
 }
