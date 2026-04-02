@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "spotify": {
+      "command": "bun",
+      "args": ["run", "/home/aokellermann/repos/spotify-mcp-server/build/index.js"]
+    }
+  }
+}
