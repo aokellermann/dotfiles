@@ -1,0 +1,318 @@
+[pacman]
+packages = [
+    # Base
+    "base",
+    "base-devel",
+    "linux",
+    "linux-firmware-intel",
+    "linux-lts",
+    "intel-ucode",
+    "efibootmgr",
+
+    # Shell
+    "bash-completion",
+    "less",
+    "man-db",
+    "openssh",
+    "rsync",
+    "unzip",
+    "wget",
+    "atool",
+    "pigz",
+    "socat",
+    "strace",
+    "lsof",
+    "inetutils",
+    "net-tools",
+    "bind",
+    "dog",
+    "gnu-netcat",
+    "tinyxxd",
+
+    # Sway / Wayland
+    "sway",
+    "swaybg",
+    "swayidle",
+    "waybar",
+    "rofi",
+    "mako",
+    "grim",
+    "slurp",
+    "wdisplays",
+    "wev",
+    "wl-mirror",
+    "xdg-desktop-portal-gtk",
+    "xdg-desktop-portal-wlr",
+    "xdg-user-dirs",
+    "xdg-utils",
+    "xorg-xwayland",
+    "qt6-wayland",
+    "dex",
+    "gammastep",
+    "geoclue",
+    "polkit-gnome",
+    "ydotool",
+    "brightnessctl",
+
+    # Terminal / TUI
+    "kitty",
+    "yazi",
+    "htop",
+    "bat",
+    "dust",
+    "fastfetch",
+    "glow",
+    "zoxide",
+
+    # Editor
+    "neovim",
+    "tree-sitter-cli",
+    "shfmt",
+
+    # Git
+    "git",
+    "git-filter-repo",
+    "github-cli",
+
+    # Fonts
+    "adobe-source-han-sans-otc-fonts",
+    "noto-fonts",
+    "noto-fonts-emoji",
+    "otf-font-awesome",
+    "woff2-font-awesome",
+    "ttf-dejavu",
+
+    # Audio / Video
+    "pipewire",
+    "pipewire-alsa",
+    "pipewire-jack",
+    "pipewire-libcamera",
+    "pipewire-pulse",
+    "wireplumber",
+    "gst-plugin-pipewire",
+    "alsa-plugins",
+    "libpulse",
+    "pavucontrol",
+    "speech-dispatcher",
+    "sof-firmware",
+    "mpv",
+    "obs-studio",
+    "kdenlive",
+
+    # Graphics / Intel
+    "intel-media-driver",
+    "libva-intel-driver",
+    "libva-utils",
+    "libvdpau-va-gl",
+    "vdpauinfo",
+    "vpl-gpu-rt",
+    "vulkan-intel",
+    "vulkan-tools",
+    "imlib2",
+    "imagemagick",
+    "poppler",
+    "ffmpegthumbnailer",
+    "resvg",
+
+    # Browsers
+    "firefox",
+    "firefoxpwa",
+    "chromium",
+
+    # Development
+    "cmake",
+    "extra-cmake-modules",
+    "rustup",
+    "bun",
+    "uv",
+    "typescript-language-server",
+    "python-argcomplete",
+    "tk",
+
+    # Bluetooth
+    "bluez",
+    "bluez-utils",
+    "blueman",
+
+    # Notifications
+    "libnotify",
+
+    # Containers / K8s
+    "docker",
+    "docker-buildx",
+    "docker-compose",
+    "dive",
+    "helm",
+    "kubeadm",
+    "kubectl",
+    "minikube",
+    "cilium-cli",
+    "crictl",
+    "critest",
+    "opentofu",
+    "ansible",
+
+    # Networking / VPN
+    "iwd",
+    "wireless_tools",
+    "iptables",
+    "systemd-resolvconf",
+    "sshpass",
+    "x11-ssh-askpass",
+
+    # Security
+    "gnome-keyring",
+    "python-keyring",
+    "libfido2",
+    "fprintd",
+    "firejail",
+    "lynis",
+    "keychain",
+    "radare2",
+
+    # Desktop apps
+    "anki",
+    "bitwarden-cli",
+    "code",
+    "gimp",
+    "loupe",
+    "signal-desktop",
+    "telegram-desktop",
+    "deluge",
+    "deluge-gtk",
+    "caja",
+    "gparted",
+    "zathura",
+    "zathura-pdf-mupdf",
+
+    # Printing
+    "cups",
+    "cups-pdf",
+    "gutenprint",
+    "hplip",
+
+    # System
+    "fwupd",
+    "fuse2",
+    "udisks2",
+    "usbutils",
+    "smartmontools",
+    "gptfdisk",
+    "xfsprogs",
+    "zram-generator",
+    "power-profiles-daemon",
+    "etckeeper",
+    "pacman-contrib",
+    "reflector",
+    "flatpak",
+    "android-udev",
+    "geoipupdate",
+    "qrencode",
+
+    # IPFS
+    "kubo",
+
+    # Databases
+    "postgresql",
+    "mariadb-clients",
+    "duckdb",
+
+    # Cloud
+    "aws-vault",
+    "cfssl",
+
+    # Testing
+    "bats",
+    "bats-assert",
+    "bats-file",
+    "bats-support",
+
+    # Misc CLI
+    "act",
+    "lazydocker",
+    "elinks",
+    "yq",
+]
+
+[aur]
+packages = [
+    # Sway extras
+    "sway-overfocus",
+    "sway-scratch",
+    "sway-win-extra",
+    "swayipc-cpp",
+    "swaylock-corrupter",
+    "swaylock-effects",
+
+    # Editor
+    "neovim-symlinks",
+
+    # Theming
+    "arc-gtk-theme",
+    "arc-icon-theme",
+
+    # Desktop apps
+    "beeper-v4-bin",
+    "brave-bin",
+    "claude-code",
+    "claude-cowork-service",
+    "claude-desktop-bin",
+    "insync",
+    "mullvad-vpn-bin",
+    "nitro-beta-bin",
+    "nitro-bin",
+    "nordvpn-bin",
+    "notion-app-electron",
+    "postman-bin",
+    "slack-desktop-wayland",
+    "zoom",
+    "zotero-bin",
+
+    # CLI tools
+    "bws-bin",
+    "downgrade",
+    "google-cloud-cli",
+    "hadolint-bin",
+    "hlint-bin",
+    "mcat-bin",
+    "pspg",
+    "rich-cli",
+    "shellcheck-bin",
+    "signal-cli",
+    "tdf",
+    "topgrade",
+    "ventoy-bin",
+    "voxd",
+
+    # Haskell
+    "ghcup-hs-bin",
+
+    # Firefox
+    "firefox-user-autoconfig",
+
+    # TeX
+    "texlive-installer",
+
+    # Package management
+    "yay",
+    "yaycache",
+    "zoxide",
+
+    # Misc
+    "gnu-netcat",
+    "python-sounddevice",
+    "libinput-gestures",
+]
+
+[bun]
+packages = [
+    "@google/clasp",
+    "@googleworkspace/cli",
+    "serverless",
+    "wrangler",
+]
+
+[flatpak]
+packages = [
+    "com.spotify.Client"
+]

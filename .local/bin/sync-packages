@@ -1,0 +1,97 @@
+#!/bin/bash
+set -euo pipefail
+
+CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/sync-packages/packages.toml"
+
+read_packages() {
+    python3 -c "
+import sys, tomllib
+with open(sys.argv[1], 'rb') as f:
+    d = tomllib.load(f)
+section = d.get(sys.argv[2], {})
+for p in section.get('packages', []):
+    print(p)
+" "$CONFIG" "$1"
+}
+
+mapfile -t pacman_packages < <(read_packages pacman)
+mapfile -t aur_packages < <(read_packages aur)
+mapfile -t bun_global_packages < <(read_packages bun)
+mapfile -t flatpak_packages < <(read_packages flatpak)
+
+all_declared_pacman=("${pacman_packages[@]}" "${aur_packages[@]}")
+installed_explicit=$(pacman -Qqe)
+installed_all=$(pacman -Qq)
+
+missing_pacman=()
+for pkg in "${pacman_packages[@]}"; do
+    grep -qx "$pkg" <<< "$installed_all" || missing_pacman+=("$pkg")
+done
+
+missing_aur=()
+for pkg in "${aur_packages[@]}"; do
+    grep -qx "$pkg" <<< "$installed_all" || missing_aur+=("$pkg")
+done
+
+extra_pacman=()
+while IFS= read -r pkg; do
+    printf '%s\n' "${all_declared_pacman[@]}" | grep -qx "$pkg" || extra_pacman+=("$pkg")
+done <<< "$installed_explicit"
+
+installed_bun=$(bun pm ls -g 2>/dev/null)
+missing_bun=()
+for pkg in "${bun_global_packages[@]}"; do
+    grep -q "$pkg" <<< "$installed_bun" || missing_bun+=("$pkg")
+done
+
+installed_flatpak=$(flatpak list --app --columns=application 2>/dev/null)
+missing_flatpak=()
+for pkg in "${flatpak_packages[@]}"; do
+    grep -qx "$pkg" <<< "$installed_flatpak" || missing_flatpak+=("$pkg")
+done
+
+extra_flatpak=()
+while IFS= read -r pkg; do
+    [[ -z "$pkg" ]] && continue
+    printf '%s\n' "${flatpak_packages[@]}" | grep -qx "$pkg" || extra_flatpak+=("$pkg")
+done <<< "$installed_flatpak"
+
+# Install missing packages
+if [[ ${#missing_pacman[@]} -gt 0 ]]; then
+    echo "==> Installing pacman packages: ${missing_pacman[*]}"
+    sudo pacman -Syu --needed "${missing_pacman[@]}"
+else
+    echo "==> Pacman packages up to date."
+fi
+
+if [[ ${#missing_aur[@]} -gt 0 ]]; then
+    echo "==> Installing AUR packages: ${missing_aur[*]}"
+    yay -S --needed "${missing_aur[@]}"
+else
+    echo "==> AUR packages up to date."
+fi
+
+if [[ ${#missing_bun[@]} -gt 0 ]]; then
+    echo "==> Installing bun global packages: ${missing_bun[*]}"
+    bun install -g "${missing_bun[@]}"
+else
+    echo "==> Bun global packages up to date."
+fi
+
+if [[ ${#missing_flatpak[@]} -gt 0 ]]; then
+    echo "==> Installing Flatpak packages: ${missing_flatpak[*]}"
+    flatpak install --noninteractive flathub "${missing_flatpak[@]}"
+else
+    echo "==> Flatpak packages up to date."
+fi
+
+# Remove undeclared packages
+if [[ ${#extra_pacman[@]} -gt 0 ]]; then
+    echo "==> Undeclared pacman packages: ${extra_pacman[*]}"
+    sudo pacman -Rns "${extra_pacman[@]}"
+fi
+
+if [[ ${#extra_flatpak[@]} -gt 0 ]]; then
+    echo "==> Undeclared Flatpak packages: ${extra_flatpak[*]}"
+    flatpak uninstall --noninteractive "${extra_flatpak[@]}"
+fi
