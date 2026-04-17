@@ -59,7 +59,7 @@ done <<< "$installed_flatpak"
 # Install missing packages
 if [[ ${#missing_pacman[@]} -gt 0 ]]; then
     echo "==> Installing pacman packages: ${missing_pacman[*]}"
-    sudo pacman -Syu --needed "${missing_pacman[@]}"
+    sudo pacman -S --needed "${missing_pacman[@]}"
 else
     echo "==> Pacman packages up to date."
 fi
