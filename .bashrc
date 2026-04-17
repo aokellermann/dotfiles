@@ -134,8 +134,8 @@ for f in "$HOME/.local/share/bash-completion/completions"/*; do
 done
 
 # cve-bench
-source "$HOME/repos/cve-benchmark-k8s-v2/completions/run.bash"
-source "$HOME/repos/cve-aws/completions/run.bash"
+source "$HOME/repos/cve-benchmark-stress/completions/run.bash"
+# source "$HOME/repos/cve-aws/completions/run.bash"
 
 # zoxide
 eval "$(zoxide init bash)"
