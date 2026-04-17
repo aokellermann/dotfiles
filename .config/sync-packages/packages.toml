@@ -150,7 +150,6 @@ packages = [
     "crictl",
     "critest",
     "opentofu",
-    "ansible",
 
     # Networking / VPN
     "iwd",
@@ -176,10 +175,6 @@ packages = [
     "code",
     "gimp",
     "loupe",
-    "signal-desktop",
-    "telegram-desktop",
-    "deluge",
-    "deluge-gtk",
     "caja",
     "gparted",
     "zathura",
@@ -215,22 +210,14 @@ packages = [
     # Databases
     "postgresql",
     "mariadb-clients",
-    "duckdb",
 
     # Cloud
     "aws-vault",
     "cfssl",
 
-    # Testing
-    "bats",
-    "bats-assert",
-    "bats-file",
-    "bats-support",
-
     # Misc CLI
     "act",
     "lazydocker",
-    "elinks",
     "yq",
 ]
 
@@ -263,10 +250,6 @@ packages = [
     "nitro-bin",
     "nordvpn-bin",
     "notion-app-electron",
-    "postman-bin",
-    "slack-desktop-wayland",
-    "zoom",
-    "zotero-bin",
 
     # CLI tools
     "bws-bin",
@@ -314,5 +297,9 @@ packages = [
 
 [flatpak]
 packages = [
-    "com.spotify.Client"
+    "com.spotify.Client",
+    "com.slack.Slack",
+    "com.getpostman.Postman",
+    "org.signal.Signal",
+    "org.deluge_torrent.deluge",
 ]

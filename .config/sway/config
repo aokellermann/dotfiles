@@ -25,13 +25,13 @@ exec mako
 exec insync start
 
 # signal
-exec signal-desktop $wayland_flags &
+exec flatpak run org.signal.Signal --start-in-tray &
 
 # texting
 exec beeper &
 
-# -u starts minimized
-exec slack $wayland_flags -u &
+# -u starts minimized. disabled for now as it is annoyingly resource intensive on startup
+# exec flatpak run com.slack.Slack -u &
 
 # VPN
 exec mullvad-vpn &
@@ -236,19 +236,19 @@ bindsym $mod+apostrophe exec sway-scratch show --app-id $scratchpy --resize "set
 
 set $scratchspotify spotify
 for_window [app_id=$scratchspotify] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+comma exec sway-scratch show --app-id $scratchspotify --resize "set 90 ppt 90 ppt" --exec "spotify"
+bindsym $mod+comma exec sway-scratch show --app-id $scratchspotify --resize "set 90 ppt 90 ppt" --exec "flatpak run com.spotify.Client"
 
 set $scratchbeeper BeeperTexts
 for_window [app_id=$scratchbeeper] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+Shift+period exec sway-scratch show --app-id $scratchbeeper --resize "set 90 ppt 90 ppt" --exec "beeper"
 
-set $scratchsignal signal
+set $scratchsignal org.signal.Signal
 for_window [app_id=$scratchsignal] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+Alt+period exec sway-scratch show --app-id $scratchsignal --resize "set 90 ppt 90 ppt" --exec "signal-desktop $wayland_flags"
+bindsym $mod+Alt+period exec sway-scratch show --app-id $scratchsignal --resize "set 90 ppt 90 ppt" --exec "flatpak run org.signal.Signal"
 
-set $scratchslack Slack
+set $scratchslack com.slack.Slack
 for_window [app_id=$scratchslack] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+Ctrl+period exec sway-scratch show --app-id $scratchslack --resize "set 90 ppt 90 ppt" --exec "slack $wayland_flags"
+bindsym $mod+Ctrl+period exec sway-scratch show --app-id $scratchslack --resize "set 90 ppt 90 ppt" --exec "flatpak run com.slack.Slack"
 
 # resize
 floating_modifier $mod normal
