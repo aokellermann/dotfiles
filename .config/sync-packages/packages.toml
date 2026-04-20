@@ -1,77 +1,154 @@
 [pacman]
 packages = [
-    # Base
+    # Base system
     "base",
     "base-devel",
-    "linux",
-    "linux-firmware-intel",
-    "linux-lts",
-    "intel-ucode",
     "efibootmgr",
 
-    # Shell
+    # Kernel & firmware
+    "linux",
+    "linux-lts",
+    "linux-firmware-intel",
+    "intel-ucode",
+    "sof-firmware", # Sound Open Firmware for modern Intel audio codecs
+
+    # Intel GPU / graphics drivers
+    "intel-media-driver",
+    "libva-intel-driver",
+    "libva-utils",
+    "libvdpau-va-gl", # VDPAU-to-VA-API bridge
+    "vdpauinfo",
+    "vpl-gpu-rt", # Intel oneVPL runtime for hardware video encode/decode
+    "vulkan-intel",
+    "vulkan-tools",
+
+    # Firmware / hardware management
+    "fwupd", # firmware updates via LVFS
+    "smartmontools", # SMART disk health monitoring
+    "usbutils",
+    "android-udev", # udev rules for Android devices (adb/mtp)
+
+    # Filesystems & storage
+    "fuse2", # FUSE v2 (required by some AppImages / legacy apps)
+    "udisks2", # disk mount daemon
+    "gptfdisk", # gdisk / sgdisk partitioning
+    "xfsprogs", # XFS tools (used for /xfs/containerd)
+    "zram-generator", # systemd generator for swap-on-zram
+
+    # Power & thermal
+    "power-profiles-daemon",
+
+    # Shell essentials
     "bash-completion",
     "less",
     "man-db",
     "openssh",
     "rsync",
-    "unzip",
     "wget",
-    "atool",
-    "pigz",
-    "socat",
-    "strace",
+
+    # CLI utilities
+    "atool", # unified archive wrapper (aunpack, apack)
+    "pigz", # parallel gzip
+    "unzip",
     "lsof",
+    "strace",
+    "tinyxxd", # small xxd hex-dumper
+    "qrencode",
+
+    # Network diagnostics
+    "bind", # dig, nslookup
+    "dog", # modern dig replacement
+    "gnu-netcat",
     "inetutils",
     "net-tools",
-    "bind",
-    "dog",
-    "gnu-netcat",
-    "tinyxxd",
+    "socat", # multipurpose network relay
+    "sshpass", # non-interactive ssh password
+    "x11-ssh-askpass", # graphical ssh passphrase prompt
 
-    # Sway / Wayland
+    # Sway / Wayland compositor
     "sway",
     "swaybg",
     "swayidle",
     "waybar",
     "rofi",
-    "mako",
-    "grim",
-    "slurp",
-    "wdisplays",
-    "wev",
-    "wl-mirror",
+    "mako", # notification daemon
+    "grim", # screenshot capture
+    "slurp", # region selector (used with grim)
+    "wdisplays", # GUI display arrangement
+    "wev", # wayland event viewer (keycodes)
+    "wl-mirror", # mirror any wayland output
+    "qt6-wayland",
+    "xorg-xwayland",
+
+    # Desktop integration
     "xdg-desktop-portal-gtk",
     "xdg-desktop-portal-wlr",
     "xdg-user-dirs",
     "xdg-utils",
-    "xorg-xwayland",
-    "qt6-wayland",
-    "dex",
-    "gammastep",
-    "geoclue",
-    "polkit-gnome",
-    "ydotool",
-    "brightnessctl",
+    "dex", # runs XDG autostart .desktop entries
+    "polkit-gnome", # polkit authentication agent
+    "libnotify",
 
-    # Terminal / TUI
+    # Input & display control
+    "brightnessctl",
+    "ydotool", # wayland-compatible xdotool replacement
+    "gammastep", # night-light / color temperature
+    "geoclue", # geolocation service (feeds gammastep)
+
+    # Bluetooth
+    "bluez",
+    "bluez-utils",
+    "blueman",
+
+    # Wireless / networking
+    "iwd", # iNet wireless daemon (WiFi)
+    "wireless_tools",
+    "iptables",
+    "systemd-resolvconf",
+
+    # Audio (PipeWire stack)
+    "pipewire",
+    "pipewire-alsa",
+    "pipewire-jack",
+    "pipewire-libcamera",
+    "pipewire-pulse",
+    "wireplumber", # pipewire session manager
+    "gst-plugin-pipewire",
+    "alsa-plugins",
+    "libpulse",
+    "pavucontrol",
+    "speech-dispatcher",
+
+    # Media playback & editing
+    "mpv",
+    "obs-studio",
+    "kdenlive",
+
+    # Image / document processing
+    "imagemagick",
+    "imlib2", # image loading lib (yazi previews)
+    "poppler", # PDF rendering (yazi previews)
+    "ffmpegthumbnailer", # video thumbnail generation
+    "resvg", # SVG renderer (yazi previews)
+
+    # Terminal & TUI
     "kitty",
-    "yazi",
+    "yazi", # file manager
     "htop",
-    "bat",
-    "dust",
-    "fastfetch",
-    "glow",
-    "zoxide",
+    "bat", # cat with syntax highlighting
+    "dust", # du replacement
+    "fastfetch", # system info banner
+    "glow", # markdown renderer
+    "zoxide", # smart cd
 
     # Editor
     "neovim",
     "tree-sitter-cli",
-    "shfmt",
+    "shfmt", # shell script formatter
 
-    # Git
+    # Git / VCS
     "git",
-    "git-filter-repo",
+    "git-filter-repo", # history rewriting
     "github-cli",
 
     # Fonts
@@ -82,217 +159,180 @@ packages = [
     "woff2-font-awesome",
     "ttf-dejavu",
 
-    # Audio / Video
-    "pipewire",
-    "pipewire-alsa",
-    "pipewire-jack",
-    "pipewire-libcamera",
-    "pipewire-pulse",
-    "wireplumber",
-    "gst-plugin-pipewire",
-    "alsa-plugins",
-    "libpulse",
-    "pavucontrol",
-    "speech-dispatcher",
-    "sof-firmware",
-    "mpv",
-    "obs-studio",
-    "kdenlive",
-
-    # Graphics / Intel
-    "intel-media-driver",
-    "libva-intel-driver",
-    "libva-utils",
-    "libvdpau-va-gl",
-    "vdpauinfo",
-    "vpl-gpu-rt",
-    "vulkan-intel",
-    "vulkan-tools",
-    "imlib2",
-    "imagemagick",
-    "poppler",
-    "ffmpegthumbnailer",
-    "resvg",
-
     # Browsers
     "firefox",
-    "firefoxpwa",
+    "firefoxpwa", # Firefox PWA support (PWAsForFirefox)
     "chromium",
 
-    # Development
+    # Development: build tooling
     "cmake",
-    "extra-cmake-modules",
+    "extra-cmake-modules", # KDE CMake modules
+
+    # Development: languages / runtimes
     "rustup",
     "bun",
-    "uv",
+    "uv", # python package/project manager
+
+    # Development: Python extras
+    "tk", # Tcl/Tk (matplotlib Tk backend, turtle, etc.)
+
+    # Development: language servers
     "typescript-language-server",
-    "python-argcomplete",
-    "tk",
 
-    # Bluetooth
-    "bluez",
-    "bluez-utils",
-    "blueman",
-
-    # Notifications
-    "libnotify",
-
-    # Containers / K8s
+    # Containers & Kubernetes
     "docker",
     "docker-buildx",
     "docker-compose",
-    "dive",
-    "helm",
+    "dive", # inspect docker image layers
+    "crictl", # CRI (kubelet runtime) CLI
+    "critest", # CRI conformance tests
     "kubeadm",
     "kubectl",
     "minikube",
-    "cilium-cli",
-    "crictl",
-    "critest",
-    "opentofu",
+    "helm",
+    "cilium-cli", # Cilium eBPF networking for k8s
 
-    # Networking / VPN
-    "iwd",
-    "wireless_tools",
-    "iptables",
-    "systemd-resolvconf",
-    "sshpass",
-    "x11-ssh-askpass",
+    # Infrastructure as code
+    "opentofu", # open-source Terraform fork
 
-    # Security
+    # Cloud / PKI
+    "aws-vault", # secure AWS credential storage
+    "cfssl", # CloudFlare SSL/PKI toolkit
+
+    # Databases
+    "postgresql",
+    "mariadb-clients", # mysql/mariadb client utilities
+
+    # IPFS
+    "kubo", # go-ipfs daemon
+
+    # Dev CLI misc
+    "act", # run GitHub Actions locally
+    "lazydocker", # docker TUI
+    "yq", # jq for YAML/XML
+
+    # Security: auth & secrets
     "gnome-keyring",
     "python-keyring",
-    "libfido2",
-    "fprintd",
-    "firejail",
-    "lynis",
-    "keychain",
-    "radare2",
+    "keychain", # ssh/gpg-agent frontend
+    "libfido2", # FIDO2/WebAuthn (YubiKey etc.)
+    "fprintd", # fingerprint reader daemon
 
-    # Desktop apps
+    # Security: tooling
+    "firejail", # sandboxing
+    "lynis", # security auditing
+
+    # Desktop applications
     "anki",
-    "bitwarden-cli",
-    "code",
+    "code", # VS Code OSS
     "gimp",
-    "loupe",
-    "caja",
+    "loupe", # GNOME image viewer
+    "caja", # MATE file manager
     "gparted",
+    "bitwarden-cli",
+
+    # PDF / documents
     "zathura",
     "zathura-pdf-mupdf",
 
     # Printing
     "cups",
     "cups-pdf",
-    "gutenprint",
-    "hplip",
+    "gutenprint", # printer driver collection
+    "hplip", # HP printer/scanner drivers
 
-    # System
-    "fwupd",
-    "fuse2",
-    "udisks2",
-    "usbutils",
-    "smartmontools",
-    "gptfdisk",
-    "xfsprogs",
-    "zram-generator",
-    "power-profiles-daemon",
-    "etckeeper",
-    "pacman-contrib",
-    "reflector",
+    # System maintenance
+    "etckeeper", # /etc version control
+    "pacman-contrib", # paccache, checkupdates, etc.
+    "reflector", # mirrorlist optimizer
     "flatpak",
-    "android-udev",
-    "geoipupdate",
-    "qrencode",
-
-    # IPFS
-    "kubo",
-
-    # Databases
-    "postgresql",
-    "mariadb-clients",
-
-    # Cloud
-    "aws-vault",
-    "cfssl",
-
-    # Misc CLI
-    "act",
-    "lazydocker",
-    "yq",
+    "geoipupdate", # MaxMind GeoIP DB updater
 ]
 
 [aur]
 packages = [
     # Sway extras
-    "sway-overfocus",
-    "sway-scratch",
-    "sway-win-extra",
-    "swayipc-cpp",
-    "swaylock-corrupter",
+    "sway-overfocus", # directional/tab window cycling
+    "sway-scratch", # scratchpad helper
+    "sway-win-extra", # extra window manipulation ops
+    "swayipc-cpp", # sway IPC C++ library
     "swaylock-effects",
+    "swaylock-corrupter", # glitch-art lockscreen effect
 
     # Editor
-    "neovim-symlinks",
+    "neovim-symlinks", # vi/vim -> nvim symlinks
 
     # Theming
     "arc-gtk-theme",
     "arc-icon-theme",
 
-    # Desktop apps
-    "beeper-v4-bin",
+    # Package management
+    "yay", # AUR helper
+    "yaycache", # yay build cache manager
+    "downgrade", # roll back pacman packages
+
+    # Browsers
     "brave-bin",
+
+    # Messaging / communication
+    "beeper-v4-bin", # unified chat client
+    "signal-cli", # Signal messenger CLI
+
+    # Productivity / notes
+    "notion-app-electron",
+    "insync", # Google Drive sync client
+
+    # Claude / AI
     "claude-code",
     "claude-cowork-service",
     "claude-desktop-bin",
-    "insync",
+
+    # VPN
     "mullvad-vpn-bin",
-    "nitro-beta-bin",
+
+    # GraphQL
     "nitro-bin",
-    "nordvpn-bin",
-    "notion-app-electron",
+    "nitro-beta-bin",
 
-    # CLI tools
-    "bws-bin",
-    "downgrade",
+    # Cloud / dev CLIs
     "google-cloud-cli",
-    "hadolint-bin",
-    "hlint-bin",
-    "mcat-bin",
-    "pspg",
-    "rich-cli",
-    "shellcheck-bin",
-    "signal-cli",
-    "tdf",
-    "topgrade",
-    "ventoy-bin",
-    "voxd",
+    "bws-bin", # Bitwarden Secrets Manager CLI
 
-    # Haskell
-    "ghcup-hs-bin",
-
-    # Firefox
-    "firefox-user-autoconfig",
+    # Linters / formatters
+    "hadolint-bin", # Dockerfile linter
+    "shellcheck-bin", # shell script linter
 
     # TeX
     "texlive-installer",
 
-    # Package management
-    "yay",
-    "yaycache",
-    "zoxide",
+    # Terminal / CLI utilities
+    "pspg", # pager for psql/SQL result sets
+    "rich-cli", # Rich (Python) markdown/code renderer
+    "tdf", # terminal PDF viewer
+    "voxd", # voice-to-text daemon
 
-    # Misc
-    "gnu-netcat",
-    "python-sounddevice",
-    "libinput-gestures",
+    # Firefox
+    "firefox-user-autoconfig", # enable user.js autoconfig support
+
+    # System maintenance
+    "topgrade", # unified upgrade runner (pacman, yay, flatpak, etc.)
+
+    # System / boot
+    "ventoy-bin", # multiboot USB creator
+
+    # Input
+    "libinput-gestures", # touchpad gesture daemon
+
+    # Python libs
+    "python-sounddevice", # PortAudio bindings (used by voxd)
 ]
 
 [bun]
 packages = [
-    "@google/clasp",
+    "@google/clasp", # Google Apps Script CLI
     "@googleworkspace/cli",
-    "serverless",
-    "wrangler",
+    "serverless", # Serverless Framework
+    "wrangler", # Cloudflare Workers CLI
 ]
 
 [flatpak]
