@@ -64,6 +64,7 @@ packages = [
     "socat", # multipurpose network relay
     "sshpass", # non-interactive ssh password
     "x11-ssh-askpass", # graphical ssh passphrase prompt
+    "whois",
 
     # Sway / Wayland compositor
     "sway",
@@ -325,6 +326,9 @@ packages = [
 
     # Python libs
     "python-sounddevice", # PortAudio bindings (used by voxd)
+
+    # docker
+    "docker-credential-secretservice",
 ]
 
 [bun]
