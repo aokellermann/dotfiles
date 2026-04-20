@@ -35,7 +35,6 @@ This is **not** a typical project repo. The git working tree root is `$HOME`. Us
 - `Mod+d` - rofi launcher
 - `Mod+l` - lock screen (swaylock-corrupter)
 - `Mod+c` - firefox
-- `Mod+j` - cursor IDE
 - `Mod+1-9` - switch workspace (via sway_win_extra)
 - `Mod+Tab` - tab between windows (sway-overfocus)
 - Scratchpads: `Mod+;` (terminal), `Mod+'` (python), `Mod+,` (spotify), `Mod+.` (beeper)

@@ -132,7 +132,6 @@ bindsym $mod+g exec code
 # electron apps
 # todo: globally apply wayland flags
 bindsym $mod+k exec notion-app $wayland_flags
-bindsym $mod+j exec cursor $wayland_flags
 
 # screenshot
 bindsym $mod+slash exec grimshot copy active
