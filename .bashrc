@@ -36,9 +36,6 @@ alias l='ls -CF'
 # PS1
 PS1='\[${BLUE}\][\[${RESET}\]\[$MAGENTA\]\u\[${RESET}\]\[${MAGENTA2}\]@\[${RESET}\]\[${BLUE}\]\h\[${RESET}\] \[${MAGENTA}\]\W\[${RESET}\]\[${BLUE}\]]\[${RESET}\]\[${MAGENTA2}\]\$\[${RESET}\] '
 
-# bin
-PATH="${HOME}/.local/bin:${PATH}"
-
 alias v="$EDITOR"
 complete -o default -o filenames v
 
@@ -72,17 +69,6 @@ __git_complete gd _git_diff
 __git_complete gf _git_fetch
 __git_complete gcp _git_cherry_pick
 
-# texlive (version-agnostic paths)
-for texlive_dir in /usr/local/texlive/*/bin/x86_64-linux; do
-    [ -d "$texlive_dir" ] && PATH="$PATH:$texlive_dir"
-done
-for texlive_man in /usr/local/texlive/*/texmf-dist/doc/man; do
-    [ -d "$texlive_man" ] && MANPATH="$MANPATH:$texlive_man"
-done
-for texlive_info in /usr/local/texlive/*/texmf-dist/doc/info; do
-    [ -d "$texlive_info" ] && INFOPATH="$INFOPATH:$texlive_info"
-done
-
 # sway
 alias sway-tree='swaymsg -r -t get_tree'
 
@@ -94,23 +80,6 @@ alias eenv='f() { if [ -z "$1" ]; then FILE=".env"; else FILE="$1"; fi; if [ -f 
 
 # chrome debugging
 alias chromium-debug='chromium --remote-debugging-port=9222 --no-sandbox --disable-gpu'
-
-# pnpm
-export PNPM_HOME="/home/aokellermann/.local/share/pnpm"
-case ":$PATH:" in
-*":$PNPM_HOME:"*) ;;
-*) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-# bun
-export PATH="$HOME/.cache/.bun/bin:$PATH"
-
-# haskell
-export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
-
-# rust
-. "$HOME/.cargo/env"
 
 # bitwarden secret (lazy-loaded on first use)
 bws() {
@@ -139,5 +108,3 @@ source "$HOME/repos/cve-benchmark-stress/completions/run.bash"
 
 # zoxide
 eval "$(zoxide init bash)"
-
-export YDOTOOL_SOCKET="$HOME/.ydotool_socket"
