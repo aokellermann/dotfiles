@@ -1,0 +1,2 @@
+[install]
+trustedDependencies = ["@anthropic-ai/claude-code"]
