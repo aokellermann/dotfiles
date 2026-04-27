@@ -22,7 +22,8 @@
       "Edit:*"
     ],
     "deny": [
-      "Read(/home/aokellermann/docs)"
+      "Read(/home/aokellermann/docs)",
+      "Bash(sudo:*)"
     ],
     "defaultMode": "acceptEdits"
   },
@@ -51,11 +52,12 @@
       }
     }
   },
+  "effortLevel": "medium",
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
   "skipDangerousModePermissionPrompt": true,
-  "voiceEnabled": true,
-  "effortLevel": "medium"
+  "preferredNotifChannel": "notifications_disabled",
+  "voiceEnabled": true
 }
