@@ -27,6 +27,7 @@ application/x-bittorrent=org.deluge_torrent.deluge.desktop
 x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 x-scheme-handler/about=brave-browser.desktop
 x-scheme-handler/unknown=brave-browser.desktop
+x-scheme-handler/claude=com.anthropic.claude-desktop.desktop
 
 [Added Associations]
 x-scheme-handler/http=firefox.desktop;
