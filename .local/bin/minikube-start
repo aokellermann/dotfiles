@@ -4,3 +4,8 @@ total_mem_kb=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 mem_mb=$((total_mem_kb * 3 / 4 / 1024))
 
 minikube start --container-runtime=containerd --addons=gvisor,registry --cpus=max --memory="${mem_mb}m" "$@"
+
+kubectl --context=minikube port-forward -n kube-system service/registry 5000:80 &
+
+PLUGIN_VERSION=v0.35.0
+kubectl apply -k "https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/nfd?ref=${PLUGIN_VERSION}"
