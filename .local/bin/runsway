@@ -30,8 +30,8 @@ export QT_STYLE_OVERRIDE=kvantum
 # Flatpak: expose desktop entries and icons
 export XDG_DATA_DIRS="${XDG_DATA_DIRS:-/usr/local/share:/usr/share}:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"
 
-# SSH agent - use systemd socket-activated ssh-agent
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+# No SSH agent: all SSH keys are YubiKey-backed (sk) and signed via libfido2 directly.
+# git signing also goes through ssh-keygen + YubiKey, never an agent.
 
 # lock the session so that if sway crashes, there is no fallback to a unlocked, logged in terminal
 exec sh -c 'sway; vlock -a'

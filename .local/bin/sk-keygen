@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Generate a YubiKey-backed FIDO2 SSH key for a named service.
+# Creates ~/.ssh/<name> (handle) and ~/.ssh/<name>.pub.
+#
+# usage: sk-keygen <name> [comment]
+# example: sk-keygen github "github auth (yubikey main)"
+set -euo pipefail
+
+if [ $# -lt 1 ] || [ $# -gt 2 ]; then
+  echo "usage: $(basename "$0") <name> [comment]" >&2
+  exit 1
+fi
+
+name=$1
+comment=${2:-"$name (yubikey)"}
+key_path="$HOME/.ssh/$name"
+
+if [ -e "$key_path" ] || [ -e "$key_path.pub" ]; then
+  echo "error: $key_path or $key_path.pub already exists" >&2
+  exit 1
+fi
+
+ssh-keygen -t ed25519-sk \
+  -O resident \
+  -O verify-required \
+  -O application="ssh:$name" \
+  -f "$key_path" \
+  -N "" \
+  -C "$comment"
+
+echo
+echo "handle: $key_path"
+echo "pubkey: $key_path.pub"
+echo
+echo "upload this to the service:"
+cat "$key_path.pub"
