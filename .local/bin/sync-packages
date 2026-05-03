@@ -17,6 +17,7 @@ for p in section.get('packages', []):
 mapfile -t pacman_packages < <(read_packages pacman)
 mapfile -t aur_packages < <(read_packages aur)
 mapfile -t bun_global_packages < <(read_packages bun)
+mapfile -t uv_tool_packages < <(read_packages uv)
 mapfile -t flatpak_packages < <(read_packages flatpak)
 
 all_declared_pacman=("${pacman_packages[@]}" "${aur_packages[@]}")
@@ -38,11 +39,29 @@ while IFS= read -r pkg; do
     printf '%s\n' "${all_declared_pacman[@]}" | grep -qx "$pkg" || extra_pacman+=("$pkg")
 done <<< "$installed_explicit"
 
-installed_bun=$(bun pm ls -g 2>/dev/null)
+installed_bun=$(bun pm ls -g 2>/dev/null | sed -nE 's/^[├└]── (.+)@[^@]+$/\1/p')
 missing_bun=()
 for pkg in "${bun_global_packages[@]}"; do
-    grep -q "$pkg" <<< "$installed_bun" || missing_bun+=("$pkg")
+    grep -qx "$pkg" <<< "$installed_bun" || missing_bun+=("$pkg")
 done
+
+extra_bun=()
+while IFS= read -r pkg; do
+    [[ -z "$pkg" ]] && continue
+    printf '%s\n' "${bun_global_packages[@]}" | grep -qx "$pkg" || extra_bun+=("$pkg")
+done <<< "$installed_bun"
+
+installed_uv=$(uv tool list 2>/dev/null | grep -v '^-' | awk '{print $1}')
+missing_uv=()
+for pkg in "${uv_tool_packages[@]}"; do
+    grep -qx "$pkg" <<< "$installed_uv" || missing_uv+=("$pkg")
+done
+
+extra_uv=()
+while IFS= read -r pkg; do
+    [[ -z "$pkg" ]] && continue
+    printf '%s\n' "${uv_tool_packages[@]}" | grep -qx "$pkg" || extra_uv+=("$pkg")
+done <<< "$installed_uv"
 
 installed_flatpak=$(flatpak list --app --columns=application 2>/dev/null)
 missing_flatpak=()
@@ -78,6 +97,15 @@ else
     echo "==> Bun global packages up to date."
 fi
 
+if [[ ${#missing_uv[@]} -gt 0 ]]; then
+    echo "==> Installing uv tools: ${missing_uv[*]}"
+    for pkg in "${missing_uv[@]}"; do
+        uv tool install "$pkg"
+    done
+else
+    echo "==> uv tools up to date."
+fi
+
 if [[ ${#missing_flatpak[@]} -gt 0 ]]; then
     echo "==> Installing Flatpak packages: ${missing_flatpak[*]}"
     flatpak install --noninteractive flathub "${missing_flatpak[@]}"
@@ -89,6 +117,18 @@ fi
 if [[ ${#extra_pacman[@]} -gt 0 ]]; then
     echo "==> Undeclared pacman packages: ${extra_pacman[*]}"
     sudo pacman -Rns "${extra_pacman[@]}"
+fi
+
+if [[ ${#extra_bun[@]} -gt 0 ]]; then
+    echo "==> Undeclared bun global packages: ${extra_bun[*]}"
+    bun remove -g "${extra_bun[@]}"
+fi
+
+if [[ ${#extra_uv[@]} -gt 0 ]]; then
+    echo "==> Undeclared uv tools: ${extra_uv[*]}"
+    for pkg in "${extra_uv[@]}"; do
+        uv tool uninstall "$pkg"
+    done
 fi
 
 if [[ ${#extra_flatpak[@]} -gt 0 ]]; then
