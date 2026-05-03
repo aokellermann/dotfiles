@@ -30,3 +30,9 @@ defaultPref("browser.quitShortcut.disabled", true)
 // Disable pocket
 defaultPref("extensions.pocket.enabled", false)
 
+// Hardware video acceleration via VA-API (Intel Arc iGPU)
+defaultPref("media.ffmpeg.vaapi.enabled", true)
+defaultPref("media.hardware-video-decoding.force-enabled", true)
+defaultPref("media.rdd-ffmpeg.enabled", true)
+defaultPref("widget.dmabuf.force-enabled", true)
+

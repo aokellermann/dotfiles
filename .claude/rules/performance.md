@@ -71,14 +71,11 @@ sudo nvme get-feature /dev/nvme0 -f 0x0c -H
 ```
 Entry 3 should no longer transition to PS4.
 
-### LUKS discard (TODO — not yet applied)
+### LUKS discard — intentionally NOT enabled
 
-Weekly `fstrim.timer` is enabled but only trims `/boot` because `/`, `/home`, `/xfs` are LUKS-encrypted without `discard` passthrough. To fix:
+Weekly `fstrim.timer` only trims `/boot` because `/`, `/home`, `/xfs` are LUKS-encrypted and LUKS blocks TRIM passthrough by default. Enabling `discard` on the LUKS layer would restore TRIM for better sustained write performance and SSD wear-leveling, but leaks coarse disk-usage patterns (free vs. used regions) to anyone with physical access to the raw ciphertext.
 
-- Add `:discard` to `rd.luks.name=` in `/boot/loader/entries/arch.conf`
-- Add `discard` to the options column in `/etc/crypttab` for `/home` and `/xfs`
-
-Minor threat-model cost (deleted block patterns observable on raw disk) — irrelevant for laptop.
+User chose to keep TRIM disabled on encrypted volumes. Drive is at 1% wear after 3310 hours, so this is fine — performance impact is long-term and gradual, not acute. Do not re-propose this change.
 
 ## Boot time
 
