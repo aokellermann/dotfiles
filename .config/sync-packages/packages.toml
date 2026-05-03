@@ -17,6 +17,7 @@ packages = [
     "libva-intel-driver",
     "libva-utils",
     "libvdpau-va-gl", # VDPAU-to-VA-API bridge
+    "nvtop",
     "vdpauinfo",
     "vpl-gpu-rt", # Intel oneVPL runtime for hardware video encode/decode
     "vulkan-intel",
@@ -25,6 +26,7 @@ packages = [
     # Firmware / hardware management
     "fwupd", # firmware updates via LVFS
     "smartmontools", # SMART disk health monitoring
+    "nvme-cli",
     "usbutils",
     "android-udev", # udev rules for Android devices (adb/mtp)
 
@@ -40,6 +42,7 @@ packages = [
 
     # Shell essentials
     "bash-completion",
+    "direnv",
     "less",
     "man-db",
     "openssh",
@@ -54,6 +57,7 @@ packages = [
     "strace",
     "tinyxxd", # small xxd hex-dumper
     "qrencode",
+    "qsv", # csv parsing
 
     # Network diagnostics
     "bind", # dig, nslookup
@@ -122,8 +126,6 @@ packages = [
 
     # Media playback & editing
     "mpv",
-    "obs-studio",
-    "kdenlive",
 
     # Image / document processing
     "imagemagick",
@@ -168,6 +170,7 @@ packages = [
     # Development: build tooling
     "cmake",
     "extra-cmake-modules", # KDE CMake modules
+    "flatpak-builder",
 
     # Development: languages / runtimes
     "rustup",
@@ -179,6 +182,9 @@ packages = [
 
     # Development: language servers
     "typescript-language-server",
+
+    # Development: linters
+    "shellcheck",
 
     # Containers & Kubernetes
     "docker",
@@ -222,15 +228,19 @@ packages = [
     # Security: tooling
     "firejail", # sandboxing
     "lynis", # security auditing
+    "arch-audit",
+    "libpwquality",
+    "sysstat", # monitor stuff
+    "yubikey-manager",
+
+    # Security: networking
+    "mullvad-vpn",
 
     # Desktop applications
-    "anki",
     "code", # VS Code OSS
-    "gimp",
     "loupe", # GNOME image viewer
     "caja", # MATE file manager
     "gparted",
-    "bitwarden-cli",
 
     # PDF / documents
     "zathura",
@@ -272,9 +282,6 @@ packages = [
     "yaycache", # yay build cache manager
     "downgrade", # roll back pacman packages
 
-    # Browsers
-    "brave-bin",
-
     # Messaging / communication
     "beeper-v4-bin", # unified chat client
     "signal-cli", # Signal messenger CLI
@@ -284,12 +291,8 @@ packages = [
     "insync", # Google Drive sync client
 
     # Claude / AI
-    "claude-code",
     "claude-cowork-service",
     "claude-desktop-bin",
-
-    # VPN
-    "mullvad-vpn-bin",
 
     # GraphQL
     "nitro-bin",
@@ -297,11 +300,9 @@ packages = [
 
     # Cloud / dev CLIs
     "google-cloud-cli",
-    "bws-bin", # Bitwarden Secrets Manager CLI
 
     # Linters / formatters
     "hadolint-bin", # Dockerfile linter
-    "shellcheck-bin", # shell script linter
 
     # TeX
     "texlive-installer",
@@ -315,10 +316,8 @@ packages = [
     # Firefox
     "firefox-user-autoconfig", # enable user.js autoconfig support
 
-    # System maintenance
-    "topgrade", # unified upgrade runner (pacman, yay, flatpak, etc.)
-
     # System / boot
+    "sbctl", # secureboot
     "ventoy-bin", # multiboot USB creator
 
     # Input
@@ -329,14 +328,25 @@ packages = [
 
     # docker
     "docker-credential-secretservice",
+
+    # security
+    "aide", # file integrity monitoring
 ]
 
 [bun]
 packages = [
+    "@anthropic-ai/claude-code",
     "@google/clasp", # Google Apps Script CLI
     "@googleworkspace/cli",
+    "markserv", # compile + serve markdown
     "serverless", # Serverless Framework
     "wrangler", # Cloudflare Workers CLI
+]
+
+[uv]
+packages = [
+    "rich-cli", # Rich (Python) markdown/code renderer
+    "topgrade", # unified upgrade runner (pacman, yay, flatpak, etc.)
 ]
 
 [flatpak]
@@ -346,4 +356,8 @@ packages = [
     "com.getpostman.Postman",
     "org.signal.Signal",
     "org.deluge_torrent.deluge",
+    "org.gimp.GIMP",
+    "net.ankiweb.Anki",
+    "com.obsproject.Studio",
+    "org.kde.kdenlive",
 ]
