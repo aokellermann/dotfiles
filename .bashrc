@@ -49,6 +49,8 @@ function y() {
 }
 
 # git
+# fail HTTPS auth instead of prompting — forces SSH usage
+export GIT_TERMINAL_PROMPT=0
 alias gs='git status'
 alias gc='git commit'
 alias gch='git checkout'
@@ -81,14 +83,6 @@ alias eenv='f() { if [ -z "$1" ]; then FILE=".env"; else FILE="$1"; fi; if [ -f 
 # chrome debugging
 alias chromium-debug='chromium --remote-debugging-port=9222 --no-sandbox --disable-gpu'
 
-# bitwarden secret (lazy-loaded on first use)
-bws() {
-    if [ -z "$BWS_ACCESS_TOKEN" ]; then
-        export BWS_ACCESS_TOKEN=$(secret-tool lookup service bws account access-token)
-    fi
-    command bws "$@"
-}
-
 # kitten diff
 alias kgd='git difftool --no-symlinks --dir-diff'
 _kgd_completion() {
@@ -103,8 +97,11 @@ for f in "$HOME/.local/share/bash-completion/completions"/*; do
 done
 
 # cve-bench
-source "$HOME/repos/cve-benchmark-stress/completions/run.bash"
+source "$HOME/repos/cve-benchmark/completions/run.bash"
 # source "$HOME/repos/cve-aws/completions/run.bash"
 
 # zoxide
 eval "$(zoxide init bash)"
+
+# direnv
+eval "$(direnv hook bash)"

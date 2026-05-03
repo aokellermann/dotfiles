@@ -3,7 +3,7 @@
 [user]
 	email = antony@aokellermann.dev
 	name = Antony Kellermann
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJqwspE/24qBkRtt2Ojjfoe3O96U02NaNnEXix2wI3tR
+	signingkey = ~/.ssh/git_signing
 [push]
 	autoSetupRemote = true
 [core]
@@ -12,10 +12,6 @@
 	gpgSign = true
 [tag]
 	gpgSign = true
-[safe]
-	directory = /opt/flutter
-[credential]
-	helper = /usr/lib/git-core/git-credential-libsecret
 [advice]
 	addIgnoredFile = false
 [gpg]
@@ -41,3 +37,5 @@
     cmd = kitten diff $LOCAL $REMOTE
 [difftool "kitty.gui"]
     cmd = kitten diff $LOCAL $REMOTE
+[gpg "ssh"]
+	allowedSignersFile = /home/aokellermann/.ssh/allowed_signers

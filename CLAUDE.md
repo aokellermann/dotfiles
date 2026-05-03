@@ -26,7 +26,7 @@ This is **not** a typical project repo. The git working tree root is `$HOME`. Us
 - `gw` - git worktree helper with GitHub PR integration (add, cd, merge, rm, ls, prune)
 - `sfpi` - sandboxed IPFS wrapper using firejail
 - `power-profile-ac-switcher` - daemon for AC/battery power profile switching
-- `bw-ssh-agent` - SSH agent integrating with Bitwarden
+- `sk-keygen <name>` - create YubiKey-backed FIDO2 SSH key (resident, verify-required) at `~/.ssh/<name>`
 - `sway-wins.sh`, `waybar-power-profile`, `upgrade-nitro.sh` - system utilities
 
 ## Sway Keybindings (Mod = Super)
@@ -59,9 +59,16 @@ Kickstart.nvim config in `.config/nvim/init.lua`:
 - `y` - yazi file manager with directory tracking
 - `ltpdf` - compile LaTeX to PDF with live preview
 
+## PDF Manipulation
+
+Use `qpdf` for PDF operations (`pdftk` is not installed). Common patterns:
+- Page count: `qpdf --show-npages file.pdf`
+- Merge/reorder pages: `qpdf --empty --pages file1.pdf 1-6 file2.pdf 1 -- out.pdf`
+- Split: `qpdf --pages file.pdf 1-3 -- out.pdf`
+
 ## Notes
 
-- SSH agent managed by Bitwarden desktop via `.bitwarden-ssh-agent.sock`
+- SSH agent provided by `rbw-agent` at `$XDG_RUNTIME_DIR/rbw/ssh-agent-socket` (signs with SSH-key entries from Bitwarden); run `rbw unlock` once per session
 - Git commits are GPG signed using SSH keys (format = ssh)
 - Electron apps require `--enable-features=UseOzonePlatform --ozone-platform=wayland` flags
 - Docker uses containerd image store with XFS at `/xfs/containerd`
