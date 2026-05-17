@@ -3,7 +3,7 @@
 [user]
 	email = antony@aokellermann.dev
 	name = Antony Kellermann
-	signingkey = ~/.ssh/git_signing
+	signingkey = ~/.ssh/git_signing_touch
 [push]
 	autoSetupRemote = true
 [core]
