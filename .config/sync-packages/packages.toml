@@ -339,6 +339,8 @@ packages = [
     "@google/clasp", # Google Apps Script CLI
     "@googleworkspace/cli",
     "markserv", # compile + serve markdown
+    "playwright",
+    "@playwright/mcp",
     "serverless", # Serverless Framework
     "wrangler", # Cloudflare Workers CLI
 ]
