@@ -113,15 +113,41 @@ cmd_merge() {
 cmd_rm() {
     local branch="$1" force="$2"
     [[ -z "$branch" ]] && usage
-    find_worktree "$branch"
-    if [[ "$force" == "--force" ]]; then
-        git worktree remove --force "$wt_path"
-        git branch -D "$wt_branch" 2>/dev/null || true
+
+    wt_path=""
+    wt_branch=""
+    eval "$(git worktree list --porcelain | awk -v branch="/$branch\$" '
+        /^worktree / { path = substr($0, 10) }
+        /^branch / {
+            br = substr($0, 8)
+            if (br ~ branch) { printf "wt_path=\"%s\"\nwt_branch=\"%s\"\n", path, br; exit }
+        }
+    ')"
+
+    # cd to main worktree so branch deletion still works if we are inside the
+    # worktree being removed (its directory disappears mid-command).
+    local main_wt
+    main_wt=$(git worktree list --porcelain | awk '/^worktree / { print substr($0, 10); exit }')
+    cd "$main_wt"
+
+    if [[ -n "$wt_path" ]]; then
+        if [[ "$force" == "--force" ]]; then
+            git worktree remove --force "$wt_path"
+        else
+            git worktree remove "$wt_path"
+        fi
+        echo "Removed worktree $wt_path"
     else
-        git worktree remove "$wt_path"
-        git branch -d "$wt_branch" 2>/dev/null || true
+        wt_branch="$(get_username)/$branch"
+        echo "No worktree for /$branch; deleting branch $wt_branch only" >&2
     fi
-    echo "Removed worktree $wt_path and branch $wt_branch"
+
+    if [[ "$force" == "--force" ]]; then
+        git branch -D "$wt_branch"
+    else
+        git branch -d "$wt_branch"
+    fi
+    echo "Removed branch $wt_branch"
 }
 
 cmd_ls() {
