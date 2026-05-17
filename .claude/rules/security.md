@@ -226,44 +226,61 @@ Brief history: previously used rbw-agent's built-in SSH socket at `$XDG_RUNTIME_
 
 Migration is incomplete for some keys, intentionally — `cais`, `huggingface`, `cvebench_aws`, and `cloudlab` remain as software entries in the rbw vault but are **broken** without an agent. Acceptable until those services are needed; re-migrate via `sk-keygen <name>` + upload pubkey + change `IdentityFile` to handle path. Until migration, those `Host` blocks in `~/.ssh/config` will fail with "bad permissions" when ssh tries to load `.pub` as a private key.
 
-Active sk auth keys (handle files in `~/.ssh/`): `github`, `aur`, plus `git_signing` for commits. Each was created via `~/.local/bin/sk-keygen <name>` and stored as a resident credential on the YubiKey (re-derivable via `ssh-keygen -K`).
+Active sk auth keys (handle files in `~/.ssh/`): `github`, `aur`, plus `git_signing_touch` for commits (and a retired `git_signing` from the verify-required era — see below). Each was created via `~/.local/bin/sk-keygen <name>` (except `git_signing_touch`, which intentionally skips the script — see below) and stored as a resident credential on the YubiKey (re-derivable via `ssh-keygen -K`).
 
-### Git signing: YubiKey FIDO2
+### Git signing: YubiKey FIDO2 (touch-only)
 
-Git commits are signed with a hardware-backed FIDO2 SSH key, **not** a software key in the agent. Generated 2026-05-02:
+Git commits are signed with a hardware-backed FIDO2 SSH key, **not** a software key in the agent. Current key generated 2026-05-11:
 
 ```sh
-ssh-keygen -t ed25519-sk -O resident -O verify-required \
-  -O application=ssh:git-signing \
-  -f ~/.ssh/git_signing -C "git signing (yubikey main)"
+ssh-keygen -t ed25519-sk -O resident \
+  -O application=ssh:git-signing-touch \
+  -f ~/.ssh/git_signing_touch -N "" \
+  -C "git signing (yubikey, touch-only)"
 ```
 
 - `-t ed25519-sk` → key material is bound to the YubiKey; signing always happens on-device.
-- `-O verify-required` → forces FIDO2 PIN verification (cached per session) plus touch per signature.
+- **No `-O verify-required`** → only touch is required per signature, no PIN. This is a deliberate policy choice — see "Policy: touch-only, not PIN+touch" below.
 - `-O resident` → credential is stored in YubiKey NVRAM and can be re-derived on a new machine via `ssh-keygen -K`. Loss of the handle file ≠ loss of the key. (Loss of the YubiKey itself = loss; mitigate with a backup YubiKey enrolled the same way.)
-- No passphrase on the handle file: redundant given PIN+touch already required, and `-O resident` makes the handle re-derivable.
+- No passphrase on the handle file: redundant given touch already required, and `-O resident` makes the handle re-derivable.
+- Application slot `ssh:git-signing-touch` is distinct from the retired `ssh:git-signing` slot, so both resident credentials coexist on the YubiKey.
+
+**Do not regenerate this key with `~/.local/bin/sk-keygen`** — that script hardcodes `-O verify-required`, which is exactly what we don't want here. Run the `ssh-keygen` command above directly, or edit `sk-keygen` to accept a touch-only flag.
 
 Wired up in `~/.config/git/config`:
 ```ini
 [user]
-    signingkey = ~/.ssh/git_signing      # path to handle file, NOT literal pubkey — git's ssh signer needs to feed this to ssh-keygen -Y sign -f
+    signingkey = ~/.ssh/git_signing_touch    # path to handle file, NOT literal pubkey — git's ssh signer feeds this to ssh-keygen -Y sign -f
 [gpg]
     format = ssh
 [gpg "ssh"]
     allowedSignersFile = /home/aokellermann/.ssh/allowed_signers
 ```
 
-`~/.ssh/allowed_signers` lists both the new YubiKey pubkey and the retired pre-YubiKey pubkey (under both git emails) so `git log --show-signature` verifies past commits as well as new ones.
+`~/.ssh/allowed_signers` lists three pubkeys per email (current touch-only, retired verify-required `git_signing`, retired pre-YubiKey ed25519) so `git log --show-signature` verifies all historical commits.
 
-**Critical: do not delete the retired pubkey from GitHub or `allowed_signers`.** GitHub re-checks the "Verified" badge against the *current* set of signing keys on every page load. Removing the retired pubkey would instantly mark every pre-2026-05-02 commit as "Unverified." The corresponding *private* key was deleted from Bitwarden; verification only needs the public half.
+**Critical: do not delete any of the retired pubkeys from GitHub or `allowed_signers`.** GitHub re-checks the "Verified" badge against the *current* set of signing keys on every page load. Removing a retired pubkey would instantly mark every commit signed with it as "Unverified."
 
 GitHub signing keys (`gh api /user/ssh_signing_keys`) currently has:
 - `arch sign` (ed25519, retired pre-YubiKey, kept for past-commit verification)
-- `yubikey git-signing` (sk-ed25519, current)
+- `yubikey git-signing` (sk-ed25519, retired verify-required era, kept for 2026-05-02 → 2026-05-11 commits)
+- `yubikey git-signing-touch` (sk-ed25519, current)
 
-Signing path bypasses ssh-agent entirely: git invokes `ssh-keygen -Y sign -f ~/.ssh/git_signing` which talks to the YubiKey through libfido2. `SSH_AUTH_SOCK` is irrelevant here. This is the load-bearing property — a compromised agent cannot forge git signatures.
+Signing path bypasses ssh-agent entirely: git invokes `ssh-keygen -Y sign -f ~/.ssh/git_signing_touch` which talks to the YubiKey through libfido2. `SSH_AUTH_SOCK` is irrelevant here. The hardware boundary (touch required per signature) is the load-bearing property.
 
 Backup YubiKey: not yet enrolled. Until then, losing the YubiKey means losing the ability to sign new commits until a replacement is provisioned and added to GitHub + `allowed_signers`.
+
+#### Policy: touch-only, not PIN+touch
+
+The original signing key (2026-05-02 to 2026-05-11) used `-O verify-required`, forcing PIN+touch per signature. **This proved untenable for rebases**: a 30-commit rebase meant 30 PIN entries. Investigated whether OpenSSH's `ssh-agent` caches the FIDO2 `pinUvAuthToken` across signature requests to amortize the PIN — it does not, in current OpenSSH. The agent stores the key handle but re-runs UV (PIN+touch) on every sign call.
+
+Tried building infrastructure around this (`signed-rebase` wrapper, `ssh-keygen-git-sign` shim that injects `-U`, custom askpass) — none of it worked, because the bottleneck is the YubiKey enforcing UV on the credential, not the agent. The only fix is to drop `verify-required` on the credential itself.
+
+**Threat-model delta:** with PIN+touch, an attacker with code execution as `aokellermann` could not forge a commit signature even with the YubiKey plugged in — they'd lack the PIN. With touch-only, an attacker who can time their request precisely with a legitimate touch the user is about to perform could conceivably forge one signature per legit touch. In practice: still a hardware boundary, still requires physical presence at the keyboard, just no second factor. For a single-user developer laptop, accepted.
+
+If signing ever needs to be PIN-protected again (e.g. shared workstation, higher-assurance project), regenerate with `-O verify-required` and accept the rebase friction, OR move to a different signing mechanism that supports proper session caching (e.g. GPG with `gpg-agent` cache, though that loses hardware binding unless paired with smartcard).
+
+Do not propose re-adding `verify-required`, ssh-agent shenanigans, `ssh-keygen -U` wrappers, or custom askpass scripts for the signing key — that path was investigated and rejected.
 
 ### gh OAuth token
 

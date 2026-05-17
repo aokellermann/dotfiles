@@ -26,7 +26,7 @@ This is **not** a typical project repo. The git working tree root is `$HOME`. Us
 - `gw` - git worktree helper with GitHub PR integration (add, cd, merge, rm, ls, prune)
 - `sfpi` - sandboxed IPFS wrapper using firejail
 - `power-profile-ac-switcher` - daemon for AC/battery power profile switching
-- `sk-keygen <name>` - create YubiKey-backed FIDO2 SSH key (resident, verify-required) at `~/.ssh/<name>`
+- `sk-keygen <name>` - create YubiKey-backed FIDO2 SSH key (resident, verify-required) at `~/.ssh/<name>`. Note: the script always sets `verify-required`; the git signing key intentionally does NOT use it (see `~/.claude/rules/security.md`), so don't use this script to regenerate it.
 - `sway-wins.sh`, `waybar-power-profile`, `upgrade-nitro.sh` - system utilities
 
 ## Sway Keybindings (Mod = Super)
