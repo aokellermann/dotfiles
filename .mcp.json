@@ -3,6 +3,36 @@
     "spotify": {
       "command": "bun",
       "args": ["run", "/home/aokellermann/repos/spotify-mcp-server/build/index.js"]
+    },
+    "twitter": {
+      "type": "stdio",
+      "command": "playwright-mcp",
+      "args": [
+        "--headless",
+        "--isolated",
+        "--storage-state",
+        "/home/aokellermann/.config/claude-twitter-profile/storage-state.json",
+        "--allowed-origins",
+        "https://x.com;https://*.x.com;https://twitter.com;https://*.twitter.com;https://*.twimg.com;https://abs.twimg.com;https://pbs.twimg.com;https://video.twimg.com",
+        "--browser",
+        "chromium"
+      ],
+      "env": {}
+    },
+    "facebook": {
+      "type": "stdio",
+      "command": "playwright-mcp",
+      "args": [
+        "--headless",
+        "--isolated",
+        "--storage-state",
+        "/home/aokellermann/.config/claude-facebook-profile/storage-state.json",
+        "--allowed-origins",
+        "https://facebook.com;https://*.facebook.com;https://*.fbcdn.net;https://instagram.com;https://*.instagram.com;https://*.cdninstagram.com",
+        "--browser",
+        "chromium"
+      ],
+      "env": {}
     }
   }
 }
