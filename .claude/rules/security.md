@@ -61,7 +61,7 @@ install firewire_sbp2 /bin/true
 
 ### login.defs
 
-- `UMASK` = 027 (was 022)
+- `UMASK` = 022 (default). Previously hardened to 027 but reverted 2026-05-18 — on a single-user laptop with `chmod 750 /home/aokellermann` already gating other-user access, stripping other-read from every new file is belt-and-suspenders against a threat that doesn't exist. The cost is real, though: any process running under a different uid/gid that needs to read a file you own — containers with non-root users (mysql, www-data, nobody), sandboxed services, bind-mounted scripts into Docker — silently breaks with permission denied. Git stores only the executable bit and uses umask for the rest, so cloning a repo with 027 umask materializes files at e.g. 640 instead of their tracked 644 and downstream consumers fail in confusing ways. The work of "no other human reads my files" is already done by the home-dir 750, LUKS, and firejail/Flatpak sandboxes — umask 027 doesn't add to that. Do not propose re-tightening to 027.
 - `YESCRYPT_COST_FACTOR` = 11 (was unset, default 5)
 - `ENCRYPT_METHOD` = YESCRYPT (already default)
 
@@ -230,7 +230,9 @@ Active sk auth keys (handle files in `~/.ssh/`): `github`, `aur`, plus `git_sign
 
 ### Git signing: YubiKey FIDO2 (touch-only)
 
-Git commits are signed with a hardware-backed FIDO2 SSH key, **not** a software key in the agent. Current key generated 2026-05-11:
+**Status: signing is currently DISABLED by default** — `commit.gpgSign` and `tag.gpgSign` are set to `false` in `~/.config/git/config` (as of 2026-07-05). The key + verifier infrastructure below remains fully wired up, so re-enabling is a one-line flip of each back to `true` (or per-commit `git commit -S`). Everything in this section documents that still-present infrastructure; it just isn't invoked automatically right now.
+
+When signing is enabled, git commits are signed with a hardware-backed FIDO2 SSH key, **not** a software key in the agent. Current key generated 2026-05-11:
 
 ```sh
 ssh-keygen -t ed25519-sk -O resident \
@@ -251,6 +253,10 @@ Wired up in `~/.config/git/config`:
 ```ini
 [user]
     signingkey = ~/.ssh/git_signing_touch    # path to handle file, NOT literal pubkey — git's ssh signer feeds this to ssh-keygen -Y sign -f
+[commit]
+    gpgSign = false    # signing disabled by default (2026-07-05); flip to true to re-enable
+[tag]
+    gpgSign = false
 [gpg]
     format = ssh
 [gpg "ssh"]
