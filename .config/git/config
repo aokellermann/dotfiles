@@ -9,9 +9,9 @@
 [core]
 	editor = nvim
 [commit]
-	gpgSign = true
+	gpgSign = false
 [tag]
-	gpgSign = true
+	gpgSign = false
 [advice]
 	addIgnoredFile = false
 [gpg]
