@@ -16,7 +16,7 @@ This is **not** a typical project repo. The git working tree root is `$HOME`. Us
 - **Window Manager**: `.config/sway/config` - swaywm keybindings and window rules
 - **Terminal**: `.config/kitty/kitty.conf` - kitty terminal emulator
 - **Editor**: `.config/nvim/init.lua` - Neovim with kickstart.nvim (lazy.nvim plugin manager)
-- **Git**: `.config/git/config` - git config with SSH signing via Bitwarden
+- **Git**: `.config/git/config` - git config with SSH signing configured (currently disabled by default)
 - **Startup**: `.local/bin/runsway` - environment setup for starting sway from TTY
 - **Editor Config**: `.editorconfig` - indentation/formatting rules (4-space default, 2 for YAML/JSON/TOML/Lua)
 
@@ -69,7 +69,7 @@ Use `qpdf` for PDF operations (`pdftk` is not installed). Common patterns:
 ## Notes
 
 - SSH agent provided by `rbw-agent` at `$XDG_RUNTIME_DIR/rbw/ssh-agent-socket` (signs with SSH-key entries from Bitwarden); run `rbw unlock` once per session
-- Git commits are GPG signed using SSH keys (format = ssh)
+- Git commit/tag signing is currently disabled (`commit.gpgSign`/`tag.gpgSign` = false); the SSH signing infrastructure (`user.signingkey`, `gpg.format = ssh`, `allowedSignersFile`) remains configured, so re-enabling is a one-line flip. See `~/.claude/rules/security.md`
 - Electron apps require `--enable-features=UseOzonePlatform --ozone-platform=wayland` flags
 - Docker uses containerd image store with XFS at `/xfs/containerd`
 - IPFS runs sandboxed through firejail over a Mullvad WireGuard interface
