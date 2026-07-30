@@ -69,6 +69,9 @@ for_window [shell="xwayland"] title_format "<b>%class</b>"
 # floating windows
 for_window [app_id="Bitwarden"] floating enable
 
+# acrobat (wine): tile the main window; dialogs (Open, Preferences, ...) keep floating
+for_window [app_id="acrord32.exe" title=".*Adobe Acrobat Reader.*"] floating disable
+
 # screen lock
 set $lock swaylock-corrupter --clock --indicator --timestr "%I:%M"
 
