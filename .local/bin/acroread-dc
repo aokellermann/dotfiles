@@ -1,0 +1,5 @@
+#!/bin/bash
+# Skip Wine virtual desktop (fullscreen black backdrop); dialogs behave as normal sway windows.
+# Delete this wrapper to restore the tab-bar-friendly virtual desktop mode.
+export ACROREAD_NO_VIRTUAL_DESKTOP=1
+exec /usr/bin/acroread-dc "$@"
