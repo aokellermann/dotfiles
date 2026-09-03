@@ -6,7 +6,7 @@ Record of security hardening applied to this machine. Based on a Lynis audit (20
 
 - **Laptop**: Lenovo ThinkPad, Intel Core Ultra 7 258V (Lunar Lake)
 - **Encryption**: Full-disk LUKS, single partition layout
-- **Sandboxing**: firejail (for IPFS, browsers, etc.)
+- **Sandboxing**: Flatpak for select GUI apps (firejail was removed 2026-08-22 along with the IPFS stack)
 - **Kernel**: `linux` (not `linux-hardened` — Electron/Chromium sandbox compatibility issues outweigh the ASLR improvement on a desktop)
 
 ## Applied hardening
@@ -61,7 +61,7 @@ install firewire_sbp2 /bin/true
 
 ### login.defs
 
-- `UMASK` = 022 (default). Previously hardened to 027 but reverted 2026-05-18 — on a single-user laptop with `chmod 750 /home/aokellermann` already gating other-user access, stripping other-read from every new file is belt-and-suspenders against a threat that doesn't exist. The cost is real, though: any process running under a different uid/gid that needs to read a file you own — containers with non-root users (mysql, www-data, nobody), sandboxed services, bind-mounted scripts into Docker — silently breaks with permission denied. Git stores only the executable bit and uses umask for the rest, so cloning a repo with 027 umask materializes files at e.g. 640 instead of their tracked 644 and downstream consumers fail in confusing ways. The work of "no other human reads my files" is already done by the home-dir 750, LUKS, and firejail/Flatpak sandboxes — umask 027 doesn't add to that. Do not propose re-tightening to 027.
+- `UMASK` = 022 (default). Previously hardened to 027 but reverted 2026-05-18 — on a single-user laptop with `chmod 750 /home/aokellermann` already gating other-user access, stripping other-read from every new file is belt-and-suspenders against a threat that doesn't exist. The cost is real, though: any process running under a different uid/gid that needs to read a file you own — containers with non-root users (mysql, www-data, nobody), sandboxed services, bind-mounted scripts into Docker — silently breaks with permission denied. Git stores only the executable bit and uses umask for the rest, so cloning a repo with 027 umask materializes files at e.g. 640 instead of their tracked 644 and downstream consumers fail in confusing ways. The work of "no other human reads my files" is already done by the home-dir 750, LUKS, and Flatpak sandboxes — umask 027 doesn't add to that. Do not propose re-tightening to 027.
 - `YESCRYPT_COST_FACTOR` = 11 (was unset, default 5)
 - `ENCRYPT_METHOD` = YESCRYPT (already default)
 
@@ -164,7 +164,7 @@ sudo mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 | Item | Reason |
 |---|---|
 | `linux-hardened` kernel | Breaks Electron/Chromium unprivileged user namespaces; ASLR gain is marginal on desktop with existing sysctl hardening |
-| AppArmor / SELinux | firejail already provides application sandboxing; AppArmor profile coverage is thin on Arch |
+| AppArmor / SELinux | Flatpak covers the apps that benefit from sandboxing (firejail removed 2026-08-22); AppArmor profile coverage is thin on Arch |
 | `hardened_malloc` | Can break applications; marginal benefit with ASLR in place |
 | USBGuard | USB storage actively used; overkill for personal desktop |
 | Separate `/var` partition | Intentional single LUKS partition layout |
