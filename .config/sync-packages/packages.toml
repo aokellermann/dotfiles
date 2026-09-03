@@ -151,6 +151,7 @@ packages = [
 
     # Git / VCS
     "git",
+    "git-lfs",
     "git-filter-repo", # history rewriting
     "github-cli",
 
@@ -210,9 +211,6 @@ packages = [
     "postgresql",
     "mariadb-clients", # mysql/mariadb client utilities
 
-    # IPFS
-    "kubo", # go-ipfs daemon
-
     # Dev CLI misc
     "act", # run GitHub Actions locally
     "lazydocker", # docker TUI
@@ -226,7 +224,6 @@ packages = [
     "fprintd", # fingerprint reader daemon
 
     # Security: tooling
-    "firejail", # sandboxing
     "lynis", # security auditing
     "arch-audit",
     "libpwquality",
@@ -258,6 +255,9 @@ packages = [
     "reflector", # mirrorlist optimizer
     "flatpak",
     "geoipupdate", # MaxMind GeoIP DB updater
+
+    # Email
+    "imapsync",
 ]
 
 [aur]
@@ -291,7 +291,6 @@ packages = [
     "insync", # Google Drive sync client
 
     # Claude / AI
-    "claude-cowork-service",
     "claude-desktop-bin",
 
     # GraphQL
@@ -311,7 +310,6 @@ packages = [
     "pspg", # pager for psql/SQL result sets
     "rich-cli", # Rich (Python) markdown/code renderer
     "tdf", # terminal PDF viewer
-    "voxd", # voice-to-text daemon
 
     # Firefox
     "firefox-user-autoconfig", # enable user.js autoconfig support
@@ -331,11 +329,19 @@ packages = [
 
     # security
     "aide", # file integrity monitoring
+
+    # applications
+    "acroread-dc-wine",
+
+    # games
+    "jagex-launcher",
+    "runelite",
 ]
 
 [bun]
 packages = [
     "@anthropic-ai/claude-code",
+    "@bitwarden/cli",
     "@google/clasp", # Google Apps Script CLI
     "@googleworkspace/cli",
     "markserv", # compile + serve markdown
@@ -349,13 +355,13 @@ packages = [
 packages = [
     "rich-cli", # Rich (Python) markdown/code renderer
     "topgrade", # unified upgrade runner (pacman, yay, flatpak, etc.)
+    "pre-commit",
 ]
 
 [flatpak]
 packages = [
     "com.spotify.Client",
     "com.slack.Slack",
-    "com.getpostman.Postman",
     "org.signal.Signal",
     "org.deluge_torrent.deluge",
     "org.gimp.GIMP",

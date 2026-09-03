@@ -1,0 +1,30 @@
+# BuildKit daemon config for the `cvebench` docker-container builder.
+#
+# The docker-container driver reads this only at builder-CREATE time, so it is
+# NOT hot-reloadable. To apply changes you must recreate the builder, which
+# DISCARDS that builder's build cache (~90GB as of this writing):
+#
+#   docker buildx rm cvebench
+#   docker buildx create --name cvebench --driver docker-container \
+#     --buildkitd-config ~/.config/buildkit/buildkitd.toml \
+#     --buildkitd-flags '--allow-insecure-entitlement=network.host' --use
+#
+# Do this only when no builds are in flight.
+
+[worker.oci]
+  # Cap concurrent build steps (vertices). This machine is 8 threads / 32GB and
+  # each heavy step (cargo/webpack/rollup/gradle) itself spawns ~nproc threads,
+  # so the BuildKit default (= CPU count) admits ~8 multi-threaded compilers at
+  # once and drives the box into swap. BuildKit has no memory-aware admission
+  # control, so this step cap is the only lever. 4 keeps all cores busy while
+  # bounding peak RAM to roughly 4 * per-step-RSS.
+  max-parallelism = 4
+
+  # Keep more build cache before GC evicts. The default keeps only ~10% of the
+  # builder's disk; the cache was sitting right at the eviction line (~90GB) and
+  # getting churned, forcing cold rebuilds. /xfs has ~1.1TB free, so keep 300GB.
+  # NOTE: this overrides BuildKit's default tiered GC policies with a single
+  # blanket rule.
+  [[worker.oci.gcpolicy]]
+    all = true
+    keepBytes = "300GB"
