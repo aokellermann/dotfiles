@@ -1,5 +1,5 @@
 {
-  "cleanupPeriodDays": 9999,
+  "cleanupPeriodDays": 30,
   "env": {
     "ENABLE_LSP_TOOL": "1",
     "DISABLE_AUTOUPDATER": "1"
@@ -17,16 +17,17 @@
       "Bash(ls:*)",
       "Bash(cat:*)",
       "Bash(grep:*)",
-      "Read:*",
-      "Write:*",
-      "Edit:*"
+      "Read",
+      "Write",
+      "Edit"
     ],
     "deny": [
       "Read(/home/aokellermann/docs)",
       "Bash(sudo:*)"
     ],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
+  "model": "claude-fable-5",
   "hooks": {
     "PreToolUse": [
       {
@@ -42,7 +43,11 @@
   },
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
-    "docent@transluce-plugins": true
+    "docent@transluce-plugins": false,
+    "frontend-design@claude-plugins-official": true,
+    "vercel@claude-plugins-official": true,
+    "notion@claude-plugins-official": true,
+    "asana@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "transluce-plugins": {
@@ -53,11 +58,13 @@
     }
   },
   "effortLevel": "medium",
+  "tui": "fullscreen",
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
   "skipDangerousModePermissionPrompt": true,
   "preferredNotifChannel": "notifications_disabled",
+  "agentPushNotifEnabled": true,
   "voiceEnabled": true
 }
