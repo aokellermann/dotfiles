@@ -10,7 +10,7 @@ application/x-extension-shtml=firefox.desktop
 application/xhtml+xml=firefox.desktop
 application/x-extension-xhtml=firefox.desktop
 application/x-extension-xht=firefox.desktop
-x-scheme-handler/jetbrains=jetbrains-toolbox.desktop
+x-scheme-handler/jetbrains=jetbrainsd.desktop
 application/pdf=firefox.desktop
 text/csv=userapp-kitty-JUSIE3.desktop
 image/png=org.gnome.Loupe.desktop
@@ -27,7 +27,10 @@ application/x-bittorrent=org.deluge_torrent.deluge.desktop
 x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 x-scheme-handler/about=brave-browser.desktop
 x-scheme-handler/unknown=brave-browser.desktop
-x-scheme-handler/claude=com.anthropic.claude-desktop.desktop
+x-scheme-handler/claude=claude-desktop.desktop
+x-scheme-handler/notion=notion.desktop
+x-scheme-handler/discord-409416265891971072=discord-409416265891971072.desktop
+x-scheme-handler/rshub=jagex-launcher.desktop
 
 [Added Associations]
 x-scheme-handler/http=firefox.desktop;
