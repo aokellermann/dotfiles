@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# $mod+q handler: hide (move to scratchpad) windows that should stay alive, kill everything else.
+# Add app_ids to HIDE to keep them running; they are re-shown via their sway-scratch binding.
+HIDE=(
+  "FFPWA-01KB2A6YB46NWKC0CDG5S1K126"   # Gmail PWA (four inbox tabs)
+)
+app_id=$(swaymsg -t get_tree | jq -r '.. | select(.type? == "con" or .type? == "floating_con") | select(.focused == true) | .app_id // ""')
+for h in "${HIDE[@]}"; do
+  if [[ "$app_id" == "$h" ]]; then
+    exec swaymsg move scratchpad
+  fi
+done
+exec swaymsg kill

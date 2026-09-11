@@ -114,8 +114,8 @@ bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. 
 bindsym $mod+Return exec $term
 bindsym $mod+Shift+Return exec $term -e python -q
 
-# Kill focused window
-bindsym $mod+q kill
+# Kill focused window (hides windows listed in sway-kill-or-hide, e.g. the Gmail PWA, instead of killing)
+bindsym $mod+q exec sway-kill-or-hide
 
 # launcher
 bindsym $mod+d exec $menu
@@ -251,6 +251,10 @@ bindsym $mod+Alt+period exec sway-scratch show --app-id $scratchsignal --resize 
 set $scratchslack com.slack.Slack
 for_window [app_id=$scratchslack] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+Ctrl+period exec sway-scratch show --app-id $scratchslack --resize "set 90 ppt 90 ppt" --exec "flatpak run com.slack.Slack"
+
+set $scratchgmail FFPWA-01KB2A6YB46NWKC0CDG5S1K126
+for_window [app_id=$scratchgmail] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
+bindsym $mod+Alt+comma exec sway-scratch show --app-id $scratchgmail --resize "set 90 ppt 90 ppt" --exec "firefoxpwa site launch 01KB2A6YB46NWKC0CDG5S1K126"
 
 # resize
 floating_modifier $mod normal
