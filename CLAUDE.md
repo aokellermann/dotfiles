@@ -53,7 +53,7 @@ Kickstart.nvim config in `.config/nvim/init.lua`:
 ## Useful Bash Aliases
 
 - `gs`, `gc`, `gch`, `gl`, `ga`, `gd`, `gf`, `gcp` - git shortcuts
-- `kgd` - kitten diff (kitty git diff viewer)
+- `d` - kitten diff (kitty git diff viewer)
 - `sway-tree` - dump sway window tree as JSON
 - `eenv [file]` - source .env file
 - `v` - opens `$EDITOR`

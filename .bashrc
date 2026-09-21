@@ -84,12 +84,12 @@ alias eenv='f() { if [ -z "$1" ]; then FILE=".env"; else FILE="$1"; fi; if [ -f 
 alias chromium-debug='chromium --remote-debugging-port=9222 --no-sandbox --disable-gpu'
 
 # kitten diff
-alias kgd='git difftool --no-symlinks --dir-diff'
-_kgd_completion() {
+alias d='git difftool --no-symlinks --dir-diff'
+_d_completion() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     COMPREPLY=($(compgen -W "$(git diff --name-only 2>/dev/null)" -- "$cur"))
 }
-complete -F _kgd_completion kgd
+complete -F _d_completion d
 
 # user completions
 for f in "$HOME/.local/share/bash-completion/completions"/*; do
