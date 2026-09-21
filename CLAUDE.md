@@ -26,7 +26,8 @@ This is **not** a typical project repo. The git working tree root is `$HOME`. Us
 - `gw` - git worktree helper with GitHub PR integration (add, cd, merge, rm, ls, prune)
 - `power-profile-ac-switcher` - daemon for AC/battery power profile switching
 - `sk-keygen <name>` - create YubiKey-backed FIDO2 SSH key (resident, verify-required) at `~/.ssh/<name>`. Note: the script always sets `verify-required`; the git signing key intentionally does NOT use it (see `~/.claude/rules/security.md`), so don't use this script to regenerate it.
-- `sway-wins.sh`, `waybar-power-profile`, `upgrade-nitro.sh` - system utilities
+- `upgrade-nitro.sh` - bumps the `nitro-bin`/`nitro-beta-bin` AUR packages (`~/repos/aur/`). Versions come from the NuGet atom feed for `ChilliCream.Nitro.App`; ChilliCream's CDN often lags NuGet by days (or skips Linux for an insider build) and its `latest-linux.yml`/`insider-linux.yml` are stale, so the script probes the CDN with a 1-byte ranged GET (HEAD 404s there even for existing files) and skips versions with no AppImage instead of failing on `wget`
+- `sway-wins.sh`, `waybar-power-profile` - system utilities
 
 ## Sway Keybindings (Mod = Super)
 
