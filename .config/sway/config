@@ -265,6 +265,10 @@ set $scratchgmail FFPWA-01KB2A6YB46NWKC0CDG5S1K126
 for_window [app_id=$scratchgmail] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+Alt+comma exec sway-scratch show --app-id $scratchgmail --resize "set 90 ppt 90 ppt" --exec "firefoxpwa site launch 01KB2A6YB46NWKC0CDG5S1K126"
 
+set $scratchgcal FFPWA-01M2RCNGNE374VBP6XGHCM1QPH
+for_window [app_id=$scratchgcal] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
+bindsym $mod+Ctrl+comma exec sway-scratch show --app-id $scratchgcal --resize "set 90 ppt 90 ppt" --exec "firefoxpwa site launch 01M2RCNGNE374VBP6XGHCM1QPH"
+
 # resize
 floating_modifier $mod normal
 
@@ -273,10 +277,6 @@ mode "resize" {
     bindsym $down resize grow height 10px
     bindsym $up resize shrink height 10px
     bindsym $right resize grow width 10px
-
-set $scratchgcal FFPWA-01M2RCNGNE374VBP6XGHCM1QPH
-for_window [app_id=$scratchgcal] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
-bindsym $mod+Ctrl+comma exec sway-scratch show --app-id $scratchgcal --resize "set 90 ppt 90 ppt" --exec "firefoxpwa site launch 01M2RCNGNE374VBP6XGHCM1QPH"
 
     bindsym Left resize shrink width 10px
     bindsym Down resize grow height 10px
