@@ -93,6 +93,15 @@ input "1739:53160:SYNA802E:00_06CB:CFA8_Touchpad" {
        scroll_factor 2
 }
 
+input "1739:52914:SYNA8017:00_06CB:CEB2_Touchpad" {
+       dwt enabled
+       tap enabled
+       drag disabled
+       natural_scroll disabled
+       middle_emulation enabled
+       scroll_factor 2
+}
+
 input "2:10:TPPS/2_Elan_TrackPoint" {
     pointer_accel 0.75
     accel_profile flat
