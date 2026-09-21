@@ -133,7 +133,7 @@ bindsym $mod+d exec $menu
 bindsym $mod+l exec $lock
 
 # web browser
-bindsym $mod+c exec firefox
+bindsym $mod+c exec chromium
 
 # file browser
 bindsym $mod+n exec caja
