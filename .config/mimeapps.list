@@ -1,9 +1,9 @@
 [Default Applications]
 x-scheme-handler/anytype=anytype.desktop
-x-scheme-handler/http=firefox.desktop
-x-scheme-handler/https=firefox.desktop
+x-scheme-handler/http=chromium.desktop
+x-scheme-handler/https=chromium.desktop
 x-scheme-handler/chrome=firefox.desktop
-text/html=firefox.desktop
+text/html=chromium.desktop
 application/x-extension-htm=firefox.desktop
 application/x-extension-html=firefox.desktop
 application/x-extension-shtml=firefox.desktop
@@ -25,8 +25,8 @@ x-scheme-handler/tg=org.telegram.desktop.desktop
 x-scheme-handler/magnet=org.deluge_torrent.deluge.desktop
 application/x-bittorrent=org.deluge_torrent.deluge.desktop
 x-scheme-handler/claude-cli=claude-code-url-handler.desktop
-x-scheme-handler/about=brave-browser.desktop
-x-scheme-handler/unknown=brave-browser.desktop
+x-scheme-handler/about=chromium.desktop
+x-scheme-handler/unknown=chromium.desktop
 x-scheme-handler/claude=claude-desktop.desktop
 x-scheme-handler/notion=notion.desktop
 x-scheme-handler/discord-409416265891971072=discord-409416265891971072.desktop
