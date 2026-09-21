@@ -34,7 +34,11 @@ powerprofilesctl set performance && sleep 1 && powerprofilesctl set balanced
 - Component versions from Linux: UEFI `/sys/class/dmi/id/bios_version`, EC `/sys/class/dmi/id/ec_firmware_release`, ME `/sys/class/mei/mei0/fw_ver`, composite via `fwupdmgr get-devices` (System Firmware entry).
 - Once on 1.22+, firmware cannot be rolled back below 1.22.
 
-Not a thermal/RAPL issue — PL1/PL2 are 37 W and throttle counters are normal when this happens.
+Not a thermal/RAPL issue — PL1/PL2 were 37 W at the time (after the 1.29 BIOS update they read MSR 64/64 W, MMIO 15/64 W, so effective PL1 = 15 W) and throttle counters are normal when this happens.
+
+## Laptop running hot — triage
+
+Quick triage recipe: `ps -eo pid,pcpu,etimes,comm --sort=-pcpu | head`, then `top -H -p <pid>` to see which thread. `pcpu` in ps is a lifetime average — use `pidstat -u 5 1` for the current picture. `powerprofilesctl` showing `Degraded: yes (lap-detected)` means the machine is on a lap and firmware already caps the performance profile.
 
 ## Memory / swap
 
