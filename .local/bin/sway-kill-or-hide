@@ -3,7 +3,7 @@
 # Add app_ids to HIDE to keep them running; they are re-shown via their sway-scratch binding.
 HIDE=(
   "FFPWA-01KB2A6YB46NWKC0CDG5S1K126"   # Gmail PWA (four inbox tabs)
-  "FFPWA-01M2RCNGNE374VBP6XGHCM1QPH"   # Google Calendar PWA
+  "FFPWA-01M32VGE3QTNP9CESHNE60B0YQ"   # Google Calendar PWA
 )
 app_id=$(swaymsg -t get_tree | jq -r '.. | select(.type? == "con" or .type? == "floating_con") | select(.focused == true) | .app_id // ""')
 for h in "${HIDE[@]}"; do
