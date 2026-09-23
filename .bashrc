@@ -105,3 +105,6 @@ eval "$(zoxide init bash)"
 
 # direnv
 eval "$(direnv hook bash)"
+
+# Claude Code without permission prompts
+alias c='claude --dangerously-skip-permissions'

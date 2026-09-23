@@ -54,6 +54,7 @@ Kickstart.nvim config in `.config/nvim/init.lua`:
 
 - `gs`, `gc`, `gch`, `gl`, `ga`, `gd`, `gf`, `gcp` - git shortcuts
 - `d` - kitten diff (kitty git diff viewer)
+- `c` - `claude --dangerously-skip-permissions`
 - `sway-tree` - dump sway window tree as JSON
 - `eenv [file]` - source .env file
 - `v` - opens `$EDITOR`
