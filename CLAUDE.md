@@ -43,7 +43,7 @@ This is **not** a typical project repo. The git working tree root is `$HOME`. Us
 - `Mod+1-9` - switch workspace (via sway_win_extra)
 - `Mod+Tab` - tab between windows (sway-overfocus)
 - `Mod+q` - `sway-kill-or-hide`: kills the focused window, except app_ids listed in the script (Gmail and Google Calendar PWAs) which are hidden to the scratchpad instead
-- Scratchpads: `Mod+;` (terminal), `Mod+'` (python), `Mod+,` (spotify), `Mod+Shift+.` (beeper), `Mod+Alt+.` (signal), `Mod+Ctrl+.` (slack), `Mod+Alt+,` (Gmail PWA), `Mod+Ctrl+,` (Google Calendar PWA)
+- Scratchpads: `Mod+;` (terminal), `Mod+'` (python), `Mod+,` (spotify), `Mod+Shift+.` (beeper), `Mod+Alt+.` (signal), `Mod+Ctrl+.` (slack), `Mod+Alt+,` (Gmail PWA), `Mod+Ctrl+,` (Google Calendar PWA), `Mod+Alt+n` (Caja; runs under `dbus-run-session` with `--name scratch_caja` because Caja is single-instance and would otherwise hand the window to the `Mod+n` instance)
 
 ## Neovim Setup
 

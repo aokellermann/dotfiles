@@ -268,6 +268,14 @@ set $scratchgcal FFPWA-01M32VGE3QTNP9CESHNE60B0YQ
 for_window [app_id=$scratchgcal] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+Ctrl+comma exec sway-scratch show --app-id $scratchgcal --resize "set 90 ppt 90 ppt" --exec "firefoxpwa site launch 01M32VGE3QTNP9CESHNE60B0YQ"
 
+# Caja is single-instance (GApplication), so a second launch just hands its
+# window to the running Mod+n instance (app_id "caja"). dbus-run-session gives
+# the scratch copy a private session bus so it stays a separate process with
+# its own app_id (set via GTK's --name).
+set $scratchcaja scratch_caja
+for_window [app_id=$scratchcaja] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
+bindsym $mod+Alt+n exec sway-scratch show --app-id $scratchcaja --resize "set 90 ppt 90 ppt" --exec "dbus-run-session -- env GDK_BACKEND=wayland caja --no-desktop --name $scratchcaja"
+
 # resize
 floating_modifier $mod normal
 
