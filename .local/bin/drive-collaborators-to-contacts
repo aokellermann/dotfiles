@@ -1,0 +1,154 @@
+#!/usr/bin/env python3
+"""Add everyone a Workspace user has shared Drive files with to their Google Contacts.
+
+Reads the ACLs of every file the user owns plus every item in the shared drives
+they belong to (via GAM's gam-delegation service account), keeps external human
+collaborators who were granted access directly on a file (inherited shared-drive
+membership is skipped), fills in names from Gmail's auto-collected "Other
+contacts" where Drive only knows the address, diffs against the user's existing
+contacts by email, and creates the missing ones in a contact group.
+
+Shared-drive permissions don't record who did the sharing, so on those files
+"shared by me" really means "shared by anyone on the team".
+
+    drive-collaborators-to-contacts                # dry run: print what would be created
+    drive-collaborators-to-contacts --apply        # create the contacts
+    drive-collaborators-to-contacts --user x@safeai.org --group "Doc collaborators"
+
+Requires: GAM7 on PATH with DWD scopes for drive + contacts, and the People API
+enabled in the SA's project (infra/cloud tofu).
+"""
+
+import argparse
+import csv
+import io
+import logging
+import re
+import subprocess
+import sys
+
+log = logging.getLogger("drive-collaborators")
+
+
+def gam(*args: str) -> str:
+    cmd = ["gam", *args]
+    log.debug("running: %s", " ".join(cmd))
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        log.error("gam failed (%d): %s\n%s", proc.returncode, " ".join(cmd), proc.stderr.strip())
+        sys.exit(proc.returncode)
+    return proc.stdout
+
+
+def gam_csv(*args: str) -> list[dict[str, str]]:
+    return list(csv.DictReader(io.StringIO(gam(*args))))
+
+
+def collaborators(user: str, home_domains: set[str], shared_drives: bool) -> dict[str, dict]:
+    """email -> {name, files} for external humans granted access directly on a file."""
+    rows = gam_csv("user", user, "print", "drivefileacls", "query", "'me' in owners", "oneitemperrow")
+    if shared_drives:
+        for sd in gam_csv("user", user, "print", "shareddrives"):
+            log.info("scanning shared drive %r", sd["name"])
+            rows += gam_csv("user", user, "print", "drivefileacls", "shareddriveid", sd["id"], "all_items", "oneitemperrow")
+    found: dict[str, dict] = {}
+    for row in rows:
+        if row.get("permission.type") != "user" or row.get("permission.role") == "owner":
+            continue
+        if row.get("permission.deleted") == "True" or row.get("permission.permissionDetails.inherited") == "True":
+            continue
+        email = (row.get("permission.emailAddress") or "").strip().lower()
+        if not email or email.split("@")[-1] in home_domains:
+            continue
+        entry = found.setdefault(email, {"name": "", "files": 0})
+        entry["files"] += 1
+        name = (row.get("permission.displayName") or "").strip()
+        # Drive falls back to the local part of the address when there is no
+        # Google profile; treat that as "no name".
+        if name and name.lower() != email.split("@")[0].lower():
+            entry["name"] = entry["name"] or name
+    return found
+
+
+def other_contact_names(user: str) -> dict[str, str]:
+    """email -> display name from Gmail's auto-collected 'Other contacts'."""
+    rows = gam_csv("user", user, "print", "othercontacts", "fields", "names,emailaddresses")
+    names: dict[str, str] = {}
+    for row in rows:
+        name = (row.get("names.displayName") or row.get("names.0.displayName") or "").strip()
+        for k, v in row.items():
+            if k and k.startswith("emailAddresses") and k.endswith(".value") and v and name:
+                names.setdefault(v.strip().lower(), name)
+    return names
+
+
+def existing_contact_emails(user: str) -> set[str]:
+    rows = gam_csv("user", user, "print", "contacts", "fields", "emailaddresses")
+    emails = set()
+    for row in rows:
+        for k, v in row.items():
+            if k and k.startswith("emailAddresses") and k.endswith(".value") and v:
+                emails.add(v.strip().lower())
+    return emails
+
+
+def split_name(name: str) -> tuple[str, str]:
+    parts = name.split()
+    if len(parts) == 1:
+        return parts[0], ""
+    return " ".join(parts[:-1]), parts[-1]
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--user", default="antony@safeai.org")
+    ap.add_argument("--group", default="Doc collaborators", help="contact group (label) to file new contacts under")
+    ap.add_argument("--home-domain", action="append", default=None, help="domain(s) to treat as internal (default: the user's)")
+    ap.add_argument("--apply", action="store_true", help="create contacts (default is a dry run)")
+    ap.add_argument("--list", action="store_true", help="only list collaborators; skip the contacts read/diff")
+    ap.add_argument("--no-shared-drives", action="store_true", help="only scan files the user owns in My Drive")
+    ap.add_argument("-v", "--verbose", action="store_true")
+    args = ap.parse_args()
+    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(levelname)s %(message)s")
+
+    home = set(args.home_domain or [args.user.split("@")[1]])
+    log.info("reading Drive ACLs for files owned by %s", args.user)
+    people = collaborators(args.user, home, not args.no_shared_drives)
+    log.info("%d external collaborators", len(people))
+
+    if args.list:
+        for email, p in sorted(people.items()):
+            print(f"  {email:45} {p['name'] or '(no name)':30} {p['files']} file(s)")
+        return
+
+    log.info("reading existing contacts")
+    for email, name in other_contact_names(args.user).items():
+        if email in people and not people[email]["name"]:
+            people[email]["name"] = name
+    have = existing_contact_emails(args.user)
+    missing = {e: p for e, p in people.items() if e not in have}
+    log.info("%d already in contacts, %d to create", len(people) - len(missing), len(missing))
+
+    for email, p in sorted(missing.items()):
+        print(f"  {email:45} {p['name'] or '(no name)':30} {p['files']} file(s)")
+    if not missing:
+        return
+    if not args.apply:
+        log.info("dry run; re-run with --apply to create these contacts")
+        return
+
+    for email, p in sorted(missing.items()):
+        cmd = ["user", args.user, "create", "contact", "email", "work", email, "primary",
+               "contactgroup", args.group,
+               "note", f"Added by drive-collaborators-to-contacts (shared Drive file)"]
+        if p["name"]:
+            given, family = split_name(p["name"])
+            cmd += ["givenname", given]
+            if family:
+                cmd += ["familyname", family]
+        out = gam(*cmd)
+        log.info("created %s: %s", email, re.sub(r"\s+", " ", out).strip()[:120])
+
+
+if __name__ == "__main__":
+    main()
