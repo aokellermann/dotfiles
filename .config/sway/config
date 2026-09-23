@@ -36,10 +36,9 @@ exec beeper &
 # VPN
 exec mullvad-vpn &
 
-# voice to text
-exec uv run --directory ~/repos/talkat talkat server
-# bindsym $mod+x exec uv run --directory ~/repos/talkat talkat listen
-bindsym $mod+x exec bash -c 'voxd --trigger-record'
+# voice to text (voxtype; daemon runs as systemd user service)
+bindsym XF86Assistant exec voxtype record toggle
+include ~/.config/sway/conf.d/*.conf
 
 # theme
 
