@@ -31,6 +31,16 @@ x-scheme-handler/claude=claude-desktop.desktop
 x-scheme-handler/notion=notion.desktop
 x-scheme-handler/discord-409416265891971072=discord-409416265891971072.desktop
 x-scheme-handler/rshub=jagex-launcher.desktop
+application/msword=gdrive-open.desktop
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=chromium.desktop
+application/vnd.oasis.opendocument.text=gdrive-open.desktop
+application/rtf=gdrive-open.desktop
+application/vnd.ms-excel=gdrive-open.desktop
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=gdrive-open.desktop
+application/vnd.oasis.opendocument.spreadsheet=gdrive-open.desktop
+application/vnd.ms-powerpoint=gdrive-open.desktop
+application/vnd.openxmlformats-officedocument.presentationml.presentation=gdrive-open.desktop
+application/vnd.oasis.opendocument.presentation=gdrive-open.desktop
 
 [Added Associations]
 x-scheme-handler/http=firefox.desktop;
@@ -43,3 +53,4 @@ text/plain=userapp-kitty-N8WVE3.desktop;
 image/jpeg=org.gnome.Loupe.desktop;
 image/svg+xml=org.gnome.Loupe.desktop;
 x-scheme-handler/chrome=firefox.desktop;
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=chromium.desktop;

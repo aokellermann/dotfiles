@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Open Office files with Google Docs/Sheets/Slides in the browser when they live
+# on an rclone Drive mount under ~/gdrive/<remote>/...; otherwise fall back to
+# LibreOffice. Registered as the default handler for Office MIME types via
+# gdrive-open.desktop.
+set -euo pipefail
+
+MOUNT_ROOT="$HOME/gdrive"
+
+open_in_browser() {
+    local path=$1 rel remote dir name id ext kind
+    rel=${path#"$MOUNT_ROOT"/}
+    remote=${rel%%/*}
+    rel=${rel#"$remote"/}
+    dir=$(dirname "$rel"); [ "$dir" = . ] && dir=""
+    name=$(basename "$rel")
+    id=$(rclone lsjson --files-only "$remote:$dir" \
+        | python3 -c 'import json,sys; n=sys.argv[1]; print(next(f["ID"] for f in json.load(sys.stdin) if f["Name"]==n))' "$name") || return 1
+    ext=${name##*.}; ext=${ext,,}
+    case $ext in
+        doc|docx|odt|rtf) kind=document ;;
+        xls|xlsx|ods|csv) kind=spreadsheets ;;
+        ppt|pptx|odp) kind=presentation ;;
+        *) xdg-open "https://drive.google.com/file/d/$id/view"; return ;;
+    esac
+    xdg-open "https://docs.google.com/$kind/d/$id/edit"
+}
+
+for f in "$@"; do
+    f=$(realpath -- "$f")
+    if [[ $f == "$MOUNT_ROOT"/* ]] && mountpoint -q "$MOUNT_ROOT/$(cut -d/ -f5 <<<"$f")" && open_in_browser "$f"; then
+        continue
+    fi
+    libreoffice "$f" &
+done
