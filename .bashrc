@@ -108,3 +108,6 @@ eval "$(direnv hook bash)"
 
 # Claude Code without permission prompts
 alias c='claude --dangerously-skip-permissions'
+
+# CSAI repo
+alias ci='cd ~/repos/csai'
