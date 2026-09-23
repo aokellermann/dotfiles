@@ -27,6 +27,7 @@ This is **not** a typical project repo. The git working tree root is `$HOME`. Us
 - `power-profile-ac-switcher` - daemon for AC/battery power profile switching
 - `sk-keygen <name>` - create YubiKey-backed FIDO2 SSH key (resident, verify-required) at `~/.ssh/<name>`. Note: the script always sets `verify-required`; the git signing key intentionally does NOT use it (see `~/.claude/rules/security.md`), so don't use this script to regenerate it.
 - `upgrade-nitro.sh` - bumps the `nitro-bin`/`nitro-beta-bin` AUR packages (`~/repos/aur/`). Versions come from the NuGet atom feed for `ChilliCream.Nitro.App`; ChilliCream's CDN often lags NuGet by days (or skips Linux for an insider build) and its `latest-linux.yml`/`insider-linux.yml` are stale, so the script probes the CDN with a 1-byte ranged GET (HEAD 404s there even for existing files) and skips versions with no AppImage instead of failing on `wget`
+- `caja-dconf-dump` / `caja-dconf-load` - Caja (file manager) settings live in dconf, not files; the dump script writes the tracked snapshot `~/.config/caja/dconf.ini` (org.mate.caja minus window-state, plus terminal=kitty and desktop-icons=false). Run the dump after changing Caja prefs, the load on a new machine
 - `sway-wins.sh`, `waybar-power-profile` - system utilities
 
 ## Sway Keybindings (Mod = Super)
@@ -35,6 +36,7 @@ This is **not** a typical project repo. The git working tree root is `$HOME`. Us
 - `Mod+d` - rofi launcher
 - `Mod+l` - lock screen (swaylock-corrupter)
 - `Mod+c` - chromium
+- `Mod+n` - caja, launched with `GDK_BACKEND=wayland` (native Wayland works in 1.28; XWayland is blurry at scale 2) and `--no-desktop` (Caja otherwise draws a desktop-icons window and lingers after the last window closes)
 - `Mod+1-9` - switch workspace (via sway_win_extra)
 - `Mod+Tab` - tab between windows (sway-overfocus)
 - `Mod+q` - `sway-kill-or-hide`: kills the focused window, except app_ids listed in the script (Gmail and Google Calendar PWAs) which are hidden to the scratchpad instead

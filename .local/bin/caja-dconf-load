@@ -1,0 +1,3 @@
+#!/bin/sh
+# Restore Caja settings from ~/.config/caja/dconf.ini (new machine / after dconf reset)
+exec dconf load /org/mate/ < "$HOME/.config/caja/dconf.ini"

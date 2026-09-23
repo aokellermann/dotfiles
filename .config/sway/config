@@ -136,7 +136,7 @@ bindsym $mod+l exec $lock
 bindsym $mod+c exec chromium
 
 # file browser
-bindsym $mod+n exec caja
+bindsym $mod+n exec env GDK_BACKEND=wayland caja --no-desktop
 
 # text editor
 bindsym $mod+g exec code

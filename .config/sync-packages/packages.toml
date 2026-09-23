@@ -237,6 +237,8 @@ packages = [
     "code", # VS Code OSS
     "loupe", # GNOME image viewer
     "caja", # MATE file manager
+    "caja-open-terminal", # right-click "Open in Terminal" (uses org.mate.applications-terminal = kitty)
+    "engrampa", # archive manager, gives Caja "Extract here"
     "gparted",
 
     # PDF / documents

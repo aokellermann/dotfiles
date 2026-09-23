@@ -1,0 +1,18 @@
+#!/bin/sh
+# Dump tracked Caja settings (org.mate.caja + terminal + background) into ~/.config/caja/dconf.ini
+set -e
+out="$HOME/.config/caja/dconf.ini"
+{
+  echo "# Caja settings. Restore with: caja-dconf-load  (dconf load /org/mate/ < this file)"
+  echo "# Regenerate after changing prefs: caja-dconf-dump"
+  echo
+  dconf dump /org/mate/caja/ | sed 's#^\[#[caja/#; s#^\[caja/\]#[caja]#' \
+    | awk '/^\[caja\/window-state\]/{skip=1;next} /^\[/{skip=0} !skip'
+  echo
+  echo "[applications-terminal]"
+  echo "exec='$(gsettings get org.mate.applications-terminal exec | tr -d "'")'"
+  echo
+  echo "[background]"
+  echo "show-desktop-icons=$(gsettings get org.mate.background show-desktop-icons)"
+} > "$out"
+echo "wrote $out"
