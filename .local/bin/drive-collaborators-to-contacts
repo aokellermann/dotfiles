@@ -1,4 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script --quiet
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["google-auth", "requests"]
+# ///
 """Add everyone a Workspace user has shared Drive files with to their Google Contacts.
 
 Reads the ACLs of every file the user owns plus every item in the shared drives
@@ -15,19 +19,49 @@ Shared-drive permissions don't record who did the sharing, so on those files
     drive-collaborators-to-contacts --apply        # create the contacts
     drive-collaborators-to-contacts --user x@safeai.org --group "Doc collaborators"
 
-Requires: GAM7 on PATH with DWD scopes for drive + contacts, and the People API
-enabled in the SA's project (infra/cloud tofu).
+Drive ACLs come from GAM (`gam user … print drivefileacls`); contacts are read
+and written through the People API directly with the same service account key
+(~/.gam/oauth2service.json, DWD scope https://www.googleapis.com/auth/contacts)
+because GAM's own contact commands misreport a scope mismatch as "People API
+Service/App not enabled". "Other contacts" enrichment additionally needs the
+contacts.other.readonly DWD scope and is skipped when that is missing.
 """
 
 import argparse
 import csv
 import io
 import logging
+import os
 import re
 import subprocess
 import sys
 
+import requests
+from google.auth.exceptions import RefreshError
+from google.auth.transport.requests import AuthorizedSession
+from google.oauth2 import service_account
+
 log = logging.getLogger("drive-collaborators")
+SA_KEY = os.path.expanduser("~/.gam/oauth2service.json")
+PEOPLE = "https://people.googleapis.com/v1"
+
+
+def people_session(user: str, *scopes: str) -> AuthorizedSession:
+    creds = service_account.Credentials.from_service_account_file(SA_KEY, scopes=list(scopes), subject=user)
+    return AuthorizedSession(creds)
+
+
+def paged(sess: AuthorizedSession, url: str, key: str, **params) -> list[dict]:
+    items: list[dict] = []
+    token = None
+    while True:
+        r = sess.get(url, params={**params, **({"pageToken": token} if token else {})})
+        r.raise_for_status()
+        body = r.json()
+        items += body.get(key, [])
+        token = body.get("nextPageToken")
+        if not token:
+            return items
 
 
 def gam(*args: str) -> str:
@@ -71,29 +105,73 @@ def collaborators(user: str, home_domains: set[str], shared_drives: bool) -> dic
 
 
 def other_contact_names(user: str) -> dict[str, str]:
-    """email -> display name from Gmail's auto-collected 'Other contacts'."""
-    rows = gam_csv("user", user, "print", "othercontacts", "fields", "names,emailaddresses")
+    """email -> display name from Gmail's auto-collected 'Other contacts' (best effort)."""
+    sess = people_session(user, "https://www.googleapis.com/auth/contacts.other.readonly")
+    try:
+        people = paged(sess, f"{PEOPLE}/otherContacts", "otherContacts", readMask="names,emailAddresses", pageSize=1000)
+    except (requests.HTTPError, RefreshError) as e:
+        log.warning("skipping Other-contacts name lookup (%s); grant contacts.other.readonly via DWD to enable", type(e).__name__)
+        return {}
     names: dict[str, str] = {}
-    for row in rows:
-        name = (row.get("names.displayName") or row.get("names.0.displayName") or "").strip()
-        for k, v in row.items():
-            if k and k.startswith("emailAddresses") and k.endswith(".value") and v and name:
-                names.setdefault(v.strip().lower(), name)
+    for p in people:
+        name = next((n.get("displayName") for n in p.get("names", []) if n.get("displayName")), None)
+        if name:
+            for e in p.get("emailAddresses", []):
+                names.setdefault(e.get("value", "").strip().lower(), name)
     return names
 
 
-def existing_contact_emails(user: str) -> set[str]:
-    rows = gam_csv("user", user, "print", "contacts", "fields", "emailaddresses")
-    emails = set()
-    for row in rows:
-        for k, v in row.items():
-            if k and k.startswith("emailAddresses") and k.endswith(".value") and v:
-                emails.add(v.strip().lower())
-    return emails
+def existing_contact_emails(sess: AuthorizedSession) -> set[str]:
+    people = paged(sess, f"{PEOPLE}/people/me/connections", "connections", personFields="emailAddresses", pageSize=1000)
+    return {e["value"].strip().lower() for p in people for e in p.get("emailAddresses", []) if e.get("value")}
+
+
+def contact_group(sess: AuthorizedSession, name: str) -> str:
+    groups = paged(sess, f"{PEOPLE}/contactGroups", "contactGroups", pageSize=1000)
+    for g in groups:
+        if g.get("name") == name and g.get("groupType") == "USER_CONTACT_GROUP":
+            return g["resourceName"]
+    r = sess.post(f"{PEOPLE}/contactGroups", json={"contactGroup": {"name": name}})
+    r.raise_for_status()
+    log.info("created contact group %r", name)
+    return r.json()["resourceName"]
+
+
+def gmail_names(user: str, emails: list[str]) -> dict[str, str]:
+    """email -> display name from the From/To headers of the user's own mailbox (best effort)."""
+    sess = people_session(user, "https://www.googleapis.com/auth/gmail.modify")
+    names: dict[str, str] = {}
+    for email in emails:
+        try:
+            r = sess.get("https://gmail.googleapis.com/gmail/v1/users/me/messages",
+                         params={"q": f"from:{email} OR to:{email}", "maxResults": 5})
+            r.raise_for_status()
+            for m in r.json().get("messages", []):
+                h = sess.get(f"https://gmail.googleapis.com/gmail/v1/users/me/messages/{m['id']}",
+                             params={"format": "metadata", "metadataHeaders": ["From", "To", "Cc"]}).json()
+                for hdr in h.get("payload", {}).get("headers", []):
+                    for addr in hdr["value"].split(","):
+                        name, _, rest = addr.rpartition("<")
+                        if rest.strip().rstrip(">").lower() == email and name.strip().strip('"'):
+                            names[email] = name.strip().strip('"')
+                if email in names:
+                    break
+        except (requests.HTTPError, RefreshError) as e:
+            log.warning("skipping Gmail name lookup (%s); grant gmail.readonly/gmail.modify via DWD to enable", type(e).__name__)
+            return names
+    return names
+
+
+def clean_name(name: str) -> str:
+    name = re.sub(r"\s*\([^)]*\)", "", name).strip()          # "Ashley Walker (Omnicom)"
+    if "," in name:                                              # "Garrahan, Andrew"
+        last, first = (x.strip() for x in name.split(",", 1))
+        name = f"{first} {last}"
+    return name
 
 
 def split_name(name: str) -> tuple[str, str]:
-    parts = name.split()
+    parts = clean_name(name).split()
     if len(parts) == 1:
         return parts[0], ""
     return " ".join(parts[:-1]), parts[-1]
@@ -125,29 +203,39 @@ def main() -> None:
     for email, name in other_contact_names(args.user).items():
         if email in people and not people[email]["name"]:
             people[email]["name"] = name
-    have = existing_contact_emails(args.user)
+    nameless = [e for e, p in sorted(people.items()) if not p["name"]]
+    if nameless:
+        log.info("looking up %d names in Gmail headers", len(nameless))
+        for email, name in gmail_names(args.user, nameless).items():
+            people[email]["name"] = name
+    sess = people_session(args.user, "https://www.googleapis.com/auth/contacts")
+    have = existing_contact_emails(sess)
     missing = {e: p for e, p in people.items() if e not in have}
     log.info("%d already in contacts, %d to create", len(people) - len(missing), len(missing))
 
     for email, p in sorted(missing.items()):
-        print(f"  {email:45} {p['name'] or '(no name)':30} {p['files']} file(s)")
+        print(f"  {email:45} {clean_name(p['name']) or '(no name)':30} {p['files']} file(s)")
     if not missing:
         return
     if not args.apply:
         log.info("dry run; re-run with --apply to create these contacts")
         return
 
+    group = contact_group(sess, args.group)
     for email, p in sorted(missing.items()):
-        cmd = ["user", args.user, "create", "contact", "email", "work", email, "primary",
-               "contactgroup", args.group,
-               "note", f"Added by drive-collaborators-to-contacts (shared Drive file)"]
+        body: dict = {
+            "emailAddresses": [{"value": email, "type": "work"}],
+            "memberships": [{"contactGroupMembership": {"contactGroupResourceName": group}}],
+            "biographies": [{"value": "Added by drive-collaborators-to-contacts (shared Drive file)"}],
+        }
         if p["name"]:
             given, family = split_name(p["name"])
-            cmd += ["givenname", given]
-            if family:
-                cmd += ["familyname", family]
-        out = gam(*cmd)
-        log.info("created %s: %s", email, re.sub(r"\s+", " ", out).strip()[:120])
+            body["names"] = [{"givenName": given, **({"familyName": family} if family else {})}]
+        r = sess.post(f"{PEOPLE}/people:createContact", json=body)
+        if r.ok:
+            log.info("created %s (%s)", email, r.json()["resourceName"])
+        else:
+            log.error("failed %s: %s %s", email, r.status_code, r.text[:200])
 
 
 if __name__ == "__main__":
