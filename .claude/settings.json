@@ -66,5 +66,6 @@
   "skipDangerousModePermissionPrompt": true,
   "preferredNotifChannel": "notifications_disabled",
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "switchModelsOnFlag": true
 }
