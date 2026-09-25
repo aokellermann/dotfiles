@@ -1,0 +1,16 @@
+# rclone mount of remote "%i" at ~/gdrive/%i. Enable per remote: systemctl --user enable --now rclone-mount@csai rclone-mount@csaic
+[Unit]
+Description=rclone mount %i: at %h/gdrive/%i
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+ExecStartPre=/usr/bin/mkdir -p %h/gdrive/%i
+ExecStart=/usr/bin/rclone mount %i: %h/gdrive/%i --vfs-cache-mode full
+ExecStop=/usr/bin/fusermount -uz %h/gdrive/%i
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target
