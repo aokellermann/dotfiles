@@ -248,8 +248,9 @@ set $scratchspotify spotify
 for_window [app_id=$scratchspotify] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+comma exec sway-scratch show --app-id $scratchspotify --resize "set 90 ppt 90 ppt" --exec "flatpak run com.spotify.Client"
 
-set $scratchbeeper BeeperTexts
-for_window [app_id=$scratchbeeper] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
+# Beeper 4.3.152 (2026-09-25) changed its app_id from BeeperTexts to Beeper
+set $scratchbeeper Beeper
+for_window [app_id="^(Beeper|BeeperTexts)$"] move scratchpad, scratchpad show, resize set 90 ppt 90 ppt
 bindsym $mod+Shift+period exec sway-scratch show --app-id $scratchbeeper --resize "set 90 ppt 90 ppt" --exec "beeper"
 
 set $scratchsignal org.signal.Signal
