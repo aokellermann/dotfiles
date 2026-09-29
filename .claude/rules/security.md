@@ -226,7 +226,9 @@ Brief history: previously used rbw-agent's built-in SSH socket at `$XDG_RUNTIME_
 
 Migration is incomplete for some keys, intentionally — `cais`, `huggingface`, `cvebench_aws`, and `cloudlab` remain as software entries in the rbw vault but are **broken** without an agent. Acceptable until those services are needed; re-migrate via `sk-keygen <name>` + upload pubkey + change `IdentityFile` to handle path. Until migration, those `Host` blocks in `~/.ssh/config` will fail with "bad permissions" when ssh tries to load `.pub` as a private key.
 
-Active sk auth keys (handle files in `~/.ssh/`): `github`, `aur`, plus `git_signing_touch` for commits (and a retired `git_signing` from the verify-required era — see below). Each was created via `~/.local/bin/sk-keygen <name>` (except `git_signing_touch`, which intentionally skips the script — see below) and stored as a resident credential on the YubiKey (re-derivable via `ssh-keygen -K`).
+**GitHub auth is a plain software key since 2026-09-29**: `~/.ssh/github_sw` (ed25519, no passphrase, on the LUKS-encrypted disk) is the `IdentityFile` for `Host github github.com`. The sk key `~/.ssh/github` (PIN+touch per connection, and `ControlMaster` sockets never actually persisted from Claude Code's Bash tool, so every `git push` prompted) is retired but kept on disk. Rationale: the `gh` OAuth token with `repo` scope already lets any local process push, so a file key adds no exposure the threat model above doesn't already accept. If GitHub ever drops the key, re-add `github_sw.pub` under Settings → SSH keys (needs `gh auth refresh -s admin:public_key` for the CLI route, then `--reset-scopes` back).
+
+Active sk auth keys (handle files in `~/.ssh/`): `aur` (and the retired `github`), plus `git_signing_touch` for commits (and a retired `git_signing` from the verify-required era — see below). Each was created via `~/.local/bin/sk-keygen <name>` (except `git_signing_touch`, which intentionally skips the script — see below) and stored as a resident credential on the YubiKey (re-derivable via `ssh-keygen -K`).
 
 ### Git signing: YubiKey FIDO2 (touch-only)
 
