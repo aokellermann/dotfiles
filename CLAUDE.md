@@ -59,7 +59,7 @@ Kickstart.nvim config in `.config/nvim/init.lua`:
 
 - `gs`, `gc`, `gch`, `gl`, `ga`, `gd`, `gf`, `gcp` - git shortcuts
 - `d` - kitten diff (kitty git diff viewer)
-- `c` - `claude --dangerously-skip-permissions`
+- `c` - `claude --dangerously-skip-permissions`. `claude` itself is a `.bashrc` function: inside `~/repos/csai` (any depth) it sets `CLAUDE_CONFIG_DIR=~/.claude-work` (work subscription), elsewhere the default `~/.claude` (personal subscription). `~/.claude-work` holds its own `.credentials.json`, `.claude.json` and `projects/` (csai session history + auto-memory were moved there 2026-10-05) and symlinks `settings.json`, `settings.local.json`, `CLAUDE.md`, `rules`, `skills`, `plugins`, `keybindings.json` from `~/.claude`, so both accounts share config. Log in with `/login` once per config dir; user-scope MCP servers (`claude mcp add -s user`) live in each dir's `.claude.json` and must be added to both. The earlier Bedrock routing (aws-vault `aisp-crm`, Opus 5.5 pin) was dropped the same day. Project settings could not do this because the csai subdirs are separate git repos. `claude-fork` launches via `bash -ic` so forks inherit the same routing
 - `sway-tree` - dump sway window tree as JSON
 - `eenv [file]` - source .env file
 - `v` - opens `$EDITOR`

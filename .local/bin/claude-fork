@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Fork the current Claude Code session into a new kitty pane.
+#
+# Run from inside a Claude Code session (via `! claude-fork` or the /fork skill):
+# opens a new kitty window/tab in the same cwd running
+#   claude --resume <this session> --fork-session [inherited flags] [extra args]
+# so the new pane shares this conversation's history but gets its own session id.
+#
+# Usage: claude-fork [-t window|tab|os-window] [--] [extra claude args]
+# Env:   CLAUDE_CODE_SESSION_ID (set by Claude Code), KITTY_LISTEN_ON (needs `listen_on` in kitty.conf),
+#        CLAUDE_PID (used to copy --dangerously-skip-permissions from the parent invocation).
+set -euo pipefail
+
+type=window
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -t|--type) type=$2; shift 2 ;;
+        --) shift; break ;;
+        *) break ;;
+    esac
+done
+
+sid=${CLAUDE_CODE_SESSION_ID:?not inside a Claude Code session}
+: "${KITTY_LISTEN_ON:?KITTY_LISTEN_ON unset: add 'listen_on unix:@kitty-{kitty_pid}' to kitty.conf and start a new kitty}"
+
+extra=()
+if [[ -n ${CLAUDE_PID:-} ]] && tr '\0' '\n' < "/proc/$CLAUDE_PID/cmdline" 2>/dev/null | grep -qx -- --dangerously-skip-permissions; then
+    extra+=(--dangerously-skip-permissions)
+fi
+
+# Go through an interactive bash so the `claude` function in ~/.bashrc applies
+# (it picks the work vs the personal subscription/config dir based on the cwd).
+exec kitty @ --to "$KITTY_LISTEN_ON" launch --type="$type" --cwd="$PWD" -- \
+    bash -ic 'claude "$@"' claude --resume "$sid" --fork-session "${extra[@]}" "$@"

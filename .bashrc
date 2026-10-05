@@ -106,6 +106,15 @@ eval "$(zoxide init bash)"
 # direnv
 eval "$(direnv hook bash)"
 
+# Claude Code: work subscription (config dir ~/.claude-work, logged into the CSAI account) when inside
+# ~/repos/csai, personal subscription (~/.claude) elsewhere. ~/.claude-work symlinks settings/rules/skills/
+# plugins/CLAUDE.md from ~/.claude; only credentials, .claude.json and projects/ (session history) differ.
+claude() {
+    case "$PWD/" in
+        "$HOME/repos/csai/"*) CLAUDE_CONFIG_DIR="$HOME/.claude-work" command claude "$@" ;;
+        *) command claude "$@" ;;
+    esac
+}
 # Claude Code without permission prompts
 alias c='claude --dangerously-skip-permissions'
 
