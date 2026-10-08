@@ -1,0 +1,190 @@
+#!/usr/bin/env bun
+// phone-page: look at a web page on the Android phone attached over ADB.
+//
+//   phone-page <url> [--shot out.png] [--eval '<js expression>'] [--browser firefox|chrome]
+//              [--wait ms] [--no-nav]
+//
+// - Opens <url> in the phone browser (Firefox by default) and screencaps the
+//   phone (`--shot`, default ./phone.png).
+// - With Firefox's "Remote debugging via USB" enabled (Settings > Advanced),
+//   also connects to Firefox's remote debugging protocol over
+//   `adb forward` and evaluates JS in the page: `--eval` for your own
+//   expression (serialised with JSON.stringify), otherwise a standard layout
+//   dump (viewport vs scroll size, boxes of .mark / h1 / footer / iframe).
+//   Navigation then happens in the selected tab via location.href instead of a
+//   new intent, so the tab count does not grow.
+// - `--browser chrome` opens Chrome instead and evaluates through the Chrome
+//   DevTools Protocol (playwright connectOverCDP over `adb forward`); Chrome
+//   exposes its socket whenever USB debugging is on, no in-app setting.
+// - `--no-nav` skips navigation and inspects whatever tab is selected.
+//
+// Requires android-tools (adb), USB debugging on the phone, one device attached.
+
+import { spawnSync } from "node:child_process";
+import { connect } from "node:net";
+
+const args = process.argv.slice(2);
+const opt = (name: string, dflt?: string): string | undefined => {
+  const i = args.indexOf(name);
+  if (i === -1) return dflt;
+  const v = args[i + 1];
+  args.splice(i, 2);
+  return v;
+};
+const flag = (name: string): boolean => {
+  const i = args.indexOf(name);
+  if (i === -1) return false;
+  args.splice(i, 1);
+  return true;
+};
+const shot = opt("--shot", "phone.png")!;
+const evalExpr = opt("--eval");
+const browser = opt("--browser", "firefox")!;
+const waitMs = Number(opt("--wait", "4000"));
+const noNav = flag("--no-nav");
+const url = args[0];
+if (!url && !noNav) {
+  console.error("usage: phone-page <url> [--shot out.png] [--eval js] [--browser firefox|chrome] [--wait ms] [--no-nav]");
+  process.exit(2);
+}
+
+const adb = (...a: string[]): string => {
+  const r = spawnSync("adb", a, { encoding: "utf8" });
+  if (r.status !== 0) throw new Error(`adb ${a.join(" ")}: ${r.stderr || r.stdout}`);
+  return r.stdout;
+};
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+const PKG = browser === "chrome" ? "com.android.chrome" : "org.mozilla.firefox";
+const sockets = adb("shell", "cat /proc/net/unix");
+const hasFirefoxSocket = sockets.includes("firefox-debugger-socket");
+
+const DEFAULT_EVAL = `(() => {
+  const r = (el) => { if (!el) return "-"; const b = el.getBoundingClientRect();
+    return Math.round(b.left) + "," + Math.round(b.top) + " " + Math.round(b.width) + "x" + Math.round(b.height); };
+  const h1 = document.querySelector("h1");
+  return { url: location.href, ua: navigator.userAgent, dpr: devicePixelRatio,
+    innerW: innerWidth, innerH: innerHeight, scrollW: document.documentElement.scrollWidth,
+    scrollH: document.documentElement.scrollHeight, bodyH: Math.round(document.body.getBoundingClientRect().height),
+    visualViewport: visualViewport ? { w: Math.round(visualViewport.width), h: Math.round(visualViewport.height), scale: visualViewport.scale } : null,
+    vh100: (() => { const d = document.createElement("div"); d.style.cssText = "position:fixed;height:100vh;width:0"; document.body.append(d); const h = d.offsetHeight; d.remove(); return h; })(),
+    dvh100: (() => { const d = document.createElement("div"); d.style.cssText = "position:fixed;height:100dvh;width:0"; document.body.append(d); const h = d.offsetHeight; d.remove(); return h; })(),
+    mark: r(document.querySelector(".mark")), markSvg: r(document.querySelector(".mark svg")),
+    h1: r(h1), h1font: h1 ? getComputedStyle(h1).fontSize : "-", footer: r(document.querySelector("footer")),
+    iframe: r(document.querySelector("iframe")) };
+})()`;
+
+// ---- Firefox remote debugging protocol (length-prefixed JSON over a unix socket) ----
+class Rdp {
+  private buf = "";
+  private waiters: Array<(m: any) => void> = [];
+  private sock = connect(6000, "127.0.0.1");
+  constructor() {
+    this.sock.setEncoding("utf8");
+    this.sock.on("data", (d: string) => {
+      this.buf += d;
+      for (;;) {
+        const i = this.buf.indexOf(":");
+        if (i === -1) return;
+        const len = Number(this.buf.slice(0, i));
+        if (this.buf.length < i + 1 + len) return;
+        const msg = JSON.parse(this.buf.slice(i + 1, i + 1 + len));
+        this.buf = this.buf.slice(i + 1 + len);
+        const w = this.waiters.shift();
+        if (w) w(msg);
+      }
+    });
+  }
+  next(): Promise<any> {
+    return new Promise((r) => this.waiters.push(r));
+  }
+  send(m: object) {
+    const s = JSON.stringify(m);
+    this.sock.write(`${Buffer.byteLength(s)}:${s}`);
+  }
+  async request(m: object, pred: (r: any) => boolean = () => true): Promise<any> {
+    this.send(m);
+    for (;;) {
+      const r = await this.next();
+      if (pred(r)) return r;
+    }
+  }
+  close() {
+    this.sock.destroy();
+  }
+}
+
+async function firefoxEval(expr: string, navigateTo?: string): Promise<any> {
+  adb("forward", "tcp:6000", "localabstract:org.mozilla.firefox/firefox-debugger-socket");
+  const rdp = new Rdp();
+  await rdp.next(); // hello
+  const tabs = await rdp.request({ to: "root", type: "listTabs" }, (r) => Array.isArray(r.tabs));
+  const tab = tabs.tabs.find((t: any) => t.selected) ?? tabs.tabs[0];
+  if (!tab) throw new Error("Firefox has no tabs open");
+  const target = await rdp.request({ to: tab.actor, type: "getTarget" }, (r) => r.frame);
+  const console_ = target.frame.consoleActor;
+  const evalOnce = async (text: string) => {
+    const ack = await rdp.request({ to: console_, type: "evaluateJSAsync", text }, (r) => r.resultID);
+    const res = await rdp.request({}, (r) => r.type === "evaluationResult" && r.resultID === ack.resultID);
+    if (res.exceptionMessage) throw new Error(`page threw: ${res.exceptionMessage}`);
+    return res.result;
+  };
+  if (navigateTo) {
+    await evalOnce(`location.href = ${JSON.stringify(navigateTo)}; "ok"`);
+    await sleep(waitMs);
+    rdp.close();
+    return firefoxEval(expr); // the console actor dies with the old document
+  }
+  const out = await evalOnce(`JSON.stringify(${expr})`);
+  rdp.close();
+  return typeof out === "string" ? JSON.parse(out) : out;
+}
+
+async function chromeEval(expr: string, navigateTo?: string): Promise<any> {
+  const { chromium } = await import(`${process.env.HOME}/.cache/.bun/install/global/node_modules/playwright`);
+  adb("forward", "tcp:9222", "localabstract:chrome_devtools_remote");
+  const b = await chromium.connectOverCDP("http://localhost:9222");
+  try {
+    const pages = b.contexts().flatMap((c: any) => c.pages());
+    let page = pages.find((p: any) => navigateTo && p.url() === navigateTo) ?? pages[0];
+    if (!page) throw new Error("Chrome has no tabs open");
+    if (navigateTo) {
+      await page.goto(navigateTo, { waitUntil: "load" });
+      await sleep(waitMs);
+    }
+    return await page.evaluate(`JSON.parse(JSON.stringify(${expr}))`);
+  } finally {
+    await b.close();
+  }
+}
+
+async function main() {
+  const model = adb("shell", "getprop ro.product.model").trim();
+  let metrics: any = null;
+  if (browser === "chrome") {
+    if (!noNav) {
+      adb("shell", "am", "start", "-a", "android.intent.action.VIEW", "-d", url!, PKG);
+      await sleep(waitMs);
+    }
+    metrics = await chromeEval(evalExpr ?? DEFAULT_EVAL, noNav ? undefined : url);
+  } else if (browser === "firefox" && hasFirefoxSocket) {
+    metrics = await firefoxEval(evalExpr ?? DEFAULT_EVAL, noNav ? undefined : url);
+  } else {
+    if (!noNav) {
+      adb("shell", "am", "start", "-a", "android.intent.action.VIEW", "-d", url!, PKG);
+      await sleep(waitMs);
+    }
+    if (browser === "firefox")
+      console.error("note: no firefox-debugger-socket; enable Settings > Advanced > Remote debugging via USB in Firefox for JS eval");
+  }
+  const png = spawnSync("adb", ["exec-out", "screencap", "-p"], { maxBuffer: 64 << 20 });
+  if (png.status !== 0) throw new Error("screencap failed");
+  await Bun.write(shot, png.stdout);
+  console.log(`${model} ${browser}: screenshot ${shot}`);
+  if (metrics !== null) console.log(JSON.stringify(metrics, null, 1));
+}
+
+main().catch((e) => {
+  console.error(e.message ?? e);
+  process.exit(1);
+});

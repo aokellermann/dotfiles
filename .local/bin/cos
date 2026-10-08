@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# cos — open the CSAI chief-of-staff console (~/repos/csai/cos), starting the server if it isn't running.
+#   cos            start if needed, open http://localhost:7777 in the default browser
+#   cos stop       stop the server (whether started here or via bun run dev)
+#   cos log        tail the server log
+set -euo pipefail
+
+DIR="$HOME/repos/csai/cos"
+PORT="${COS_PORT:-7777}"
+URL="http://localhost:$PORT"
+LOG="${XDG_STATE_HOME:-$HOME/.local/state}/cos/server.log"
+
+up() { curl -fsS -o /dev/null --max-time 1 "$URL/api/queue" 2>/dev/null; }
+
+case "${1:-}" in
+    stop)
+        if fuser -k -TERM "$PORT/tcp" >/dev/null 2>&1; then echo "cos: stopped"; else echo "cos: nothing listening on :$PORT" >&2; exit 1; fi
+        exit 0 ;;
+    log) exec tail -f "$LOG" ;;
+    "") ;;
+    *) echo "usage: cos [stop|log]" >&2; exit 2 ;;
+esac
+
+if ! up; then
+    mkdir -p "$(dirname "$LOG")"
+    echo "cos: starting server (log: $LOG)"
+    (cd "$DIR" && setsid -f bun src/server.ts >>"$LOG" 2>&1 </dev/null)
+    for _ in $(seq 1 50); do up && break; sleep 0.2; done
+    up || { echo "cos: server did not come up; see $LOG" >&2; exit 1; }
+fi
+
+xdg-open "$URL" >/dev/null 2>&1 &
+echo "cos: $URL"
