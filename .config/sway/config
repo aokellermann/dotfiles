@@ -306,3 +306,8 @@ bar {
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 include /etc/sway/config.d/*
+
+# Start the systemd user session target so units WantedBy=graphical-session.target
+# (voxtype.service) come up with sway. Must run after the /etc/sway/config.d
+# import-environment above so those units see WAYLAND_DISPLAY/SWAYSOCK.
+exec systemctl --user start sway-session.target
