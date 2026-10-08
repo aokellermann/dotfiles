@@ -65,7 +65,7 @@
   },
   "skipDangerousModePermissionPrompt": true,
   "preferredNotifChannel": "notifications_disabled",
+  "switchModelsOnFlag": true,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true,
-  "switchModelsOnFlag": true
+  "voiceEnabled": true
 }

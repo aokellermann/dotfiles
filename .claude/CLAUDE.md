@@ -4,6 +4,14 @@
 
 Be liberal with updating `CLAUDE.md` files and `.claude/rules/*.md` as you work. When you learn something that would help a future Claude instance — a non-obvious build step, a repo convention, a gotcha that caused a failure, a tool invocation that took iteration to get right — add it to the appropriate CLAUDE.md or rule file. Prefer the most specific scope that still applies (task/challenge-level → project-level → user-level). Don't ask for permission for small additions; just make the edit alongside the work that taught you the lesson.
 
+## Tracking rules files in dotfiles
+
+`~/.claude/CLAUDE.md` and `~/.claude/rules/*.md` are tracked in the **public** dotfiles repo (home dir
+is the git root with a catch-all `.gitignore`, so new files need `git add -f`). When you create or
+edit one, stage it with `git add -f` as long as it holds no sensitive information (credentials,
+tokens, session strings, private addresses, non-public personal details). If a rule must contain
+something sensitive, leave it untracked and say so.
+
 ## Git Branch Naming
 
 When creating git branches, always prefix them with `aokellermann/` followed by a descriptive kebab-case name.
@@ -20,6 +28,10 @@ Never run `sudo` yourself. It is denied via permission rules and would fail anyw
 ## Pull Requests
 
 When creating GitHub PRs, do not include a "Test plan" section in the PR body unless explicitly requested.
+
+## Web archive lookups
+
+Use the `webarchives` CLI/library (`~/repos/webarchives`) for any archived-copy question; see `~/.claude/rules/webarchives.md`.
 
 ## Python Package Management
 
